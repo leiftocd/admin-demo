@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="bg-gray-800 text-white w-64 flex-shrink-0">
+            <div class="p-4 flex items-center">
+                <img src="https://www.concorfacilityservices.com/wp-content/uploads/2020/01/Concor_Facility_Services_Website_Omzet_Icon-1024x1024.png" alt="Logo" class="w-8 h-8 rounded-full mr-3">
+                <span class="text-xl font-bold">AdminPage</span>
+            </div>
+            <nav class="mt-6">
+                <div id="sidebar-menu">
+                    <a href="#dashboard" class="nav-link active-nav flex items-center py-3 px-6 text-gray-100 hover:bg-gray-700 bg-gray-700">
+                        <i class="fas fa-home mr-3"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="#games" class="nav-link flex items-center py-3 px-6 text-gray-400 hover:bg-gray-700">
+                        <i class="fas fa-gamepad mr-3"></i>
+                        <span>Games</span>
+                    </a>
+                    <a href="#users" class="nav-link flex items-center py-3 px-6 text-gray-400 hover:bg-gray-700">
+                        <i class="fas fa-users mr-3"></i>
+                        <span>Users</span>
+                    </a>
+                    <a href="#transactions" class="nav-link flex items-center py-3 px-6 text-gray-400 hover:bg-gray-700">
+                        <i class="fas fa-money-bill-wave mr-3"></i>
+                        <span>Transactions</span>
+                    </a>
+                    <a href="#reports" class="nav-link flex items-center py-3 px-6 text-gray-400 hover:bg-gray-700">
+                        <i class="fas fa-chart-bar mr-3"></i>
+                        <span>Reports</span>
+                    </a>
+                    <a href="#settings" class="nav-link flex items-center py-3 px-6 text-gray-400 hover:bg-gray-700">
+                        <i class="fas fa-cog mr-3"></i>
+                        <span>Settings</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Main content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top header -->
+            <header class="bg-white shadow-sm px-6 py-3 flex justify-between items-center">
+                <div class="flex items-center">
+                    <h1 id="page-title" class="text-xl font-semibold">Dashboard</h1>
+                </div>
+                <div class="flex items-center">
+                    <div class="relative">
+                        <input type="text" id="header-search" placeholder="Search..." class="px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <i class="fas fa-search absolute right-3 top-2.5 text-gray-400"></i>
+                        <div id="search-results" class="absolute top-10 left-0 w-full bg-white shadow-lg rounded-lg hidden max-h-96 overflow-y-auto z-10">
+                            <div id="search-results-content" class="p-2"></div>
+                            <div id="no-results" class="p-2 text-gray-500 hidden">No results found</div>
+                        </div>
+                    </div>
+                    <div class="ml-4 relative">
+                        <button id="notification-bell" class="relative p-1">
+                            <i class="fas fa-bell text-gray-500"></i>
+                            <span class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-4 h-4 text-xs flex items-center justify-center">3</span>
+                        </button>
+                        <div id="notification-subnav" class="absolute top-10 right-0 w-80 bg-white shadow-lg rounded-lg hidden z-10">
+                            <div class="p-4 border-b">
+                                <h3 class="text-lg font-semibold">Notifications</h3>
+                            </div>
+                            <div id="notification-content" class="max-h-96 overflow-y-auto"></div>
+                        </div>
+                    </div>
+                    <div class="ml-4 flex items-center">
+                        <img src="https://static.vecteezy.com/system/resources/previews/015/078/710/non_2x/professor-illustration-on-a-background-premium-quality-symbols-icons-for-concept-and-graphic-design-vector.jpg" alt="Admin" class="w-8 h-8 rounded-full mr-2">
+                        <span class="text-sm font-medium">Admin Name</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main content area -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <!-- Dashboard -->
+                <div id="dashboard-page" class="page active-page">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-blue-100 text-blue-500">
+                                    <i class="fas fa-gamepad text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h2 class="text-gray-500 text-sm">Total Games</h2>
+                                    <p class="text-2xl font-semibold">46</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-sm text-green-500 flex items-center">
+                                <i class="fas fa-arrow-up mr-1"></i>
+                                <span>12% from last month</span>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-green-100 text-green-500">
+                                    <i class="fas fa-users text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h2 class="text-gray-500 text-sm">Total Users</h2>
+                                    <p class="text-2xl font-semibold">3,442</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-sm text-green-500 flex items-center">
+                                <i class="fas fa-arrow-up mr-1"></i>
+                                <span>18% from last month</span>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-yellow-100 text-yellow-500">
+                                    <i class="fas fa-money-bill-wave text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h2 class="text-gray-500 text-sm">Revenue</h2>
+                                    <p class="text-2xl font-semibold">$688,200</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-sm text-green-500 flex items-center">
+                                <i class="fas fa-arrow-up mr-1"></i>
+                                <span>7% from last month</span>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-red-100 text-red-500">
+                                    <i class="fas fa-clipboard-list text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h2 class="text-gray-500 text-sm">Pending Tasks</h2>
+                                    <p class="text-2xl font-semibold">12</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-sm text-red-500 flex items-center">
+                                <i class="fas fa-arrow-down mr-1"></i>
+                                <span>3 fewer than yesterday</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h2 class="text-lg font-semibold mb-4">Game Downloads (Last 7 Days)</h2>
+                            <canvas id="downloadChart" height="240"></canvas>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h2 class="text-lg font-semibold mb-4">Revenue by Game Category</h2>
+                            <canvas id="categoryChart" height="240"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                            <h2 class="text-lg font-semibold">Recent Transactions</h2>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Game</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment Method</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transaction-table-body" class="bg-white divide-y divide-gray-200">
+                                    <!-- Transactions will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Games Management -->
+                <div id="games-page" class="page hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-semibold text-gray-800">Games Management</h2>
+                        <button id="add-game-btn" class="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-5 py-2 rounded-lg transition duration-300">
+                            <i class="fas fa-plus mr-2"></i> Add New Game
+                        </button>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md mb-6">
+                        <div class="p-4 flex flex-wrap gap-4">
+                            <div class="flex-1 min-w-fit">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                                <div class="relative">
+                                    <input type="text" id="game-search" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Search games...">
+                                    <i class="fas fa-search absolute right-3 top-2.5 text-gray-400"></i>
+                                </div>
+                            </div>
+                            <div class="w-40">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                                <select id="game-category-filter" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="">All Categories</option>
+                                    <option>Action</option>
+                                    <option>Adventure</option>
+                                    <option>RPG</option>
+                                    <option>Simulation</option>
+                                    <option>Strategy</option>
+                                    <option>Puzzle</option>
+                                    <option>Racing</option>
+                                    <option>Sports</option>
+                                    <option>Horror</option>
+                                    <option>Shooter</option>
+                                    <option>Platformer</option>
+                                    <option>Casual</option>
+                                </select>
+                            </div>
+                            <div class="w-40">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                                <select id="game-status-filter" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="">All Status</option>
+                                    <option>Published</option>
+                                    <option>Draft</option>
+                                    <option>Archived</option>
+                                </select>
+                            </div>
+                            <div class="w-40">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
+                                <select id="game-sort" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="newest">Newest First</option>
+                                    <option value="oldest">Oldest First</option>
+                                    <option value="popular">Most Popular</option>
+                                    <option value="rating">Highest Rated</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Game</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rating</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="game-table-body" class="bg-white divide-y divide-gray-200">
+                                    <!-- Games will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Management -->
+                <div id="users-page" class="page hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-semibold">Users Management</h2>
+                        <button id="add-user-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                            <i class="fas fa-user-plus mr-2"></i> Add New User
+                        </button>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md mb-6">
+                        <div class="p-4 flex flex-wrap gap-4">
+                            <div class="flex-1 min-w-fit">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                                <div class="relative">
+                                    <input type="text" id="user-search" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Search users...">
+                                    <i class="fas fa-search absolute right-3 top-2.5 text-gray-400"></i>
+                                </div>
+                            </div>
+                            <div class="w-40">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                                <select id="user-role-filter" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="">All Roles</option>
+                                    <option>Admin</option>
+                                    <option>Customer</option>
+                                    <option>Developer</option>
+                                </select>
+                            </div>
+                            <div class="w-40">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                                <select id="user-status-filter" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="">All Status</option>
+                                    <option>Active</option>
+                                    <option>Suspended</option>
+                                    <option>Inactive</option>
+                                </select>
+                            </div>
+                            <div class="w-40">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
+                                <select id="user-sort" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="newest">Newest First</option>
+                                    <option value="oldest">Oldest First</option>
+                                    <option value="name">Name (A-Z)</option>
+                                    <option value="activity">Activity</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Registration</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Games</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Spent</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="user-table-body" class="bg-white divide-y divide-gray-200">
+                                    <!-- Users will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transactions -->
+                <div id="transactions-page" class="page hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-semibold">Transaction Management</h2>
+                        <div>
+                            <button id="export-transactions-btn" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg mr-2">
+                                <i class="fas fa-download mr-2"></i> Export
+                            </button>
+                            <button id="add-transaction-btn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">
+                                <i class="fas fa-plus mr-2"></i> New Transaction
+                            </button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md mb-6">
+                        <div class="p-4 flex flex-wrap gap-4">
+                            <div class="flex-1 min-w-fit">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                                <div class="relative">
+                                    <input type="text" id="transaction-search" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Search transactions...">
+                                    <i class="fas fa-search absolute right-3 top-2.5 text-gray-400"></i>
+                                </div>
+                            </div>
+                            <div class="w-40">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                                <select id="transaction-status-filter" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="">All Status</option>
+                                    <option>Completed</option>
+                                    <option>Processing</option>
+                                    <option>Failed</option>
+                                    <option>Refunded</option>
+                                </select>
+                            </div>
+                            <div class="w-40">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Payment Method</label>
+                                <select id="transaction-payment-filter" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="">All Methods</option>
+                                    <option>Credit Card</option>
+                                    <option>PayPal</option>
+                                    <option>Crypto</option>
+                                    <option>Bank Transfer</option>
+                                </select>
+                            </div>
+                            <div class="w-52">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Date Range</label>
+                                <select id="transaction-date-filter" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="7">Last 7 Days</option>
+                                    <option value="30">Last 30 Days</option>
+                                    <option value="90">Last 3 Months</option>
+                                    <option value="180">Last 6 Months</option>
+                                    <option value="">Custom Range</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Transaction ID</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Game</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment Method</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transaction-table-body-full" class="bg-white divide-y divide-gray-200">
+                                    <!-- Transactions will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reports -->
+                <div id="reports-page" class="page hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-semibold">Reports</h2>
+                        <button id="generate-report-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                            <i class="fas fa-download mr-2"></i> Generate Report
+                        </button>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold mb-4">Select Report Type</h3>
+                        <div class="flex flex-wrap gap-4 mb-6">
+                            <select id="report-type" class="w-40 px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="user-activity">User Activity</option>
+                                <option value="game-performance">Game Performance</option>
+                                <option value="revenue-analysis">Revenue Analysis</option>
+                                <option value="transaction-summary">Transaction Summary</option>
+                            </select>
+                            <select id="report-date-range" class="w-40 px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="7">Last 7 Days</option>
+                                <option value="30">Last 30 Days</option>
+                                <option value="90">Last 3 Months</option>
+                                <option value="180">Last 6 Months</option>
+                            </select>
+                        </div>
+                        <canvas id="reportChart" height="150"></canvas>
+                    </div>
+                </div>
+
+                <!-- Settings -->
+                <div id="settings-page" class="page hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-semibold">Settings</h2>
+                        <button id="save-settings-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+                            <i class="fas fa-save mr-2"></i> Save Changes
+                        </button>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold mb-4">General Settings</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Platform Name</label>
+                                <input type="text" id="platform-name" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500" value="GameAdmin">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Admin Email</label>
+                                <input type="email" id="admin-email" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500" value="admin@example.com">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Currency</label>
+                                <select id="currency" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="USD">USD</option>
+                                    <option value="EUR">EUR</option>
+                                    <option value="GBP">GBP</option>
+                                    <option value="JPY">JPY</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+  <!-- Add Game Modal -->
+    <div id="add-game-modal" class="fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center hidden transition-opacity duration-300 z-50">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md transform transition-all duration-300 scale-95">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Add New Game</h2>
+            <div class="space-y-5">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Game Name</label>
+                    <input type="text" id="add-game-name" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" placeholder="Enter game name">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Categories</label>
+                    <div id="add-game-categories" class="max-h-40 overflow-y-auto border border-gray-300 rounded-lg p-4 bg-gray-50">
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" value="Action" class="accent-blue-500 w-4 h-4 border-gray-300 rounded focus:ring-blue-500">
+                                <span class="text-sm text-gray-700">Action</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" value="Adventure" class="accent-blue-500 w-4 h-4 border-gray-300 rounded focus:ring-blue-500">
+                                <span class="text-sm text-gray-700">Adventure</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" value="RPG" class="accent-blue-500 w-4 h-4 border-gray-300 rounded focus:ring-blue-500">
+                                <span class="text-sm text-gray-700">RPG</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" value="Simulation" class="accent-blue-500 w-4 h-4 border-gray-300 rounded focus:ring-blue-500">
+                                <span class="text-sm text-gray-700">Simulation</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" value="Strategy" class="accent-blue-500 w-4 h-4 border-gray-300 rounded focus:ring-blue-500">
+                                <span class="text-sm text-gray-700">Strategy</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" value="Puzzle" class="accent-blue-500 w-4 h-4 border-gray-300 rounded focus:ring-blue-500">
+                                <span class="text-sm text-gray-700">Puzzle</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" value="Racing" class="accent-blue-500 w-4 h-4 border-gray-300 rounded focus:ring-blue-500">
+                                <span class="text-sm text-gray-700">Racing</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" value="Sports" class="accent-blue-500 w-4 h-4 border-gray-300 rounded focus:ring-blue-500">
+                                <span class="text-sm text-gray-700">Sports</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" value="Horror" class="accent-blue-500 w-4 h-4 border-gray-300 rounded focus:ring-blue-500">
+                                <span class="text-sm text-gray-700">Horror</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" value="Shooter" class="accent-blue-500 w-4 h-4 border-gray-300 rounded focus:ring-blue-500">
+                                <span class="text-sm text-gray-700">Shooter</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" value="Platformer" class="accent-blue-500 w-4 h-4 border-gray-300 rounded focus:ring-blue-500">
+                                <span class="text-sm text-gray-700">Platformer</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" value="Casual" class="accent-blue-500 w-4 h-4 border-gray-300 rounded focus:ring-blue-500">
+                                <span class="text-sm text-gray-700">Casual</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Price ($)</label>
+                    <input type="number" id="add-game-price" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" placeholder="Enter price" step="0.01">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                    <textarea id="add-game-description" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" placeholder="Enter game description" rows="4"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                    <select id="add-game-status" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+                        <option value="Published">Published</option>
+                        <option value="Draft">Draft</option>
+                        <option value="Archived">Archived</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mt-8 flex justify-end space-x-3">
+                <button id="add-game-cancel" class="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition duration-200">Cancel</button>
+                <button id="add-game-save" class="px-5 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition duration-200">Save</button>
+            </div>
+            <p id="add-game-error" class="text-red-500 text-sm mt-3 text-center hidden">Please fill in all fields</p>
+        </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div id="add-user-modal" class="fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center hidden transition-opacity duration-300 z-50">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md transform transition-all duration-300 scale-95">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Add New User</h2>
+            <div class="space-y-5">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                    <input type="text" id="add-user-username" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" placeholder="Enter username">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <input type="email" id="add-user-email" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" placeholder="Enter email">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Role</label>
+                    <select id="add-user-role" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+                        <option value="Customer">Customer</option>
+                        <option value="Admin">Admin</option>
+                        <option value="Developer">Developer</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                    <select id="add-user-status" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+                        <option value="Active">Active</option>
+                        <option value="Suspended">Suspended</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mt-8 flex justify-end space-x-3">
+                <button id="add-user-cancel" class="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition duration-200">Cancel</button>
+                <button id="add-user-save" class="px-5 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition duration-200">Save</button>
+            </div>
+            <p id="add-user-error" class="text-red-500 text-sm mt-3 text-center hidden">Please fill in all fields</p>
+        </div>
+    </div>
+
+    <!-- Add Transaction Modal -->
+    <div id="add-transaction-modal" class="fixed inset-0 bg-gray-900 bg-opacity-60 flex items-center justify-center hidden transition-opacity duration-300 z-50">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md transform transition-all duration-300 scale-95">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Add New Transaction</h2>
+            <div class="space-y-5">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">User Email</label>
+                    <select id="add-transaction-user-email" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+                        <option value="">Select user</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Game</label>
+                    <select id="add-transaction-game" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+                        <option value="">Select game</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Amount ($)</label>
+                    <input type="number" id="add-transaction-amount" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" placeholder="Enter amount" step="0.01">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Payment Method</label>
+                    <select id="add-transaction-payment-method" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+                        <option value="">Select payment method</option>
+                        <option value="Credit Card">Credit Card</option>
+                        <option value="PayPal">PayPal</option>
+                        <option value="Crypto">Crypto</option>
+                        <option value="Bank Transfer">Bank Transfer</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                    <select id="add-transaction-status" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+                        <option value="">Select status</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Processing">Processing</option>
+                        <option value="Failed">Failed</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mt-8 flex justify-end space-x-3">
+                <button id="add-transaction-cancel" class="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition duration-200">Cancel</button>
+                <button id="add-transaction-save" class="px-5 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition duration-200">Save</button>
+            </div>
+            <p id="add-transaction-error" class="text-red-500 text-sm mt-3 text-center hidden">Please fill in all fields</p>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
