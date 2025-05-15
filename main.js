@@ -115,8 +115,158 @@ document.addEventListener('DOMContentLoaded', () => {
         adminNameSpan.textContent = user.username || 'Admin';
     };
     updateAdminName();
-
-    // Rest of the existing code remains unchanged
+    //localstorage data
+    localStorage.setItem('platformUsers', JSON.stringify([
+        {
+            id: "U5481",
+            name: "Alice Nguyen",
+            email: "alice.nguyen@example.com",
+            wallet: 100.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Lucky Card Flip", date: "2025-05-12", result: "Win", bet: 100.00, payout: 200.00 }, // Profit: $100
+                { game: "Slot Machine", date: "2025-05-11", result: "Lose", bet: 50.00, payout: 0.00 } // Profit: -$50
+            ]
+        },
+        {
+            id: "U5480",
+            name: "Brian Tran",
+            email: "brian.tran@example.com",
+            wallet: 200.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Dice Roll", date: "2025-05-12", result: "Win", bet: 150.00, payout: 300.00 } // Profit: $150
+            ]
+        },
+        {
+            id: "U5479",
+            name: "Cindy Le",
+            email: "cindy.le@example.com",
+            wallet: 50.00,
+            status: "Banned",
+            gameHistory: []
+        },
+        {
+            id: "U5482",
+            name: "David Pham",
+            email: "david.pham@example.com",
+            wallet: 300.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Crash", date: "2025-05-14", result: "Win", bet: 20.00, payout: 50.00 } // Profit: $30
+            ]
+        },
+        {
+            id: "U5483",
+            name: "Emma Vu",
+            email: "emma.vu@example.com",
+            wallet: 250.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Aviator", date: "2025-05-14", result: "Win", bet: 15.00, payout: 40.00 } // Profit: $25
+            ]
+        },
+        {
+            id: "U5484",
+            name: "Frank Ho",
+            email: "frank.ho@example.com",
+            wallet: 200.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Dice Roll", date: "2025-05-14", result: "Win", bet: 10.00, payout: 30.00 } // Profit: $20
+            ]
+        },
+        {
+            id: "U5485",
+            name: "Grace Tran",
+            email: "grace.tran@example.com",
+            wallet: 150.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Lucky Card Flip", date: "2025-05-14", result: "Win", bet: 5.00, payout: 20.00 } // Profit: $15
+            ]
+        },
+        {
+            id: "U5486",
+            name: "Henry Nguyen",
+            email: "henry.nguyen@example.com",
+            wallet: 100.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Lucky Wheel", date: "2025-05-14", result: "Win", bet: 10.00, payout: 30.00 } // Profit: $20
+            ]
+        },
+        {
+            id: "U5487",
+            name: "Isabella Le",
+            email: "isabella.le@example.com",
+            wallet: 120.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Plinko", date: "2025-05-14", result: "Win", bet: 10.00, payout: 25.00 } // Profit: $15
+            ]
+        },
+        {
+            id: "U5488",
+            name: "Jack Dao",
+            email: "jack.dao@example.com",
+            wallet: 180.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Coin Flip", date: "2025-05-14", result: "Win", bet: 5.00, payout: 15.00 } // Profit: $10
+            ]
+        },
+        {
+            id: "U5489",
+            name: "Kelly Bui",
+            email: "kelly.bui@example.com",
+            wallet: 220.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Limbo", date: "2025-05-14", result: "Win", bet: 20.00, payout: 50.00 } // Profit: $30
+            ]
+        },
+        {
+            id: "U5490",
+            name: "Liam Vo",
+            email: "liam.vo@example.com",
+            wallet: 270.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Goal", date: "2025-05-14", result: "Win", bet: 15.00, payout: 40.00 } // Profit: $25
+            ]
+        },
+        {
+            id: "U5491",
+            name: "Mia Phan",
+            email: "mia.phan@example.com",
+            wallet: 300.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Video Poker", date: "2025-05-14", result: "Win", bet: 10.00, payout: 30.00 } // Profit: $20
+            ]
+        },
+        {
+            id: "U5492",
+            name: "Noah Dinh",
+            email: "noah.dinh@example.com",
+            wallet: 190.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Classic Wheel", date: "2025-05-14", result: "Win", bet: 5.00, payout: 20.00 } // Profit: $15
+            ]
+        },
+        {
+            id: "U5493",
+            name: "Olivia Huynh",
+            email: "olivia.huynh@example.com",
+            wallet: 260.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Racing", date: "2025-05-14", result: "Win", bet: 10.00, payout: 35.00 } // Profit: $25
+            ]
+        }
+    ]));
     // Data
     let games = JSON.parse(localStorage.getItem('games')) || [
         { id: 1, name: "Lucky Card Flip", description: "Flip one of three cards to reveal a hidden reward", status: "On", winRate: 55, preResult: "", plays: 1200 },
@@ -138,8 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 17, name: "Space Max", description: "Navigate a spaceship to pass checkpoints and collect rewards", status: "On", winRate: 49, preResult: "Lose", plays: 650 },
         { id: 18, name: "Racing", description: "Bet on animated cars and win if your pick finishes first", status: "On", winRate: 46, preResult: "", plays: 1400 },
         { id: 19, name: "Video Poker", description: "Play a quick 5-card poker game against probability", status: "On", winRate: 51, preResult: "", plays: 750 },
-        { id: 20, name: "Classic Wheel", description: "Spin a wheel with fixed win segments", status: "On", winRate: 54, preResult: "", plays: 1600 },
-    
+        { id: 20, name: "Classic Wheel", description: "Spin a wheel with fixed win segments", status: "On", winRate: 54, preResult: "", plays: 1600 }
     ];
 
     let users = JSON.parse(localStorage.getItem('platformUsers')) || [
@@ -150,8 +299,8 @@ document.addEventListener('DOMContentLoaded', () => {
             wallet: 100.00,
             status: "Active",
             gameHistory: [
-                { game: "Lucky Card Flip", date: "2025-05-12", result: "Win", bet: 10.00, payout: 20.00 },
-                { game: "Slot Machine", date: "2025-05-11", result: "Lose", bet: 5.00, payout: 0.00 }
+                { game: "Lucky Card Flip", date: "2025-05-12", result: "Win", bet: 100.00, payout: 200.00 }, // Profit: $10
+                { game: "Slot Machine", date: "2025-05-11", result: "Lose", bet: 50.00, payout: 0.00 } // Profit: -$5
             ]
         },
         {
@@ -161,7 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
             wallet: 200.00,
             status: "Active",
             gameHistory: [
-                { game: "Dice Roll", date: "2025-05-12", result: "Win", bet: 15.00, payout: 30.00 }
+                { game: "Dice Roll", date: "2025-05-12", result: "Win", bet: 150.00, payout: 300.00 } // Profit: $15
             ]
         },
         {
@@ -172,123 +321,127 @@ document.addEventListener('DOMContentLoaded', () => {
             status: "Banned",
             gameHistory: []
         },
-                {
-            id: "U5481",
-            name: "Alice Nguyen",
-            email: "alice.nguyen@example.com",
+        // Thêm 12 người dùng mới
+        {
+            id: "U5482",
+            name: "David Pham",
+            email: "david.pham@example.com",
+            wallet: 300.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Crash", date: "2025-05-14", result: "Win", bet: 20.00, payout: 50.00 } // Profit: $30
+            ]
+        },
+        {
+            id: "U5483",
+            name: "Emma Vu",
+            email: "emma.vu@example.com",
+            wallet: 250.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Aviator", date: "2025-05-14", result: "Win", bet: 15.00, payout: 40.00 } // Profit: $25
+            ]
+        },
+        {
+            id: "U5484",
+            name: "Frank Ho",
+            email: "frank.ho@example.com",
+            wallet: 200.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Dice Roll", date: "2025-05-14", result: "Win", bet: 10.00, payout: 30.00 } // Profit: $20
+            ]
+        },
+        {
+            id: "U5485",
+            name: "Grace Tran",
+            email: "grace.tran@example.com",
+            wallet: 150.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Lucky Card Flip", date: "2025-05-14", result: "Win", bet: 5.00, payout: 20.00 } // Profit: $15
+            ]
+        },
+        {
+            id: "U5486",
+            name: "Henry Nguyen",
+            email: "henry.nguyen@example.com",
             wallet: 100.00,
             status: "Active",
             gameHistory: [
-                { game: "Lucky Card Flip", date: "2025-05-12", result: "Win", bet: 10.00, payout: 20.00 },
-                { game: "Slot Machine", date: "2025-05-11", result: "Lose", bet: 5.00, payout: 0.00 }
+                { game: "Lucky Wheel", date: "2025-05-14", result: "Win", bet: 10.00, payout: 30.00 } // Profit: $20
             ]
         },
         {
-            id: "U5480",
-            name: "Brian Tran",
-            email: "brian.tran@example.com",
-            wallet: 200.00,
+            id: "U5487",
+            name: "Isabella Le",
+            email: "isabella.le@example.com",
+            wallet: 120.00,
             status: "Active",
             gameHistory: [
-                { game: "Dice Roll", date: "2025-05-12", result: "Win", bet: 15.00, payout: 30.00 }
+                { game: "Plinko", date: "2025-05-14", result: "Win", bet: 10.00, payout: 25.00 } // Profit: $15
             ]
         },
         {
-            id: "U5479",
-            name: "Cindy Le",
-            email: "cindy.le@example.com",
-            wallet: 50.00,
-            status: "Banned",
-            gameHistory: []
-        },
-                {
-            id: "U5481",
-            name: "Alice Nguyen",
-            email: "alice.nguyen@example.com",
-            wallet: 100.00,
+            id: "U5488",
+            name: "Jack Dao",
+            email: "jack.dao@example.com",
+            wallet: 180.00,
             status: "Active",
             gameHistory: [
-                { game: "Lucky Card Flip", date: "2025-05-12", result: "Win", bet: 10.00, payout: 20.00 },
-                { game: "Slot Machine", date: "2025-05-11", result: "Lose", bet: 5.00, payout: 0.00 }
+                { game: "Coin Flip", date: "2025-05-14", result: "Win", bet: 5.00, payout: 15.00 } // Profit: $10
             ]
         },
         {
-            id: "U5480",
-            name: "Brian Tran",
-            email: "brian.tran@example.com",
-            wallet: 200.00,
+            id: "U5489",
+            name: "Kelly Bui",
+            email: "kelly.bui@example.com",
+            wallet: 220.00,
             status: "Active",
             gameHistory: [
-                { game: "Dice Roll", date: "2025-05-12", result: "Win", bet: 15.00, payout: 30.00 }
+                { game: "Limbo", date: "2025-05-14", result: "Win", bet: 20.00, payout: 50.00 } // Profit: $30
             ]
         },
         {
-            id: "U5479",
-            name: "Cindy Le",
-            email: "cindy.le@example.com",
-            wallet: 50.00,
-            status: "Banned",
-            gameHistory: []
-        },
-                {
-            id: "U5481",
-            name: "Alice Nguyen",
-            email: "alice.nguyen@example.com",
-            wallet: 100.00,
+            id: "U5490",
+            name: "Liam Vo",
+            email: "liam.vo@example.com",
+            wallet: 270.00,
             status: "Active",
             gameHistory: [
-                { game: "Lucky Card Flip", date: "2025-05-12", result: "Win", bet: 10.00, payout: 20.00 },
-                { game: "Slot Machine", date: "2025-05-11", result: "Lose", bet: 5.00, payout: 0.00 }
+                { game: "Goal", date: "2025-05-14", result: "Win", bet: 15.00, payout: 40.00 } // Profit: $25
             ]
         },
         {
-            id: "U5480",
-            name: "Brian Tran",
-            email: "brian.tran@example.com",
-            wallet: 200.00,
+            id: "U5491",
+            name: "Mia Phan",
+            email: "mia.phan@example.com",
+            wallet: 300.00,
             status: "Active",
             gameHistory: [
-                { game: "Dice Roll", date: "2025-05-12", result: "Win", bet: 15.00, payout: 30.00 }
+                { game: "Video Poker", date: "2025-05-14", result: "Win", bet: 10.00, payout: 30.00 } // Profit: $20
             ]
         },
         {
-            id: "U5479",
-            name: "Cindy Le",
-            email: "cindy.le@example.com",
-            wallet: 50.00,
-            status: "Banned",
-            gameHistory: []
-        },
-                {
-            id: "U5481",
-            name: "Alice Nguyen",
-            email: "alice.nguyen@example.com",
-            wallet: 100.00,
+            id: "U5492",
+            name: "Noah Dinh",
+            email: "noah.dinh@example.com",
+            wallet: 190.00,
             status: "Active",
             gameHistory: [
-                { game: "Lucky Card Flip", date: "2025-05-12", result: "Win", bet: 10.00, payout: 20.00 },
-                { game: "Slot Machine", date: "2025-05-11", result: "Lose", bet: 5.00, payout: 0.00 }
+                { game: "Classic Wheel", date: "2025-05-14", result: "Win", bet: 5.00, payout: 20.00 } // Profit: $15
             ]
         },
         {
-            id: "U5480",
-            name: "Brian Tran",
-            email: "brian.tran@example.com",
-            wallet: 200.00,
+            id: "U5493",
+            name: "Olivia Huynh",
+            email: "olivia.huynh@example.com",
+            wallet: 260.00,
             status: "Active",
             gameHistory: [
-                { game: "Dice Roll", date: "2025-05-12", result: "Win", bet: 15.00, payout: 30.00 }
+                { game: "Racing", date: "2025-05-14", result: "Win", bet: 10.00, payout: 35.00 } // Profit: $25
             ]
-        },
-        {
-            id: "U5479",
-            name: "Cindy Le",
-            email: "cindy.le@example.com",
-            wallet: 50.00,
-            status: "Banned",
-            gameHistory: []
-        },
-        
+        }
     ];
 
     let walletTransactions = JSON.parse(localStorage.getItem('walletTransactions')) || [
@@ -326,7 +479,6 @@ document.addEventListener('DOMContentLoaded', () => {
             expiration: "2025-05-18"
         }
     ];
-
 
     let notifications = JSON.parse(localStorage.getItem('notifications')) || [
         { id: 1, title: "New User Registered", message: "A new user has registered.", time: "2025-05-13 10:30 AM" },
@@ -408,21 +560,109 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    const profitChart = new Chart(document.getElementById('profitChart'), {
-        type: 'bar',
-        data: {
-            labels: games.map(g => g.name),
-            datasets: [{
-                label: 'Profit',
-                data: games.map(g => g.plays * 0.1),
-                backgroundColor: 'rgb(59, 130, 246)'
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: { y: { beginAtZero: true } }
+    // Initialize profit chart with top 5 most profitable games
+    const profitChartCanvas = document.getElementById('profitChart');
+        if (!profitChartCanvas) {
+            console.error('profitChart canvas not found');
+        } else {
+            // Aggregate profit by game from users' gameHistory
+            const profitByGame = {};
+            users.forEach(user => {
+                user.gameHistory.forEach(record => {
+                    const gameName = record.game;
+                    const profit = (record.payout || 0) - (record.bet || 0); // User profit
+                    profitByGame[gameName] = (profitByGame[gameName] || 0) + profit;
+                });
+            });
+
+            // Sort games by profit and select top 5
+            let sortedProfits = Object.entries(profitByGame)
+                .map(([game, profit]) => ({ game, profit }))
+                .sort((a, b) => b.profit - a.profit);
+
+            // If fewer than 5 games, select additional games from the 'games' list with 0 profit
+            if (sortedProfits.length < 5) {
+                const existingGames = new Set(sortedProfits.map(item => item.game));
+                let additionalGames = games
+                    .filter(game => !existingGames.has(game.name))
+                    .map(game => ({ game: game.name, profit: 0 }))
+                    .slice(0, 5 - sortedProfits.length);
+                sortedProfits = [...sortedProfits, ...additionalGames];
+            }
+
+            // Ensure exactly 5 entries
+            sortedProfits = sortedProfits.slice(0, 5);
+
+            // Extract labels and profits
+            const labels = sortedProfits.map(item => item.game);
+            const profits = sortedProfits.map(item => item.profit);
+
+            // Log for debugging
+            console.log('Top 5 profitable games:', sortedProfits);
+
+            // Destroy existing chart if any
+            if (profitChartCanvas.chart) {
+                profitChartCanvas.chart.destroy();
+            }
+
+            // Create bar chart
+            profitChartCanvas.chart = new Chart(profitChartCanvas, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Profit ($)',
+                        data: profits,
+                        backgroundColor: 'rgb(59, 130, 246)',
+                        borderColor: 'rgb(59, 130, 246)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            bottom: 20 
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 180, 
+                            ticks: {
+                                stepSize: 30, 
+                                callback: value => `$${value.toFixed(2)}`
+                            },
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Game'
+                            },
+                            ticks: {
+                                autoSkip: false, 
+                                maxRotation: 45,
+                                minRotation: 0,
+                                font: {
+                                    size: 12,
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: context => `$${context.parsed.y.toFixed(2)}`
+                            }
+                        }
+                    }
+                }
+            });
         }
-    });
 
     // Populate Tables
     function populateGameTable(filteredGames) {
@@ -629,70 +869,70 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-   function renderPagination(container, totalPages, currentPage, onPageChange) {
-    container.innerHTML = '';
-    if (totalPages <= 1) return;
+    function renderPagination(container, totalPages, currentPage, onPageChange) {
+        container.innerHTML = '';
+        if (totalPages <= 1) return;
 
-    // Log pagination state for debugging
-    console.log('Rendering pagination:', { totalPages, currentPage });
+        // Log pagination state for debugging
+        console.log('Rendering pagination:', { totalPages, currentPage });
 
-    const pagination = document.createElement('div');
-    pagination.className = 'flex items-center justify-center mt-4 space-x-2';
+        const pagination = document.createElement('div');
+        pagination.className = 'flex items-center justify-center mt-4 space-x-2';
 
-    // Previous button
-    const prevButton = document.createElement('button');
-    prevButton.className = `px-3 py-1 rounded-lg ${currentPage === 1 ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`;
-    prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
-    prevButton.disabled = currentPage === 1;
-    prevButton.addEventListener('click', () => {
-        if (currentPage > 1) onPageChange(currentPage - 1);
-    });
+        // Previous button
+        const prevButton = document.createElement('button');
+        prevButton.className = `px-3 py-1 rounded-lg ${currentPage === 1 ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`;
+        prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
+        prevButton.disabled = currentPage === 1;
+        prevButton.addEventListener('click', () => {
+            if (currentPage > 1) onPageChange(currentPage - 1);
+        });
 
-    // Page tabs (show only previous, current, next)
-    const pageTabs = document.createElement('div');
-    pageTabs.className = 'flex space-x-1';
+        // Page tabs (show only previous, current, next)
+        const pageTabs = document.createElement('div');
+        pageTabs.className = 'flex space-x-1';
 
-    // Calculate the tabs to display
-    const tabsToShow = [];
-    if (totalPages <= 3) {
-        // If 3 or fewer pages, show all
-        for (let i = 1; i <= totalPages; i++) {
-            tabsToShow.push(i);
-        }
-    } else {
-        // Show previous, current, next
-        if (currentPage === 1) {
-            tabsToShow.push(1, 2, 3); // [1][2][3]
-        } else if (currentPage === totalPages) {
-            tabsToShow.push(totalPages - 2, totalPages - 1, totalPages); // [N-2][N-1][N]
+        // Calculate the tabs to display
+        const tabsToShow = [];
+        if (totalPages <= 3) {
+            // If 3 or fewer pages, show all
+            for (let i = 1; i <= totalPages; i++) {
+                tabsToShow.push(i);
+            }
         } else {
-            tabsToShow.push(currentPage - 1, currentPage, currentPage + 1); // [prev][current][next]
+            // Show previous, current, next
+            if (currentPage === 1) {
+                tabsToShow.push(1, 2, 3); // [1][2][3]
+            } else if (currentPage === totalPages) {
+                tabsToShow.push(totalPages - 2, totalPages - 1, totalPages); // [N-2][N-1][N]
+            } else {
+                tabsToShow.push(currentPage - 1, currentPage, currentPage + 1); // [prev][current][next]
+            }
         }
+
+        // Render the tabs
+        tabsToShow.forEach(page => {
+            const pageButton = document.createElement('button');
+            pageButton.className = `px-3 py-1 rounded-lg ${page === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`;
+            pageButton.textContent = page;
+            pageButton.addEventListener('click', () => onPageChange(page));
+            pageTabs.appendChild(pageButton);
+        });
+
+        // Next button
+        const nextButton = document.createElement('button');
+        nextButton.className = `px-3 py-1 rounded-lg ${currentPage === totalPages ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`;
+        nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
+        nextButton.disabled = currentPage === totalPages;
+        nextButton.addEventListener('click', () => {
+            if (currentPage < totalPages) onPageChange(currentPage + 1);
+        });
+
+        pagination.appendChild(prevButton);
+        pagination.appendChild(pageTabs);
+        pagination.appendChild(nextButton);
+        container.appendChild(pagination);
     }
-
-    // Render the tabs
-    tabsToShow.forEach(page => {
-        const pageButton = document.createElement('button');
-        pageButton.className = `px-3 py-1 rounded-lg ${page === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`;
-        pageButton.textContent = page;
-        pageButton.addEventListener('click', () => onPageChange(page));
-        pageTabs.appendChild(pageButton);
-    });
-
-    // Next button
-    const nextButton = document.createElement('button');
-    nextButton.className = `px-3 py-1 rounded-lg ${currentPage === totalPages ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`;
-    nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
-    nextButton.disabled = currentPage === totalPages;
-    nextButton.addEventListener('click', () => {
-        if (currentPage < totalPages) onPageChange(currentPage + 1);
-    });
-
-    pagination.appendChild(prevButton);
-    pagination.appendChild(pageTabs);
-    pagination.appendChild(nextButton);
-    container.appendChild(pagination);
-}
 
     // Game Modal
     const addGameModal = document.getElementById('add-game-modal');
@@ -802,6 +1042,8 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('notifications', JSON.stringify(notifications));
             populateGameTable(games);
             updateDashboardStats();
+            update部分
+
             updateNotificationBadge();
         }
     });
