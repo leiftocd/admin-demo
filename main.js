@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(authContainer);
     }
 
-    // Add CSS to disable browser's native toggle (you can add this to your stylesheet)
+    // Add CSS to disable browser's native password toggle
     const style = document.createElement('style');
     style.textContent = `
         input[type="password"]::-ms-reveal,
@@ -65,6 +65,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const isPassword = passwordInput.type === 'password';
         passwordInput.type = isPassword ? 'text' : 'password';
         togglePasswordBtn.innerHTML = `<i class="fas fa-${isPassword ? 'eye-slash' : 'eye'}"></i>`;
+    });
+
+    // Login
+    document.getElementById('login-btn').addEventListener('click', () => {
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value.trim();
+        const error = document.getElementById('login-error');
+
+        if (username === adminAccount.username && password === adminAccount.password) {
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('currentUser', JSON.stringify({ username: adminAccount.username }));
+            authContainer.style.display = 'none';
+            dashboard.style.display = 'flex';
+            error.classList.add('hidden');
+            updateAdminName();
+        } else {
+            error.classList.remove('hidden');
+        }
     });
 
     // Logout
