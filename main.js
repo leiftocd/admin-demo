@@ -23,11 +23,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div id="login-form" class="form">
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                        <input type="text" id="login-username" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your username" value="admin">
+                        <input type="text" id="login-username" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your username">
                     </div>
                     <div class="mb-6 relative">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                        <input type="password" id="login-password" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your password" value="admin">
+                        <input type="password" id="login-password" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10" placeholder="Enter your password">
                         <button type="button" id="toggle-password" class="absolute right-3 top-9 text-gray-500 hover:text-gray-700 focus:outline-none">
                             <i class="fas fa-eye"></i>
                         </button>
@@ -40,38 +40,31 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(authContainer);
     }
 
+    // Add CSS to disable browser's native toggle (you can add this to your stylesheet)
+    const style = document.createElement('style');
+    style.textContent = `
+        input[type="password"]::-ms-reveal,
+        input[type="password"]::-ms-clear,
+        input[type="password"]::-webkit-credentials-auto-fill-button,
+        input[type="password"]::-webkit-textfield-decoration-container {
+            display: none !important;
+        }
+        #toggle-password {
+            display: block !important;
+        }
+    `;
+    document.head.appendChild(style);
+
     // Set default input values and handle show/hide password
     const usernameInput = document.getElementById('login-username');
     const passwordInput = document.getElementById('login-password');
     const togglePasswordBtn = document.getElementById('toggle-password');
-
-    // Set default values
-    usernameInput.value = adminAccount.username;
-    passwordInput.value = adminAccount.password;
 
     // Toggle password visibility
     togglePasswordBtn.addEventListener('click', () => {
         const isPassword = passwordInput.type === 'password';
         passwordInput.type = isPassword ? 'text' : 'password';
         togglePasswordBtn.innerHTML = `<i class="fas fa-${isPassword ? 'eye-slash' : 'eye'}"></i>`;
-    });
-
-    // Login
-    document.getElementById('login-btn').addEventListener('click', () => {
-        const username = usernameInput.value.trim();
-        const password = passwordInput.value.trim();
-        const error = document.getElementById('login-error');
-
-        if (username === adminAccount.username && password === adminAccount.password) {
-            localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('currentUser', JSON.stringify({ username: adminAccount.username }));
-            authContainer.style.display = 'none';
-            dashboard.style.display = 'flex';
-            error.classList.add('hidden');
-            updateAdminName();
-        } else {
-            error.classList.remove('hidden');
-        }
     });
 
     // Logout
@@ -1583,4 +1576,5 @@ document.addEventListener('DOMContentLoaded', () => {
     populateOverrideTable(overrides);
     updateDashboardStats();
     updateNotificationBadge();
+    localStorage.clear();
 });
