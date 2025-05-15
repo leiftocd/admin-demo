@@ -23,11 +23,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div id="login-form" class="form">
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                        <input type="text" id="login-username" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your username">
+                        <input type="text" id="login-username" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your username" value="admin">
                     </div>
                     <div class="mb-6 relative">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                        <input type="password" id="login-password" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10" placeholder="Enter your password">
+                        <input type="password" id="login-password" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your password" value="admin">
                         <button type="button" id="toggle-password" class="absolute right-3 top-9 text-gray-500 hover:text-gray-700 focus:outline-none">
                             <i class="fas fa-eye"></i>
                         </button>
@@ -40,27 +40,14 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(authContainer);
     }
 
-    // Add CSS to disable browser's native password toggle
-    const style = document.createElement('style');
-    style.textContent = `
-        input[type="password"]::-ms-reveal,
-        input[type="password"]::-ms-clear,
-        input[type="password"]::-webkit-credentials-auto-fill-button,
-        input[type="password"]::-webkit-textfield-decoration-container {
-            display: none !important;
-        }
-        #toggle-password {
-            display: block !important;
-        }
-    `;
-    document.head.appendChild(style);
-
     // Set default input values and handle show/hide password
     const usernameInput = document.getElementById('login-username');
     const passwordInput = document.getElementById('login-password');
     const togglePasswordBtn = document.getElementById('toggle-password');
 
-    // Toggle password visibility
+    usernameInput.value = adminAccount.username;
+    passwordInput.value = adminAccount.password;
+
     togglePasswordBtn.addEventListener('click', () => {
         const isPassword = passwordInput.type === 'password';
         passwordInput.type = isPassword ? 'text' : 'password';
@@ -90,13 +77,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const logoutBtn = document.createElement('button');
     logoutBtn.className = 'ml-4 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm logout-btn';
 
-    // Check screen size to set logout button content
     const isMobile = window.innerWidth < 641;
     logoutBtn.innerHTML = isMobile 
         ? '<i class="fas fa-sign-out-alt"></i>' 
         : '<i class="fas fa-sign-out-alt mr-1"></i> Logout';
 
-    // Update logout button on window resize
     window.addEventListener('resize', () => {
         const isMobileNow = window.innerWidth < 641;
         logoutBtn.innerHTML = isMobileNow 
@@ -111,7 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem('currentUser');
         dashboard.style.display = 'none';
         authContainer.style.display = 'flex';
-        // Reset input values to default
         usernameInput.value = adminAccount.username;
         passwordInput.value = adminAccount.password;
         passwordInput.type = 'password';
@@ -126,404 +110,192 @@ document.addEventListener('DOMContentLoaded', () => {
         adminNameSpan.textContent = user.username || 'Admin';
     };
     updateAdminName();
-    //localstorage data
-    localStorage.setItem('platformUsers', JSON.stringify([
-        {
-            id: "U5481",
-            name: "Alice Nguyen",
-            email: "alice.nguyen@example.com",
-            wallet: 100.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Lucky Card Flip", date: "2025-05-12", result: "Win", bet: 100.00, payout: 200.00 }, // Profit: $100
-                { game: "Slot Machine", date: "2025-05-11", result: "Lose", bet: 50.00, payout: 0.00 } // Profit: -$50
+
+    const overrideConfigs = {
+        "Lucky Card Flip": {
+            fields: [
+                { name: "result", type: "select", label: "Result", options: ["Win", "Lose"], default: "Win" },
+                { name: "details", type: "select", label: "Details", options: ["Card 1", "Card 2", "Card 3"], default: "Card 1", placeholder: "Select card" }
             ]
         },
-        {
-            id: "U5480",
-            name: "Brian Tran",
-            email: "brian.tran@example.com",
-            wallet: 200.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Dice Roll", date: "2025-05-12", result: "Win", bet: 150.00, payout: 300.00 } // Profit: $150
+        "Dice Roll": {
+            fields: [
+                { name: "result", type: "select", label: "Result", options: ["Win", "Lose"], default: "Win" },
+                { name: "details", type: "select", label: "Dice Value", options: ["1", "2", "3", "4", "5", "6"], default: "6", placeholder: "Select value" }
             ]
         },
-        {
-            id: "U5479",
-            name: "Cindy Le",
-            email: "cindy.le@example.com",
-            wallet: 50.00,
-            status: "Banned",
-            gameHistory: []
-        },
-        {
-            id: "U5482",
-            name: "David Pham",
-            email: "david.pham@example.com",
-            wallet: 300.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Crash", date: "2025-05-14", result: "Win", bet: 20.00, payout: 50.00 } // Profit: $30
+        "Lucky Wheel": {
+            fields: [
+                { name: "result", type: "select", label: "Result", options: ["Win", "Lose"], default: "Win" },
+                { name: "details", type: "select", label: "Segment", options: ["Segment 1", "Segment 2", "Segment 3"], default: "Segment 1", placeholder: "Select segment" }
             ]
         },
-        {
-            id: "U5483",
-            name: "Emma Vu",
-            email: "emma.vu@example.com",
-            wallet: 250.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Aviator", date: "2025-05-14", result: "Win", bet: 15.00, payout: 40.00 } // Profit: $25
+        "Slot Machine": {
+            fields: [
+                { name: "result", type: "select", label: "Result", options: ["Win", "Lose"], default: "Win" },
+                { name: "details", type: "select", label: "Combination", options: ["Triple 7s", "Double Bars", "Cherries"], default: "Cherries", placeholder: "Select combination" }
             ]
         },
-        {
-            id: "U5484",
-            name: "Frank Ho",
-            email: "frank.ho@example.com",
-            wallet: 200.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Dice Roll", date: "2025-05-14", result: "Win", bet: 10.00, payout: 30.00 } // Profit: $20
+        "Mystery Box": {
+            fields: [
+                { name: "result", type: "select", label: "Result", options: ["Win", "Lose"], default: "Win" },
+                { name: "details", type: "select", label: "Box", options: ["Box 1", "Box 2", "Box 3"], default: "Box 1", placeholder: "Select box" }
             ]
         },
-        {
-            id: "U5485",
-            name: "Grace Tran",
-            email: "grace.tran@example.com",
-            wallet: 150.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Lucky Card Flip", date: "2025-05-14", result: "Win", bet: 5.00, payout: 20.00 } // Profit: $15
+        "Plinko": {
+            fields: [
+                { name: "result", type: "select", label: "Result", options: ["Win", "Lose"], default: "Win" },
+                { name: "details", type: "select", label: "Slot", options: ["Left", "Center", "Right"], default: "Left", placeholder: "Select slot" }
             ]
         },
-        {
-            id: "U5486",
-            name: "Henry Nguyen",
-            email: "henry.nguyen@example.com",
-            wallet: 100.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Lucky Wheel", date: "2025-05-14", result: "Win", bet: 10.00, payout: 30.00 } // Profit: $20
+        "Mine": {
+            fields: [
+                { name: "result", type: "select", label: "Result", options: ["Win", "Lose"], default: "Win" },
+                { name: "details", type: "select", label: "Tile Type", options: ["Safe", "Bonus", "Jackpot"], default: "Safe", placeholder: "Select tile" }
             ]
         },
-        {
-            id: "U5487",
-            name: "Isabella Le",
-            email: "isabella.le@example.com",
-            wallet: 120.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Plinko", date: "2025-05-14", result: "Win", bet: 10.00, payout: 25.00 } // Profit: $15
+        "Crash": {
+            fields: [
+                { name: "result", type: "select", label: "Result", options: ["Win", "Lose"], default: "Win" },
+                { name: "multiplier", type: "text", label: "Multiplier", placeholder: "e.g., 100x", default: "100x" },
+                { name: "crashTime", type: "text", label: "Crash Time", placeholder: "e.g., 3.25s", default: "3.25s" }
             ]
         },
-        {
-            id: "U5488",
-            name: "Jack Dao",
-            email: "jack.dao@example.com",
-            wallet: 180.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Coin Flip", date: "2025-05-14", result: "Win", bet: 5.00, payout: 15.00 } // Profit: $10
+        "Jackpot Ladder": {
+            fields: [
+                { name: "result", type: "select", label: "Result", options: ["Win", "Lose"], default: "Win" },
+                { name: "level", type: "select", label: "Level", options: ["1", "2", "3"], default: "1", placeholder: "Select level" },
+                { name: "jumpHeight", type: "text", label: "Jump Height", placeholder: "e.g., 2.5m", default: "2.5m" }
             ]
         },
-        {
-            id: "U5489",
-            name: "Kelly Bui",
-            email: "kelly.bui@example.com",
-            wallet: 220.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Limbo", date: "2025-05-14", result: "Win", bet: 20.00, payout: 50.00 } // Profit: $30
+        "Aviator": {
+            fields: [
+                { name: "result", type: "select", label: "Result", options: ["Win", "Lose"], default: "Win" },
+                { name: "multiplier", type: "text", label: "Multiplier", placeholder: "e.g., 50x", default: "50x" },
+                { name: "takeoffTime", type: "text", label: "Takeoff Time", placeholder: "e.g., 2.7s", default: "2.7s" }
             ]
         },
-        {
-            id: "U5490",
-            name: "Liam Vo",
-            email: "liam.vo@example.com",
-            wallet: 270.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Goal", date: "2025-05-14", result: "Win", bet: 15.00, payout: 40.00 } // Profit: $25
+        "Higher or Lower": {
+            fields: [
+                { name: "result", type: "select", label: "Result", options: ["Win", "Lose"], default: "Win" },
+                { name: "number", type: "select", label: "Next Number", options: ["7", "8", "9"], default: "7", placeholder: "Select number" }
             ]
         },
-        {
-            id: "U5491",
-            name: "Mia Phan",
-            email: "mia.phan@example.com",
-            wallet: 300.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Video Poker", date: "2025-05-14", result: "Win", bet: 10.00, payout: 30.00 } // Profit: $20
+        "Number Guess": {
+            fields: [
+                { name: "result", type: "select", label: "Result", options: ["Win", "Lose"], default: "Win" },
+                { name: "guess", type: "select", label: "Guessed Number", options: ["5", "6", "7"], default: "5", placeholder: "Select number" }
             ]
         },
-        {
-            id: "U5492",
-            name: "Noah Dinh",
-            email: "noah.dinh@example.com",
-            wallet: 190.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Classic Wheel", date: "2025-05-14", result: "Win", bet: 5.00, payout: 20.00 } // Profit: $15
+        "Coin Flip": {
+            fields: [
+                { name: "result", type: "select", label: "Result", options: ["Win", "Lose"], default: "Win" },
+                { name: "side", type: "select", label: "Side", options: ["Heads", "Tails"], default: "Heads", placeholder: "Select side" }
             ]
         },
-        {
-            id: "U5493",
-            name: "Olivia Huynh",
-            email: "olivia.huynh@example.com",
-            wallet: 260.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Racing", date: "2025-05-14", result: "Win", bet: 10.00, payout: 35.00 } // Profit: $25
+        "Color Guess": {
+            fields: [
+                { name: "result", type: "select", label: "Result", options: ["Win", "Lose"], default: "Win" },
+                { name: "color", type: "select", label: "Color", options: ["Red", "Blue", "Green"], default: "Red", placeholder: "Select color" }
+            ]
+        },
+        "Limbo": {
+            fields: [
+                { name: "result", type: "select", label: "Result", options: ["Win", "Lose"], default: "Win" },
+                { name: "targetMultiplier", type: "text", label: "Target Multiplier", placeholder: "e.g., 100x", default: "100x" },
+                { name: "delay", type: "text", label: "Trigger Delay", placeholder: "e.g., 1.2s", default: "1.2s" }
+            ]
+        },
+        "Goal": {
+            fields: [
+                { name: "result", type: "select", label: "Result", options: ["Win", "Lose"], default: "Win" },
+                { name: "position", type: "select", label: "Goal Position", options: ["Left", "Right", "Center"], default: "Left", placeholder: "Select position" },
+                { name: "keeperAction", type: "select", label: "Goalkeeper Action", options: ["Dive Left", "Dive Right", "Stand Still"], default: "Dive Left", placeholder: "Select action" }
+            ]
+        },
+        "Space Max": {
+            fields: [
+                { name: "result", type: "select", label: "Result", options: ["Win", "Lose"], default: "Win" },
+                { name: "checkpoint", type: "select", label: "Checkpoint", options: ["1", "2", "3"], default: "1", placeholder: "Select checkpoint" },
+                { name: "boostPower", type: "text", label: "Boost Power", placeholder: "e.g., 3x", default: "3x" }
+            ]
+        },
+        "Racing": {
+            fields: [
+                { name: "result", type: "select", label: "Result", options: ["Win", "Lose"], default: "Win" },
+                { name: "winner", type: "select", label: "Winning Car", options: ["Car 1", "Car 2", "Car 3"], default: "Car 1", placeholder: "Select winner" },
+                { name: "speed", type: "text", label: "Speed", placeholder: "e.g., 120km/h", default: "120km/h" }
+            ]
+        },
+        "Video Poker": {
+            fields: [
+                { name: "result", type: "select", label: "Result", options: ["Win", "Lose"], default: "Win" },
+                { name: "hand", type: "select", label: "Poker Hand", options: ["Royal Flush", "Straight Flush", "Four of a Kind"], default: "Four of a Kind", placeholder: "Select hand" }
+            ]
+        },
+        "Classic Wheel": {
+            fields: [
+                { name: "result", type: "select", label: "Result", options: ["Win", "Lose"], default: "Win" },
+                { name: "segment", type: "select", label: "Segment", options: ["Segment 1", "Segment 2", "Segment 3"], default: "Segment 1", placeholder: "Select segment" }
             ]
         }
-    ]));
+    };
+
     // Data
     let games = JSON.parse(localStorage.getItem('games')) || [
-        { id: 1, name: "Lucky Card Flip", description: "Flip one of three cards to reveal a hidden reward", status: "On", winRate: 55, preResult: "", plays: 1200 },
-        { id: 2, name: "Dice Roll", description: "Guess the result of a dice roll from 1 to 6", status: "On", winRate: 60, preResult: "Win", plays: 800 },
-        { id: 3, name: "Lucky Wheel", description: "Spin the wheel and win based on the landed segment", status: "On", winRate: 45, preResult: "", plays: 1500 },
-        { id: 4, name: "Slot Machine", description: "Classic 3-row slot with randomized symbols and combinations", status: "On", winRate: 50, preResult: "Lose", plays: 1000 },
-        { id: 5, name: "Mystery Box", description: "Open a random box for a chance to win valuable prize", status: "Off", winRate: 40, preResult: "", plays: 300 },
-        { id: 6, name: "Plinko", description: "Drop a ball through a peg board to land in a random reward slot", status: "On", winRate: 52, preResult: "", plays: 900 },
-        { id: 7, name: "Mine", description: "Choose safe tiles on a grid without hitting mines", status: "On", winRate: 48, preResult: "Win", plays: 600 },
-        { id: 8, name: "Crash", description: "Bet and cash out before the rising multiplier crashes", status: "On", winRate: 65, preResult: "", plays: 1800 },
-        { id: 9, name: "Jackpot Ladder", description: "Climb the reward ladder — the longer you play, the bigger the jackpot", status: "On", winRate: 42, preResult: "", plays: 400 },
-        { id: 10, name: "Aviator", description: "Bet on a plane's ascent and cash out before it crashes", status: "On", winRate: 58, preResult: "Lose", plays: 1100 },
-        { id: 11, name: "Higher or Lower", description: "Predict whether the next number will be higher or lower", status: "On", winRate: 50, preResult: "", plays: 700 },
-        { id: 12, name: "Number Guess", description: "Guess a number from 1–10; correct guesses win big", status: "Off", winRate: 38, preResult: "", plays: 200 },
-        { id: 13, name: "Coin Flip", description: "Simple heads-or-tails coin toss betting game", status: "On", winRate: 55, preResult: "Win", plays: 1300 },
-        { id: 14, name: "Color Guess", description: "Guess which color will appear next", status: "On", winRate: 47, preResult: "", plays: 500 },
-        { id: 15, name: "Limbo", description: "Bet on a multiplier and cash out before the number drops", status: "On", winRate: 60, preResult: "", plays: 950 },
-        { id: 16, name: "Goal", description: "Shoot the ball and avoid the goalkeeper to score", status: "On", winRate: 53, preResult: "", plays: 850 },
-        { id: 17, name: "Space Max", description: "Navigate a spaceship to pass checkpoints and collect rewards", status: "On", winRate: 49, preResult: "Lose", plays: 650 },
-        { id: 18, name: "Racing", description: "Bet on animated cars and win if your pick finishes first", status: "On", winRate: 46, preResult: "", plays: 1400 },
-        { id: 19, name: "Video Poker", description: "Play a quick 5-card poker game against probability", status: "On", winRate: 51, preResult: "", plays: 750 },
-        { id: 20, name: "Classic Wheel", description: "Spin a wheel with fixed win segments", status: "On", winRate: 54, preResult: "", plays: 1600 }
+        { id: 1, name: "Lucky Card Flip", description: "Flip one of three cards to reveal a hidden reward", status: "On", winRate: 55, plays: 1200 },
+        { id: 2, name: "Dice Roll", description: "Guess the result of a dice roll from 1 to 6", status: "On", winRate: 60, plays: 800 },
+        { id: 3, name: "Lucky Wheel", description: "Spin the wheel and win based on the landed segment", status: "On", winRate: 45, plays: 1500 },
+        { id: 4, name: "Slot Machine", description: "Classic 3-row slot with randomized symbols and combinations", status: "On", winRate: 50, plays: 1000 },
+        { id: 5, name: "Mystery Box", description: "Open a random box for a chance to win valuable prize", status: "Off", winRate: 40, plays: 300 },
+        { id: 6, name: "Plinko", description: "Drop a ball through a peg board to land in a random reward slot", status: "On", winRate: 52, plays: 900 },
+        { id: 7, name: "Mine", description: "Choose safe tiles on a grid without hitting mines", status: "On", winRate: 48, plays: 600 },
+        { id: 8, name: "Crash", description: "Bet and cash out before the rising multiplier crashes", status: "On", winRate: 65, plays: 1800 },
+        { id: 9, name: "Jackpot Ladder", description: "Climb the reward ladder — the longer you play, the bigger the jackpot", status: "On", winRate: 42, plays: 400 },
+        { id: 10, name: "Aviator", description: "Bet on a plane's ascent and cash out before it crashes", status: "On", winRate: 58, plays: 1100 },
+        { id: 11, name: "Higher or Lower", description: "Predict whether the next number will be higher or lower", status: "On", winRate: 50, plays: 700 },
+        { id: 12, name: "Number Guess", description: "Guess a number from 1–10; correct guesses win big", status: "Off", winRate: 38, plays: 200 },
+        { id: 13, name: "Coin Flip", description: "Simple heads-or-tails coin toss betting game", status: "On", winRate: 55, plays: 1300 },
+        { id: 14, name: "Color Guess", description: "Guess which color will appear next", status: "On", winRate: 47, plays: 500 },
+        { id: 15, name: "Limbo", description: "Bet on a multiplier and cash out before the number drops", status: "On", winRate: 60, plays: 950 },
+        { id: 16, name: "Goal", description: "Shoot the ball and avoid the goalkeeper to score", status: "On", winRate: 53, plays: 850 },
+        { id: 17, name: "Space Max", description: "Navigate a spaceship to pass checkpoints and collect rewards", status: "On", winRate: 49, plays: 650 },
+        { id: 18, name: "Racing", description: "Bet on animated cars and win if your pick finishes first", status: "On", winRate: 46, plays: 1400 },
+        { id: 19, name: "Video Poker", description: "Play a quick 5-card poker game against probability", status: "On", winRate: 51, plays: 750 },
+        { id: 20, name: "Classic Wheel", description: "Spin a wheel with fixed win segments", status: "On", winRate: 54, plays: 1600 }
     ];
 
     let users = JSON.parse(localStorage.getItem('platformUsers')) || [
-        {
-            id: "U5481",
-            name: "Alice Nguyen",
-            email: "alice.nguyen@example.com",
-            wallet: 100.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Lucky Card Flip", date: "2025-05-12", result: "Win", bet: 100.00, payout: 200.00 }, // Profit: $10
-                { game: "Slot Machine", date: "2025-05-11", result: "Lose", bet: 50.00, payout: 0.00 } // Profit: -$5
-            ]
-        },
-        {
-            id: "U5480",
-            name: "Brian Tran",
-            email: "brian.tran@example.com",
-            wallet: 200.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Dice Roll", date: "2025-05-12", result: "Win", bet: 150.00, payout: 300.00 } // Profit: $15
-            ]
-        },
-        {
-            id: "U5479",
-            name: "Cindy Le",
-            email: "cindy.le@example.com",
-            wallet: 50.00,
-            status: "Banned",
-            gameHistory: []
-        },
-        // Thêm 12 người dùng mới
-        {
-            id: "U5482",
-            name: "David Pham",
-            email: "david.pham@example.com",
-            wallet: 300.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Crash", date: "2025-05-14", result: "Win", bet: 20.00, payout: 50.00 } // Profit: $30
-            ]
-        },
-        {
-            id: "U5483",
-            name: "Emma Vu",
-            email: "emma.vu@example.com",
-            wallet: 250.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Aviator", date: "2025-05-14", result: "Win", bet: 15.00, payout: 40.00 } // Profit: $25
-            ]
-        },
-        {
-            id: "U5484",
-            name: "Frank Ho",
-            email: "frank.ho@example.com",
-            wallet: 200.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Dice Roll", date: "2025-05-14", result: "Win", bet: 10.00, payout: 30.00 } // Profit: $20
-            ]
-        },
-        {
-            id: "U5485",
-            name: "Grace Tran",
-            email: "grace.tran@example.com",
-            wallet: 150.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Lucky Card Flip", date: "2025-05-14", result: "Win", bet: 5.00, payout: 20.00 } // Profit: $15
-            ]
-        },
-        {
-            id: "U5486",
-            name: "Henry Nguyen",
-            email: "henry.nguyen@example.com",
-            wallet: 100.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Lucky Wheel", date: "2025-05-14", result: "Win", bet: 10.00, payout: 30.00 } // Profit: $20
-            ]
-        },
-        {
-            id: "U5487",
-            name: "Isabella Le",
-            email: "isabella.le@example.com",
-            wallet: 120.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Plinko", date: "2025-05-14", result: "Win", bet: 10.00, payout: 25.00 } // Profit: $15
-            ]
-        },
-        {
-            id: "U5488",
-            name: "Jack Dao",
-            email: "jack.dao@example.com",
-            wallet: 180.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Coin Flip", date: "2025-05-14", result: "Win", bet: 5.00, payout: 15.00 } // Profit: $10
-            ]
-        },
-        {
-            id: "U5489",
-            name: "Kelly Bui",
-            email: "kelly.bui@example.com",
-            wallet: 220.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Limbo", date: "2025-05-14", result: "Win", bet: 20.00, payout: 50.00 } // Profit: $30
-            ]
-        },
-        {
-            id: "U5490",
-            name: "Liam Vo",
-            email: "liam.vo@example.com",
-            wallet: 270.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Goal", date: "2025-05-14", result: "Win", bet: 15.00, payout: 40.00 } // Profit: $25
-            ]
-        },
-        {
-            id: "U5491",
-            name: "Mia Phan",
-            email: "mia.phan@example.com",
-            wallet: 300.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Video Poker", date: "2025-05-14", result: "Win", bet: 10.00, payout: 30.00 } // Profit: $20
-            ]
-        },
-        {
-            id: "U5492",
-            name: "Noah Dinh",
-            email: "noah.dinh@example.com",
-            wallet: 190.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Classic Wheel", date: "2025-05-14", result: "Win", bet: 5.00, payout: 20.00 } // Profit: $15
-            ]
-        },
-        {
-            id: "U5493",
-            name: "Olivia Huynh",
-            email: "olivia.huynh@example.com",
-            wallet: 260.00,
-            status: "Active",
-            gameHistory: [
-                { game: "Racing", date: "2025-05-14", result: "Win", bet: 10.00, payout: 35.00 } // Profit: $25
-            ]
-        }
+        { id: "U5481", name: "Alice Nguyen", email: "alice.nguyen@example.com", wallet: 10000, status: "Active", gameHistory: [{ game: "Lucky Card Flip", date: "2025-05-12", result: "Win", bet: 10000, payout: 20000 }, { game: "Slot Machine", date: "2025-05-11", result: "Lose", bet: 5000, payout: 0 }] },
+        { id: "U5480", name: "Brian Tran", email: "brian.tran@example.com", wallet: 20000, status: "Active", gameHistory: [{ game: "Dice Roll", date: "2025-05-12", result: "Win", bet: 15000, payout: 30000 }] },
+        { id: "U5479", name: "Cindy Le", email: "cindy.le@example.com", wallet: 5000, status: "Banned", gameHistory: [] },
+        { id: "U5482", name: "David Pham", email: "david.pham@example.com", wallet: 30000, status: "Active", gameHistory: [{ game: "Crash", date: "2025-05-14", result: "Win", bet: 2000, payout: 5000 }] },
+        { id: "U5483", name: "Emma Vu", email: "emma.vu@example.com", wallet: 25000, status: "Active", gameHistory: [{ game: "Aviator", date: "2025-05-14", result: "Win", bet: 1500, payout: 4000 }] },
+        { id: "U5484", name: "Frank Ho", email: "frank.ho@example.com", wallet: 20000, status: "Active", gameHistory: [{ game: "Dice Roll", date: "2025-05-14", result: "Win", bet: 1000, payout: 3000 }] },
+        { id: "U5485", name: "Grace Tran", email: "grace.tran@example.com", wallet: 15000, status: "Active", gameHistory: [{ game: "Lucky Card Flip", date: "2025-05-14", result: "Win", bet: 500, payout: 2000 }] },
+        { id: "U5486", name: "Henry Nguyen", email: "henry.nguyen@example.com", wallet: 10000, status: "Active", gameHistory: [{ game: "Lucky Wheel", date: "2025-05-14", result: "Win", bet: 1000, payout: 3000 }] },
+        { id: "U5487", name: "Isabella Le", email: "isabella.le@example.com", wallet: 12000, status: "Active", gameHistory: [{ game: "Plinko", date: "2025-05-14", result: "Win", bet: 1000, payout: 2500 }] },
+        { id: "U5488", name: "Jack Dao", email: "jack.dao@example.com", wallet: 18000, status: "Active", gameHistory: [{ game: "Coin Flip", date: "2025-05-14", result: "Win", bet: 500, payout: 1500 }] },
+        { id: "U5489", name: "Kelly Bui", email: "kelly.bui@example.com", wallet: 20020, status: "Active", gameHistory: [{ game: "Limbo", date: "2025-05-14", result: "Win", bet: 2000, payout: 5000 }] },
+        { id: "U5490", name: "Liam Vo", email: "liam.vo@example.com", wallet: 27000, status: "Active", gameHistory: [{ game: "Goal", date: "2025-05-14", result: "Win", bet: 1500, payout: 4000 }] },
+        { id: "U5491", name: "Mia Phan", email: "mia.phan@example.com", wallet: 30000, status: "Active", gameHistory: [{ game: "Video Poker", date: "2025-05-14", result: "Win", bet: 1000, payout: 3000 }] },
+        { id: "U5492", name: "Noah Dinh", email: "noah.dinh@example.com", wallet: 19000, status: "Active", gameHistory: [{ game: "Classic Wheel", date: "2025-05-14", result: "Win", bet: 500, payout: 2000 }] },
+        { id: "U5493", name: "Olivia Huynh", email: "olivia.huynh@example.com", wallet: 26000, status: "Active", gameHistory: [{ game: "Racing", date: "2025-05-14", result: "Win", bet: 1000, payout: 3500 }] }
     ];
 
     let walletTransactions = JSON.parse(localStorage.getItem('walletTransactions')) || [
-        {
-            id: "WT8765",
-            user: "Alice Nguyen",
-            email: "alice.nguyen@example.com",
-            action: "Deposit",
-            amount: 50.00,
-            date: "2025-05-12"
-        },
-        {
-            id: "WT8764",
-            user: "Brian Tran",
-            email: "brian.tran@example.com",
-            action: "Withdraw",
-            amount: 20.00,
-            date: "2025-05-12"
-        }
+        { id: "WT8765", user: "Alice Nguyen", email: "alice.nguyen@example.com", action: "Deposit", amount: 5000, date: "2025-05-12" },
+        { id: "WT8764", user: "Brian Tran", email: "brian.tran@example.com", action: "Withdraw", amount: 2000, date: "2025-05-12" }
     ];
 
     let overrides = JSON.parse(localStorage.getItem('overrides')) || [
-        {
-            id: 1,
-            game: "Lucky Card Flip",
-            user: "alice.nguyen@example.com",
-            result: "Win",
-            expiration: "2025-05-20"
-        },
-        {
-            id: 2,
-            game: "Dice Roll",
-            user: "brian.tran@example.com",
-            result: "Lose",
-            expiration: "2025-05-18"
-        },
-        {
-            id: 3,
-            game: "Crash",
-            user: "david.pham@example.com",
-            result: "Win",
-            expiration: "2025-04-20"
-        },
-        {
-            id: 4,
-            game: "Aviator",
-            user: "emma.vu@example.com",
-            result: "Win",
-            expiration: "2025-02-18"
-        },
-        {
-            id: 5,
-            game: "Classic Wheel",
-            user: "noah.dinh@example.com",
-            result: "Win",
-            expiration: "2025-04-22"
-        },
-        {
-            id: 6,
-            game: "Lucky Wheel",
-            user: "henry.nguyen@example.com",
-            result: "Win",
-            expiration: "2025-02-12"
-        },
-                {
-            id: 7,
-            game: "Lucky Card Flip",
-            user: "grace.tran@example.com",
-            result: "Win",
-            expiration: "2025-05-18"
-        },
+        { id: 1, game: "Lucky Card Flip", user: "alice.nguyen@example.com", fields: { result: "Win", details: "Set card 1" }, expiration: "2025-05-20" },
+        { id: 2, game: "Dice Roll", user: "brian.tran@example.com", fields: { result: "Lose", details: "Set roll to 4" }, expiration: "2025-05-18" },
+        { id: 3, game: "Crash", user: "david.pham@example.com", fields: { result: "Win", details: "100x" }, expiration: "2025-04-20" },
+        { id: 4, game: "Aviator", user: "emma.vu@example.com", fields: { result: "Win", details: "50x" }, expiration: "2025-02-18" },
+        { id: 5, game: "Classic Wheel", user: "noah.dinh@example.com", fields: { result: "Win", details: "Segment 1" }, expiration: "2025-04-22" },
+        { id: 6, game: "Lucky Wheel", user: "henry.nguyen@example.com", fields: { result: "Win", details: "Land on" }, expiration: "2025-02-12" },
+        { id: 7, game: "Lucky Card Flip", user: "grace.tran@example.com", fields: { result: "Win", details: "Set card 2" }, expiration: "2025-05-18" }
     ];
 
     let notifications = JSON.parse(localStorage.getItem('notifications')) || [
@@ -602,7 +374,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false, // Allow custom height
+            maintainAspectRatio: false,
             layout: {
                 padding: {
                     bottom: 20
@@ -611,10 +383,10 @@ document.addEventListener('DOMContentLoaded', () => {
             scales: {
                 y: {
                     beginAtZero: true,
-                    max: 400 + 100, // Dynamic max: highest value (400) + 100
+                    max: 400 + 100,
                     ticks: {
-                        stepSize: Math.max(50, Math.ceil((400 + 100) / 5)), // Dynamic step size (~5 steps)
-                        callback: value => value // No formatting needed for integers
+                        stepSize: Math.max(50, Math.ceil((400 + 100) / 5)),
+                        callback: value => value
                     }
                 },
                 x: {
@@ -629,123 +401,169 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize profit chart with top 5 most profitable games
     const profitChartCanvas = document.getElementById('profitChart');
-        if (!profitChartCanvas) {
-            console.error('profitChart canvas not found');
-        } else {
-            // Aggregate profit by game from users' gameHistory
-            const profitByGame = {};
-            users.forEach(user => {
-                user.gameHistory.forEach(record => {
-                    const gameName = record.game;
-                    const profit = (record.payout || 0) - (record.bet || 0); // User profit
-                    profitByGame[gameName] = (profitByGame[gameName] || 0) + profit;
-                });
+    if (!profitChartCanvas) {
+        console.error('profitChart canvas not found');
+    } else {
+        const profitByGame = {};
+        users.forEach(user => {
+            user.gameHistory.forEach(record => {
+                const gameName = record.game;
+                const profit = (record.payout || 0) - (record.bet || 0);
+                profitByGame[gameName] = (profitByGame[gameName] || 0) + profit;
             });
+        });
 
-            // Convert to array of {game, profit} objects and sort by profit
-            let sortedProfits = Object.entries(profitByGame)
-                .map(([game, profit]) => ({ game, profit }))
-                .sort((a, b) => b.profit - a.profit);
+        let sortedProfits = Object.entries(profitByGame)
+            .map(([game, profit]) => ({ game, profit }))
+            .sort((a, b) => b.profit - a.profit);
 
-            // Select top 5 games and calculate "Other"
-            const top5Profits = sortedProfits.slice(0, 5);
-            const otherProfit = sortedProfits.slice(5).reduce((sum, item) => sum + item.profit, 0);
-            top5Profits.push({ game: "Other", profit: otherProfit });
+        const top5Profits = sortedProfits.slice(0, 5);
+        const otherProfit = sortedProfits.slice(5).reduce((sum, item) => sum + item.profit, 0);
+        top5Profits.push({ game: "Other", profit: otherProfit });
 
-            // Extract labels and profits
-            const labels = top5Profits.map(item => item.game);
-            const profits = top5Profits.map(item => item.profit);
+        const labels = top5Profits.map(item => item.game);
+        const profits = top5Profits.map(item => item.profit);
 
-            // Determine dynamic max for y-axis with smaller buffer
-            const maxProfit = Math.max(0, ...profits);
-            const yAxisMax = maxProfit + 50; 
+        const maxProfit = Math.max(0, ...profits);
+        const yAxisMax = maxProfit + 2000;
 
-            // Destroy existing chart if any
-            if (profitChartCanvas.chart) {
-                profitChartCanvas.chart.destroy();
-            }
+        if (profitChartCanvas.chart) {
+            profitChartCanvas.chart.destroy();
+        }
 
-            // Create bar chart
-            profitChartCanvas.chart = new Chart(profitChartCanvas, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Profit ($)',
-                        data: profits,
-                        backgroundColor: 'rgb(59, 130, 246)',
-                        borderColor: 'rgb(59, 130, 246)',
-                        borderWidth: 1
-                    }]
+        profitChartCanvas.chart = new Chart(profitChartCanvas, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Profit ($)',
+                    data: profits,
+                    backgroundColor: 'rgb(59, 130, 246)',
+                    borderColor: 'rgb(59, 130, 246)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                layout: {
+                    padding: {
+                        bottom: 10,
+                    }
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    layout: {
-                        padding: {
-                            bottom: 10,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: yAxisMax,
+                        ticks: {
+                            stepSize: Math.max(20, Math.ceil(yAxisMax / 5)),
+                            callback: value => `$${value.toFixed(2)}`
                         }
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: yAxisMax,
-                            ticks: {
-                                stepSize: Math.max(20, Math.ceil(yAxisMax / 5)), 
-                                callback: value => `$${value.toFixed(2)}`
-                            }
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Game'
                         },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Game'
-                            },
-                            ticks: {
-                                autoSkip: false,
-                                maxRotation: 45,
-                                minRotation: 0,
-                                font: {
-                                    size: 12
-                                }
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: true
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: context => `$${context.parsed.y.toFixed(2)}`
+                        ticks: {
+                            autoSkip: false,
+                            maxRotation: 45,
+                            minRotation: 0,
+                            font: {
+                                size: 12
                             }
                         }
                     }
+                },
+                plugins: {
+                    legend: {
+                        display: true
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: context => `$${context.parsed.y.toFixed(2)}`
+                        }
+                    }
                 }
-            });
+            }
+        });
+    }
+
+    function updateDashboardStats() {
+        const totalGames = document.querySelector('#dashboard-page .p-x-5:nth-child(1) p');
+        const totalUsers = document.querySelector('#dashboard-page .p-x-5:nth-child(2) p');
+        const totalDeposits = document.querySelector('#dashboard-page .p-x-5:nth-child(3) p');
+        const totalProfit = document.querySelector('#dashboard-page .p-x-5:nth-child(4) p');
+        const usersOnline = document.querySelector('#dashboard-page .p-x-5:nth-child(5) p');
+
+        totalGames.textContent = games.length;
+        
+        totalUsers.textContent = users.length;
+        
+        totalUsers.textContent = Math.floor(Math.random() * (10000 - 5000 + 1)) + 5000; // Fake 5000-10000 users
+
+        totalDeposits.textContent = `$${walletTransactions
+        .filter(t => t.action === 'Deposit')
+        .reduce((sum, t) => sum + t.amount, 0)}`;
+        totalProfit.textContent = `$${users
+        .flatMap(u => u.gameHistory)
+        .reduce((sum, g) => sum + (g.payout - g.bet), 0)}`;
+        
+        usersOnline.textContent = Math.floor(Math.random() * (1200 - 800 + 1)) + 800; // Fake 800-1200 
+    }
+    updateDashboardStats();
+    // Display game play history in the modal
+    function populateGameLogsTable(gameName) {
+        const tbody = document.getElementById('game-logs-table-body');
+        if (!tbody) {
+            console.error('Element with ID game-logs-table-body not found');
+            return;
         }
 
-    // Populate Tables
+        // Collect play history from all users, filtering by game name
+        const gameLogs = users
+            .flatMap(user => user.gameHistory
+                .filter(record => record.game === gameName)
+                .map(record => ({
+                    email: user.email,
+                    result: record.result,
+                    bet: record.bet,
+                    payout: record.payout,
+                    date: record.date
+                }))
+            );
+
+        // Render the table content
+        tbody.innerHTML = gameLogs.length > 0 ? gameLogs.map(log => `
+            <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${log.email}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${log.result}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$${log.bet}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$${log.payout}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${log.date}</td>
+            </tr>
+        `).join('') : '<tr><td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">No play logs found for this game</td></tr>';
+    }
+    // Update populateGameTable to include the View button
     function populateGameTable(filteredGames) {
         const tbody = document.getElementById('game-table-body');
         const paginationContainer = document.getElementById('game-pagination');
         if (!tbody) {
-            console.error('game-table-body not found');
+            console.error('Element with ID game-table-body not found');
             return;
         }
 
-        // Determine items per page based on screen size
         const isMobile = window.innerWidth <= 640;
         const itemsPerPage = isMobile ? 5 : 7;
         const totalPages = Math.ceil(filteredGames.length / itemsPerPage);
         let currentPage = parseInt(localStorage.getItem('gamePage')) || 1;
         if (currentPage < 1 || currentPage > totalPages) currentPage = totalPages > 0 ? 1 : 1;
 
-        // Get data for the current page
         const start = (currentPage - 1) * itemsPerPage;
         const end = start + itemsPerPage;
         const paginatedGames = filteredGames.slice(start, end);
 
-        // Render table rows
+        // Render the games table with a View button in the Actions column
         tbody.innerHTML = paginatedGames.length > 0 ? paginatedGames.map(game => `
             <tr>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${game.name}</td>
@@ -754,17 +572,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-${game.status === 'On' ? 'green' : 'red'}-100 text-${game.status === 'On' ? 'green' : 'red'}-800">${game.status}</span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${game.winRate}%</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${game.preResult || 'None'}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <a href="#" class="text-blue-600 hover:text-blue-900 mr-3 edit-game" data-id="${game.id}"><i class="fas fa-edit"></i></a>
+                    <a href="#" class="text-gray-600 hover:text-gray-900 mr-3 view-game-logs" data-id="${game.id}"><i class="fas fa-eye"></i></a>
                     <a href="#" class="text-red-600 hover:text-red-900 delete-game" data-id="${game.id}"><i class="fas fa-trash"></i></a>
                 </td>
             </tr>
-        `).join('') : '<tr><td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">No games found</td></tr>';
+        `).join('') : '<tr><td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">No games found</td></tr>';
 
-        // Render pagination controls
         if (!paginationContainer) {
-            console.warn('game-pagination container not found, skipping pagination');
+            console.warn('Element with ID game-pagination not found, skipping pagination');
             return;
         }
         renderPagination(paginationContainer, totalPages, currentPage, page => {
@@ -781,19 +598,16 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Determine items per page based on screen size
         const isMobile = window.innerWidth <= 640;
         const itemsPerPage = isMobile ? 5 : 7;
         const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
         let currentPage = parseInt(localStorage.getItem('userPage')) || 1;
         if (currentPage < 1 || currentPage > totalPages) currentPage = totalPages > 0 ? 1 : 1;
 
-        // Get data for the current page
         const start = (currentPage - 1) * itemsPerPage;
         const end = start + itemsPerPage;
         const paginatedUsers = filteredUsers.slice(start, end);
 
-        // Render table rows
         tbody.innerHTML = paginatedUsers.length > 0 ? paginatedUsers.map(user => `
             <tr>
                 <td class="px-6 py-4 whitespace-nowrap">
@@ -806,7 +620,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${user.email}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$${user.wallet.toFixed(2)}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$${user.wallet % 1 === 0 ? user.wallet.toFixed(0) : user.wallet.toFixed(2)}</td>
                 <td class="px-6 py-4 whitespace-nowrap">
                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-${user.status === 'Active' ? 'green' : 'red'}-100 text-${user.status === 'Active' ? 'green' : 'red'}-800">${user.status}</span>
                 </td>
@@ -819,7 +633,6 @@ document.addEventListener('DOMContentLoaded', () => {
             </tr>
         `).join('') : '<tr><td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">No users found</td></tr>';
 
-        // Render pagination controls
         if (!paginationContainer) {
             console.warn('user-pagination container not found, skipping pagination');
             return;
@@ -830,6 +643,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Populate Override Table
     function populateOverrideTable(filteredOverrides) {
         const tbody = document.getElementById('override-table-body');
         const paginationContainer = document.getElementById('override-pagination');
@@ -838,33 +652,30 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Determine items per page based on screen size
         const isMobile = window.innerWidth <= 640;
         const itemsPerPage = isMobile ? 5 : 8;
         const totalPages = Math.ceil(filteredOverrides.length / itemsPerPage);
         let currentPage = parseInt(localStorage.getItem('overridePage')) || 1;
         if (currentPage < 1 || currentPage > totalPages) currentPage = totalPages > 0 ? 1 : 1;
 
-        // Get data for the current page
         const start = (currentPage - 1) * itemsPerPage;
         const end = start + itemsPerPage;
         const paginatedOverrides = filteredOverrides.slice(start, end);
 
-        // Render table rows
         tbody.innerHTML = paginatedOverrides.length > 0 ? paginatedOverrides.map(override => `
             <tr>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${override.game}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${override.user}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${override.result}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${override.fields?.result || ''}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${override.fields?.details || ''}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${override.expiration}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <a href="#" class="text-blue-600 hover:text-blue-900 mr-3 edit-override" data-id="${override.id}"><i class="fas fa-edit"></i></a>
                     <a href="#" class="text-red-600 hover:text-red-900 delete-override" data-id="${override.id}"><i class="fas fa-trash"></i></a>
                 </td>
             </tr>
-        `).join('') : '<tr><td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">No overrides found</td></tr>';
+        `).join('') : '<tr><td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">No overrides found</td></tr>';
 
-        // Render pagination controls
         if (!paginationContainer) {
             console.warn('override-pagination container not found, skipping pagination');
             return;
@@ -875,58 +686,94 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function populateGameHistoryTable(history) {
-        const tbody = document.getElementById('game-history-table-body');
-        const paginationContainer = document.getElementById('game-history-pagination');
-        if (!tbody) {
-            console.error('game-history-table-body not found');
-            return;
-        }
-
-        // Determine items per page based on screen size
-        const isMobile = window.innerWidth <= 640;
-        const itemsPerPage = isMobile ? 5 : 7;
-        const totalPages = Math.ceil(history.length / itemsPerPage);
-        let currentPage = parseInt(localStorage.getItem('gameHistoryPage')) || 1;
-        if (currentPage < 1 || currentPage > totalPages) currentPage = totalPages > 0 ? 1 : 1;
-
-        // Get data for the current page
-        const start = (currentPage - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
-        const paginatedHistory = history.slice(start, end);
-
-        // Render table rows
-        tbody.innerHTML = paginatedHistory.length > 0 ? paginatedHistory.map(record => `
-            <tr>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${record.game}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${record.date}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${record.result}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$${record.bet.toFixed(2)}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$${record.payout.toFixed(2)}</td>
-            </tr>
-        `).join('') : '<tr><td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">No game history</td></tr>';
-
-        // Render pagination controls
-        if (!paginationContainer) {
-            console.warn('game-history-pagination container not found, skipping pagination');
-            return;
-        }
-        renderPagination(paginationContainer, totalPages, currentPage, page => {
-            localStorage.setItem('gameHistoryPage', page);
-            populateGameHistoryTable(history);
-        });
+    // Render dynamic fields in modal
+    function renderDynamicFields(gameName, container, existingValues = {}) {
+    if (!container) {
+        console.error('Dynamic fields container not found');
+        return;
     }
+    container.innerHTML = '';
+    if (!gameName || !overrideConfigs[gameName]) {
+        console.warn(`No override config found for game: ${gameName}`);
+        return;
+    }
+
+    overrideConfigs[gameName].fields.forEach(field => {
+        const div = document.createElement('div');
+        div.className = 'mb-4';
+        const label = document.createElement('label');
+        label.className = 'block text-sm font-medium text-gray-700 mb-1';
+        label.setAttribute('for', `add-override-${field.name}`);
+        label.textContent = field.label;
+        div.appendChild(label);
+
+        let input;
+        if (field.type === 'select') {
+            input = document.createElement('select');
+            input.className = 'border rounded-lg px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500';
+            input.id = `add-override-${field.name}`;
+            input.name = field.name;
+            input.innerHTML = `<option value="">Select ${field.label}</option>` +
+                field.options.map(opt => `<option value="${opt}">${opt}</option>`).join('');
+            input.value = existingValues[field.name] || field.default || '';
+        } else if (field.type === 'text') {
+            input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'border rounded-lg px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500';
+            input.id = `add-override-${field.name}`;
+            input.name = field.name;
+            input.placeholder = field.placeholder || '';
+            input.value = existingValues[field.name] || field.default || '';
+        }
+        div.appendChild(input);
+        container.appendChild(div);
+    });
+}
+
+    // Populate modal fields for add/edit
+    function populateModalFields(override = null) {
+    const gameSelect = document.getElementById('add-override-game');
+    const userSelect = document.getElementById('add-override-user-email');
+    const dynamicFieldsContainer = document.getElementById('add-override-dynamic-fields');
+    const expirationInput = document.getElementById('add-override-expiration');
+
+    if (!gameSelect || !userSelect || !dynamicFieldsContainer || !expirationInput) {
+        console.error('One or more modal elements not found');
+        return;
+    }
+
+    if (override) {
+        gameSelect.value = override.game;
+        userSelect.value = override.user;
+        renderDynamicFields(override.game, dynamicFieldsContainer, override.fields || {});
+        expirationInput.value = override.expiration;
+    } else {
+        // Chọn game đầu tiên làm mặc định
+        const firstGame = Object.keys(overrideConfigs)[0]; // Lấy game đầu tiên từ overrideConfigs
+        gameSelect.value = firstGame || '';
+        userSelect.value = '';
+        expirationInput.value = '';
+        if (firstGame) {
+            renderDynamicFields(firstGame, dynamicFieldsContainer);
+        } else {
+            dynamicFieldsContainer.innerHTML = '<p class="text-sm text-gray-500">No games available to configure.</p>';
+        }
+    }
+
+    // Update dynamic fields when game changes
+    gameSelect.removeEventListener('change', renderDynamicFields);
+    gameSelect.addEventListener('change', () => {
+        renderDynamicFields(gameSelect.value, dynamicFieldsContainer);
+    });
+}
 
     function renderPagination(container, totalPages, currentPage, onPageChange) {
         container.innerHTML = '';
         if (totalPages <= 1) return;
 
-        // Log pagination state for debugging
-
         const pagination = document.createElement('div');
         pagination.className = 'flex items-center justify-center mt-4 space-x-2';
 
-        // Previous button
         const prevButton = document.createElement('button');
         prevButton.className = `px-3 py-1 rounded-lg ${currentPage === 1 ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`;
         prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
@@ -935,29 +782,18 @@ document.addEventListener('DOMContentLoaded', () => {
             if (currentPage > 1) onPageChange(currentPage - 1);
         });
 
-        // Page tabs (show only previous, current, next)
         const pageTabs = document.createElement('div');
         pageTabs.className = 'flex space-x-1';
 
-        // Calculate the tabs to display
         const tabsToShow = [];
         if (totalPages <= 3) {
-            // If 3 or fewer pages, show all
-            for (let i = 1; i <= totalPages; i++) {
-                tabsToShow.push(i);
-            }
+            for (let i = 1; i <= totalPages; i++) tabsToShow.push(i);
         } else {
-            // Show previous, current, next
-            if (currentPage === 1) {
-                tabsToShow.push(1, 2, 3); // [1][2][3]
-            } else if (currentPage === totalPages) {
-                tabsToShow.push(totalPages - 2, totalPages - 1, totalPages); // [N-2][N-1][N]
-            } else {
-                tabsToShow.push(currentPage - 1, currentPage, currentPage + 1); // [prev][current][next]
-            }
+            if (currentPage === 1) tabsToShow.push(1, 2, 3);
+            else if (currentPage === totalPages) tabsToShow.push(totalPages - 2, totalPages - 1, totalPages);
+            else tabsToShow.push(currentPage - 1, currentPage, currentPage + 1);
         }
 
-        // Render the tabs
         tabsToShow.forEach(page => {
             const pageButton = document.createElement('button');
             pageButton.className = `px-3 py-1 rounded-lg ${page === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`;
@@ -966,7 +802,6 @@ document.addEventListener('DOMContentLoaded', () => {
             pageTabs.appendChild(pageButton);
         });
 
-        // Next button
         const nextButton = document.createElement('button');
         nextButton.className = `px-3 py-1 rounded-lg ${currentPage === totalPages ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`;
         nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
@@ -997,7 +832,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('add-game-description').value = '';
         document.getElementById('add-game-status').value = 'On';
         document.getElementById('add-game-win-rate').value = '';
-        document.getElementById('add-game-pre-result').value = '';
         addGameError.classList.add('hidden');
         isEditingGame = false;
         editingGameId = null;
@@ -1012,7 +846,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const description = document.getElementById('add-game-description').value.trim();
         const status = document.getElementById('add-game-status').value;
         const winRate = parseInt(document.getElementById('add-game-win-rate').value);
-        const preResult = document.getElementById('add-game-pre-result').value;
 
         if (!name || !description || !status || isNaN(winRate) || winRate < 0 || winRate > 100) {
             addGameError.classList.remove('hidden');
@@ -1025,7 +858,6 @@ document.addEventListener('DOMContentLoaded', () => {
             game.description = description;
             game.status = status;
             game.winRate = winRate;
-            game.preResult = preResult;
             notifications.push({
                 id: notifications.length + 1,
                 title: "Game Updated",
@@ -1039,7 +871,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 description,
                 status,
                 winRate,
-                preResult,
                 plays: 0
             };
             games.push(newGame);
@@ -1060,15 +891,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('game-table-body').addEventListener('click', (e) => {
+        console.log('Click detected in game-table-body', e.target); // Debug click events
+
         if (e.target.closest('.edit-game')) {
             e.preventDefault();
             const id = parseInt(e.target.closest('.edit-game').dataset.id);
+            console.log('Editing game with ID:', id); // Debug edit action
             const game = games.find(g => g.id === id);
             document.getElementById('add-game-name').value = game.name;
             document.getElementById('add-game-description').value = game.description;
             document.getElementById('add-game-status').value = game.status;
             document.getElementById('add-game-win-rate').value = game.winRate;
-            document.getElementById('add-game-pre-result').value = game.preResult;
             addGameModal.classList.remove('hidden');
             isEditingGame = true;
             editingGameId = id;
@@ -1077,6 +910,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target.closest('.delete-game')) {
             e.preventDefault();
             const id = parseInt(e.target.closest('.delete-game').dataset.id);
+            console.log('Deleting game with ID:', id); // Debug delete action
             const game = games.find(g => g.id === id);
             games = games.filter(g => g.id !== id);
             notifications.push({
@@ -1089,12 +923,41 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('notifications', JSON.stringify(notifications));
             populateGameTable(games);
             updateDashboardStats();
-            update部分
-
             updateNotificationBadge();
         }
-    });
 
+        if (e.target.closest('.view-game-logs')) {
+            e.preventDefault();
+            const id = parseInt(e.target.closest('.view-game-logs').dataset.id);
+            console.log('Viewing logs for game with ID:', id); // Debug view action
+            const game = games.find(g => g.id === id);
+            if (game) {
+                console.log('Game found:', game); // Debug game object
+                populateGameLogsTable(game.name);
+                const gameLogsModal = document.getElementById('game-logs-modal');
+                if (gameLogsModal) {
+                    gameLogsModal.classList.remove('hidden');
+                    console.log('Game logs modal should now be visible'); // Debug modal visibility
+                } else {
+                    console.error('Element with ID game-logs-modal not found');
+                }
+            } else {
+                console.error('Game not found with ID:', id);
+            }
+        }
+    });
+    // Handle closing the game-logs-modal
+    const gameLogsModal = document.getElementById('game-logs-modal');
+    const gameLogsClose = document.getElementById('game-logs-close');
+
+    if (gameLogsClose) {
+        gameLogsClose.addEventListener('click', () => {
+            console.log('Closing game logs modal'); // Debug close action
+            gameLogsModal.classList.add('hidden');
+        });
+    } else {
+        console.error('Element with ID game-logs-close not found');
+    }
     // Game Filters
     document.getElementById('game-search').addEventListener('input', filterGames);
     document.getElementById('game-status-filter').addEventListener('change', filterGames);
@@ -1262,7 +1125,23 @@ document.addEventListener('DOMContentLoaded', () => {
     gameHistoryClose.addEventListener('click', () => {
         gameHistoryModal.classList.add('hidden');
     });
+    function populateGameHistoryTable(gameHistory) {
+        const tbody = document.getElementById('game-history-table-body');
+        if (!tbody) {
+            console.error('game-history-table-body not found');
+            return;
+        }
 
+        tbody.innerHTML = gameHistory.length > 0 ? gameHistory.map(record => `
+            <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${record.game}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${record.date}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${record.result}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$${record.bet}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$${record.payout}</td>
+            </tr>
+        `).join('') : '<tr><td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">No game history found</td></tr>';
+    }
     // User Table Actions
     document.getElementById('user-table-body').addEventListener('click', (e) => {
         if (e.target.closest('.edit-user')) {
@@ -1346,6 +1225,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const overrideGameSelect = document.getElementById('add-override-game');
     const overrideUserSelect = document.getElementById('add-override-user-email');
 
+    overrideGameSelect.innerHTML = '<option value="">Select Game</option>';
     games.forEach(game => {
         const option = document.createElement('option');
         option.value = game.name;
@@ -1353,6 +1233,7 @@ document.addEventListener('DOMContentLoaded', () => {
         overrideGameSelect.appendChild(option);
     });
 
+    overrideUserSelect.innerHTML = '<option value="">Select User</option>';
     users.forEach(user => {
         const option = document.createElement('option');
         option.value = user.email;
@@ -1362,10 +1243,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     addOverrideBtn.addEventListener('click', () => {
         addOverrideModal.classList.remove('hidden');
-        overrideGameSelect.value = '';
-        overrideUserSelect.value = '';
-        document.getElementById('add-override-result').value = 'Win';
-        document.getElementById('add-override-expiration').value = '';
+        populateModalFields();
         addOverrideError.classList.add('hidden');
         isEditingOverride = false;
         editingOverrideId = null;
@@ -1377,11 +1255,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     addOverrideSave.addEventListener('click', () => {
         const game = overrideGameSelect.value;
-        const userEmail = overrideUserSelect.value;
-        const result = document.getElementById('add-override-result').value;
+        const user = overrideUserSelect.value;
         const expiration = document.getElementById('add-override-expiration').value;
+        const dynamicFieldsContainer = document.getElementById('add-override-dynamic-fields');
 
-        if (!game || !userEmail || !result || !expiration) {
+        if (!game || !user || !expiration) {
+            addOverrideError.classList.remove('hidden');
+            return;
+        }
+
+        const fields = {};
+        const inputs = dynamicFieldsContainer.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            if (input.type === 'checkbox') {
+                if (!fields[input.name]) fields[input.name] = [];
+                if (input.checked) fields[input.name].push(input.value);
+            } else if (input.multiple) {
+                fields[input.name] = Array.from(input.selectedOptions).map(opt => opt.value);
+            } else {
+                fields[input.name] = input.value;
+            }
+        });
+
+        const requiredFields = overrideConfigs[game]?.fields.map(f => f.name) || [];
+        if (requiredFields.some(field => !fields[field] || (Array.isArray(fields[field]) && fields[field].length === 0))) {
             addOverrideError.classList.remove('hidden');
             return;
         }
@@ -1389,28 +1286,28 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isEditingOverride) {
             const override = overrides.find(o => o.id === editingOverrideId);
             override.game = game;
-            override.user = userEmail;
-            override.result = result;
+            override.user = user;
+            override.fields = fields;
             override.expiration = expiration;
             notifications.push({
                 id: notifications.length + 1,
                 title: "Override Updated",
-                message: `Override for game "${game}" updated.`,
+                message: `Override for "${game}" and "${user}" has been updated.`,
                 time: new Date().toLocaleString()
             });
         } else {
             const newOverride = {
                 id: overrides.length ? Math.max(...overrides.map(o => o.id)) + 1 : 1,
                 game,
-                user: userEmail,
-                result,
+                user,
+                fields,
                 expiration
             };
             overrides.push(newOverride);
             notifications.push({
                 id: notifications.length + 1,
                 title: "New Override Added",
-                message: `Override for game "${game}" added.`,
+                message: `Override for "${game}" and "${user}" has been added.`,
                 time: new Date().toLocaleString()
             });
         }
@@ -1423,28 +1320,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('override-table-body').addEventListener('click', (e) => {
-        if (e.target.closest('.edit-override')) {
-            e.preventDefault();
-            const id = parseInt(e.target.closest('.edit-override').dataset.id);
+        e.preventDefault();
+        const editButton = e.target.closest('.edit-override');
+        const deleteButton = e.target.closest('.delete-override');
+
+        if (editButton) {
+            const id = parseInt(editButton.dataset.id);
             const override = overrides.find(o => o.id === id);
-            overrideGameSelect.value = override.game;
-            overrideUserSelect.value = override.user;
-            document.getElementById('add-override-result').value = override.result;
-            document.getElementById('add-override-expiration').value = override.expiration;
-            addOverrideModal.classList.remove('hidden');
-            isEditingOverride = true;
-            editingOverrideId = id;
+            if (override) {
+                addOverrideModal.classList.remove('hidden');
+                populateModalFields(override);
+                isEditingOverride = true;
+                editingOverrideId = id;
+                addOverrideError.classList.add('hidden');
+            }
         }
 
-        if (e.target.closest('.delete-override')) {
-            e.preventDefault();
-            const id = parseInt(e.target.closest('.delete-override').dataset.id);
+        if (deleteButton) {
+            const id = parseInt(deleteButton.dataset.id);
             const override = overrides.find(o => o.id === id);
             overrides = overrides.filter(o => o.id !== id);
             notifications.push({
                 id: notifications.length + 1,
                 title: "Override Deleted",
-                message: `Override for game "${override.game}" deleted.`,
+                message: `Override for "${override.game}" and "${override.user}" has been deleted.`,
                 time: new Date().toLocaleString()
             });
             localStorage.setItem('overrides', JSON.stringify(overrides));
@@ -1457,48 +1356,47 @@ document.addEventListener('DOMContentLoaded', () => {
     // Notifications
     function updateNotificationBadge() {
         const notificationCount = document.getElementById('notification-count');
-        if (!notificationCount) return;
         notificationCount.textContent = notifications.length;
-        if (notifications.length > 0) {
-            notificationCount.classList.remove('hidden');
-        } else {
-            notificationCount.classList.add('hidden');
-        }
-    }
-
-    function populateNotificationContent() {
-        const notificationContent = document.getElementById('notification-content');
-        if (!notificationContent) return;
-        notificationContent.innerHTML = '';
-        if (notifications.length === 0) {
-            notificationContent.innerHTML = '<p class="px-4 py-2 text-sm text-gray-500">No notifications</p>';
-            return;
-        }
-
-        notifications.forEach(notification => {
-            const div = document.createElement('div');
-            div.className = 'px-4 py-2 border-b last:border-b-0 hover:bg-gray-50';
-            div.innerHTML = `
-                <p class="text-sm font-medium text-gray-900">${notification.title}</p>
-                <p class="text-xs text-gray-500">${notification.message}</p>
-                <p class="text-xs text-gray-400">${notification.time}</p>
-            `;
-            notificationContent.appendChild(div);
-        });
+        notificationCount.classList.toggle('hidden', notifications.length === 0);
     }
 
     const notificationBell = document.getElementById('notification-bell');
     const notificationSubnav = document.getElementById('notification-subnav');
+    const notificationContent = document.getElementById('notification-content');
 
-    if (notificationBell && notificationSubnav) {
-        notificationBell.addEventListener('click', (e) => {
-            e.stopPropagation();
-            notificationSubnav.classList.toggle('hidden');
-            if (!notificationSubnav.classList.contains('hidden')) {
-                populateNotificationContent();
-            }
-        });
-    }
+    notificationBell.addEventListener('click', () => {
+        notificationSubnav.classList.toggle('hidden');
+        // Hiển thị danh sách thông báo
+        notificationContent.innerHTML = notifications.length > 0 ? `
+            <div class="p-3 border-b">
+                <button id="clear-notifications" class="w-full bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm">Clear All</button>
+            </div>
+            ${notifications.map(n => `
+                <div class="p-3 border-b last:border-b-0">
+                    <div class="text-sm font-medium text-gray-900">${n.title}</div>
+                    <div class="text-xs text-gray-500">${n.message}</div>
+                    <div class="text-xs text-gray-400">${n.time}</div>
+                </div>
+            `).join('')}
+        ` : '<div class="p-3 text-sm text-gray-500">No notifications</div>';
+
+        // Đặt số thông báo về 0 (đánh dấu đã xem)
+        notifications.length = 0;
+        localStorage.setItem('notifications', JSON.stringify(notifications));
+        updateNotificationBadge();
+
+        // Thêm sự kiện cho nút Clear All
+        const clearNotificationsBtn = document.getElementById('clear-notifications');
+        if (clearNotificationsBtn) {
+            clearNotificationsBtn.addEventListener('click', () => {
+                notifications = [];
+                localStorage.setItem('notifications', JSON.stringify(notifications));
+                notificationContent.innerHTML = '<div class="p-3 text-sm text-gray-500">No notifications</div>';
+                updateNotificationBadge();
+                notificationSubnav.classList.add('hidden');
+            });
+        }
+    });
 
     // Search Functionality
     const headerSearch = document.getElementById('header-search');
@@ -1506,93 +1404,77 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchResultsContent = document.getElementById('search-results-content');
     const noResults = document.getElementById('no-results');
 
-    if (headerSearch) {
-        headerSearch.addEventListener('input', () => {
-            const query = headerSearch.value.toLowerCase();
-            if (!searchResultsContent || !noResults) return;
-            searchResultsContent.innerHTML = '';
-            noResults.classList.add('hidden');
-
-            if (query) {
-                const gameResults = games.filter(g => g.name.toLowerCase().includes(query)).slice(0, 5);
-                const userResults = users.filter(u => u.name.toLowerCase().includes(query) || u.email.toLowerCase().includes(query)).slice(0, 5);
-
-                if (gameResults.length === 0 && userResults.length === 0) {
-                    noResults.classList.remove('hidden');
-                } else {
-                    gameResults.forEach(game => {
-                        const div = document.createElement('div');
-                        div.className = 'p-2 hover:bg-gray-100 cursor-pointer';
-                        div.innerHTML = `
-                            <p class="text-sm font-medium text-gray-900">Game: ${game.name}</p>
-                            <p class="text-xs text-gray-500">${game.description}</p>
-                        `;
-                        div.addEventListener('click', () => {
-                            document.getElementById('games').click();
-                            document.getElementById('game-search').value = game.name;
-                            filterGames();
-                            searchResults.classList.add('hidden');
-                        });
-                        searchResultsContent.appendChild(div);
-                    });
-
-                    userResults.forEach(user => {
-                        const div = document.createElement('div');
-                        div.className = 'p-2 hover:bg-gray-100 cursor-pointer';
-                        div.innerHTML = `
-                            <p class="text-sm font-medium text-gray-900">User: ${user.name}</p>
-                            <p class="text-xs text-gray-500">${user.email}</p>
-                        `;
-                        div.addEventListener('click', () => {
-                            document.getElementById('users').click();
-                            document.getElementById('user-search').value = user.name;
-                            filterUsers();
-                            searchResults.classList.add('hidden');
-                        });
-                        searchResultsContent.appendChild(div);
-                    });
-                }
-
-                searchResults.classList.remove('hidden');
-            } else {
-                searchResults.classList.add('hidden');
-            }
-        });
-    }
-
-    // Close search results and notification subnav when clicking outside
-    document.addEventListener('click', (e) => {
-        if (searchResults && !searchResults.contains(e.target) && e.target !== headerSearch) {
+    headerSearch.addEventListener('input', () => {
+        const query = headerSearch.value.toLowerCase();
+        if (!query) {
             searchResults.classList.add('hidden');
+            return;
         }
-        if (notificationSubnav && !notificationSubnav.contains(e.target) && !notificationBell.contains(e.target)) {
-            notificationSubnav.classList.add('hidden');
+
+        const results = [
+            ...games.filter(g => g.name.toLowerCase().includes(query)).map(g => ({ type: 'Game', name: g.name, id: g.id })),
+            ...users.filter(u => u.name.toLowerCase().includes(query) || u.email.toLowerCase().includes(query)).map(u => ({ type: 'User', name: u.name, id: u.id }))
+        ];
+
+        searchResultsContent.innerHTML = results.length > 0 ? results.map(r => `
+            <div class="p-2 hover:bg-gray-100 cursor-pointer search-result" data-type="${r.type.toLowerCase()}" data-id="${r.id}">
+                <div class="text-sm font-medium text-gray-900">${r.name}</div>
+                <div class="text-xs text-gray-500">${r.type}</div>
+            </div>
+        `).join('') : '';
+        noResults.classList.toggle('hidden', results.length > 0);
+        searchResults.classList.remove('hidden');
+    });
+
+    searchResults.addEventListener('click', (e) => {
+        const result = e.target.closest('.search-result');
+        if (!result) return;
+
+        const type = result.dataset.type;
+        const id = result.dataset.id;
+
+        if (type === 'game') {
+            const game = games.find(g => g.id === parseInt(id));
+            document.getElementById('add-game-name').value = game.name;
+            document.getElementById('add-game-description').value = game.description;
+            document.getElementById('add-game-status').value = game.status;
+            document.getElementById('add-game-win-rate').value = game.winRate;
+            addGameModal.classList.remove('hidden');
+            isEditingGame = true;
+            editingGameId = id;
+            navLinks.forEach(l => l.classList.remove('active-nav', 'bg-gray-700', 'text-gray-100'));
+            document.querySelector('a[href="#games"]').classList.add('active-nav', 'bg-gray-700', 'text-gray-100');
+            pages.forEach(page => page.classList.add('hidden'));
+            document.getElementById('games-page').classList.remove('hidden');
+            pageTitle.textContent = 'Games';
+        } else if (type === 'user') {
+            const user = users.find(u => u.id === id);
+            document.getElementById('add-user-username').value = user.name;
+            document.getElementById('add-user-email').value = user.email;
+            document.getElementById('add-user-wallet').value = user.wallet;
+            document.getElementById('add-user-status').value = user.status;
+            addUserModal.classList.remove('hidden');
+            isEditingUser = true;
+            editingUserId = id;
+            navLinks.forEach(l => l.classList.remove('active-nav', 'bg-gray-700', 'text-gray-100'));
+            document.querySelector('a[href="#users"]').classList.add('active-nav', 'bg-gray-700', 'text-gray-100');
+            pages.forEach(page => page.classList.add('hidden'));
+            document.getElementById('users-page').classList.remove('hidden');
+            pageTitle.textContent = 'Users';
+        }
+        searchResults.classList.add('hidden');
+        headerSearch.value = '';
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!searchResults.contains(e.target) && e.target !== headerSearch) {
+            searchResults.classList.add('hidden');
         }
     });
 
-    // Update Dashboard Stats
-    function updateDashboardStats() {
-        const totalGamesEl = document.querySelector('.bg-white.p-6.rounded-lg.shadow:nth-child(1) p');
-        const totalUsersEl = document.querySelector('.bg-white.p-6.rounded-lg.shadow:nth-child(2) p');
-        const totalDepositsEl = document.querySelector('.bg-white.p-6.rounded-lg.shadow:nth-child(3) p');
-        const totalProfitEl = document.querySelector('.bg-white.p-6.rounded-lg.shadow:nth-child(4) p');
-
-        if (totalGamesEl) totalGamesEl.textContent = games.length;
-        if (totalUsersEl) totalUsersEl.textContent = users.length;
-
-        const totalDeposits = walletTransactions.filter(t => t.action === 'Deposit').reduce((sum, t) => sum + t.amount, 0);
-        const totalWithdrawals = walletTransactions.filter(t => t.action === 'Withdraw').reduce((sum, t) => sum + t.amount, 0);
-        const totalProfit = users.reduce((sum, u) => sum + u.gameHistory.reduce((s, h) => s + (h.payout - h.bet), 0), 0);
-
-        if (totalDepositsEl) totalDepositsEl.textContent = `$${totalDeposits.toFixed(2)}`;
-        if (totalProfitEl) totalProfitEl.textContent = `$${totalProfit.toFixed(2)}`;
-    }
-
-    // Initialize
+    // Initialize tables
     populateGameTable(games);
     populateUserTable(users);
     populateOverrideTable(overrides);
-    updateDashboardStats();
     updateNotificationBadge();
-    localStorage.clear();
 });

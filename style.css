@@ -66,13 +66,19 @@ canvas {
     width: 100% !important;
     height: 100% !important;
 }
-@media (max-width: 768px){
+@media (max-width: 1200px){
     .chart-container {
         min-height: 400px; 
+    }
+    .p-res{
+        font-size: 24px !important;
     }
 }
 
 @media (max-width: 768px){
+    .p-res{
+        font-size: 20px !important;
+    }
     .chart-container {
         min-height: 350px; 
     }
