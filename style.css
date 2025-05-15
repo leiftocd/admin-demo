@@ -66,10 +66,15 @@ canvas {
     width: 100% !important;
     height: 100% !important;
 }
-
 @media (max-width: 768px){
     .chart-container {
         min-height: 400px; 
+    }
+}
+
+@media (max-width: 768px){
+    .chart-container {
+        min-height: 350px; 
     }
     main{
         padding: 0 6px !important;
@@ -173,7 +178,7 @@ canvas {
 
 @media (max-width: 450px) {
     .chart-container {
-        min-height: 300px; 
+        min-height: 280px; 
     }
     #add-game-btn ,
     #add-user-btn ,
