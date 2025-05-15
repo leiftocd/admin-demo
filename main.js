@@ -724,7 +724,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Determine items per page based on screen size
         const isMobile = window.innerWidth <= 640;
-        const itemsPerPage = isMobile ? 5 : 8;
+        const itemsPerPage = isMobile ? 5 : 7;
         const totalPages = Math.ceil(filteredGames.length / itemsPerPage);
         let currentPage = parseInt(localStorage.getItem('gamePage')) || 1;
         if (currentPage < 1 || currentPage > totalPages) currentPage = totalPages > 0 ? 1 : 1;
@@ -772,7 +772,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Determine items per page based on screen size
         const isMobile = window.innerWidth <= 640;
-        const itemsPerPage = isMobile ? 5 : 8;
+        const itemsPerPage = isMobile ? 5 : 7;
         const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
         let currentPage = parseInt(localStorage.getItem('userPage')) || 1;
         if (currentPage < 1 || currentPage > totalPages) currentPage = totalPages > 0 ? 1 : 1;
@@ -874,7 +874,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Determine items per page based on screen size
         const isMobile = window.innerWidth <= 640;
-        const itemsPerPage = isMobile ? 5 : 8;
+        const itemsPerPage = isMobile ? 5 : 7;
         const totalPages = Math.ceil(history.length / itemsPerPage);
         let currentPage = parseInt(localStorage.getItem('gameHistoryPage')) || 1;
         if (currentPage < 1 || currentPage > totalPages) currentPage = totalPages > 0 ? 1 : 1;
