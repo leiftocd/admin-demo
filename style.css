@@ -58,7 +58,7 @@
 }
 .chart-container {
     width: 100%;
-    min-height: 300px; 
+    min-height: 500px; 
     position: relative;
     padding: 10px; 
 }
@@ -68,6 +68,9 @@ canvas {
 }
 
 @media (max-width: 768px){
+    .chart-container {
+        min-height: 400px; 
+    }
     main{
         padding: 0 6px !important;
     }
@@ -169,6 +172,9 @@ canvas {
 }   
 
 @media (max-width: 450px) {
+    .chart-container {
+        min-height: 300px; 
+    }
     #add-game-btn ,
     #add-user-btn ,
     #add-override-btn {

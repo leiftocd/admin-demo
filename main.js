@@ -477,7 +477,42 @@ document.addEventListener('DOMContentLoaded', () => {
             user: "brian.tran@example.com",
             result: "Lose",
             expiration: "2025-05-18"
-        }
+        },
+        {
+            id: 3,
+            game: "Crash",
+            user: "david.pham@example.com",
+            result: "Win",
+            expiration: "2025-04-20"
+        },
+        {
+            id: 4,
+            game: "Aviator",
+            user: "emma.vu@example.com",
+            result: "Win",
+            expiration: "2025-02-18"
+        },
+        {
+            id: 5,
+            game: "Classic Wheel",
+            user: "noah.dinh@example.com",
+            result: "Win",
+            expiration: "2025-04-22"
+        },
+        {
+            id: 6,
+            game: "Lucky Wheel",
+            user: "henry.nguyen@example.com",
+            result: "Win",
+            expiration: "2025-02-12"
+        },
+                {
+            id: 7,
+            game: "Lucky Card Flip",
+            user: "grace.tran@example.com",
+            result: "Win",
+            expiration: "2025-05-18"
+        },
     ];
 
     let notifications = JSON.parse(localStorage.getItem('notifications')) || [
@@ -549,14 +584,35 @@ document.addEventListener('DOMContentLoaded', () => {
             labels: ['May 6', 'May 7', 'May 8', 'May 9', 'May 10', 'May 11', 'May 12'],
             datasets: [{
                 label: 'Game Plays',
-                data: [200, 250, 300, 280, 320, 350, 400],
+                data: [50, 250, 300, 280, 320, 350, 400],
                 borderColor: 'rgb(59, 130, 246)',
                 tension: 0.1
             }]
         },
         options: {
             responsive: true,
-            scales: { y: { beginAtZero: true } }
+            maintainAspectRatio: false, // Allow custom height
+            layout: {
+                padding: {
+                    bottom: 20
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 400 + 100, // Dynamic max: highest value (400) + 100
+                    ticks: {
+                        stepSize: Math.max(50, Math.ceil((400 + 100) / 5)), // Dynamic step size (~5 steps)
+                        callback: value => value // No formatting needed for integers
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    }
+                }
+            }
         }
     });
 
@@ -575,30 +631,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
 
-            // Sort games by profit and select top 5
+            // Convert to array of {game, profit} objects and sort by profit
             let sortedProfits = Object.entries(profitByGame)
                 .map(([game, profit]) => ({ game, profit }))
                 .sort((a, b) => b.profit - a.profit);
 
-            // If fewer than 5 games, select additional games from the 'games' list with 0 profit
-            if (sortedProfits.length < 5) {
-                const existingGames = new Set(sortedProfits.map(item => item.game));
-                let additionalGames = games
-                    .filter(game => !existingGames.has(game.name))
-                    .map(game => ({ game: game.name, profit: 0 }))
-                    .slice(0, 5 - sortedProfits.length);
-                sortedProfits = [...sortedProfits, ...additionalGames];
-            }
-
-            // Ensure exactly 5 entries
-            sortedProfits = sortedProfits.slice(0, 5);
+            // Select top 5 games and calculate "Other"
+            const top5Profits = sortedProfits.slice(0, 5);
+            const otherProfit = sortedProfits.slice(5).reduce((sum, item) => sum + item.profit, 0);
+            top5Profits.push({ game: "Other", profit: otherProfit });
 
             // Extract labels and profits
-            const labels = sortedProfits.map(item => item.game);
-            const profits = sortedProfits.map(item => item.profit);
+            const labels = top5Profits.map(item => item.game);
+            const profits = top5Profits.map(item => item.profit);
 
-            // Log for debugging
-            console.log('Top 5 profitable games:', sortedProfits);
+            // Determine dynamic max for y-axis with smaller buffer
+            const maxProfit = Math.max(0, ...profits); // Đảm bảo không âm
+            const yAxisMax = maxProfit + 50; // Buffer nhỏ hơn, dựa trên hình ảnh max là $162
 
             // Destroy existing chart if any
             if (profitChartCanvas.chart) {
@@ -620,20 +669,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false,
+                    maintainAspectRatio: false, // Cho phép tùy chỉnh chiều cao
                     layout: {
                         padding: {
-                            bottom: 20 
+                            bottom: 10 // Giảm padding dưới
                         }
                     },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            max: 180, 
+                            max: yAxisMax, // Ví dụ: 162 + 50 = 212
                             ticks: {
-                                stepSize: 30, 
+                                stepSize: Math.max(20, Math.ceil(yAxisMax / 5)), // Bước chia động
                                 callback: value => `$${value.toFixed(2)}`
-                            },
+                            }
                         },
                         x: {
                             title: {
@@ -641,11 +690,11 @@ document.addEventListener('DOMContentLoaded', () => {
                                 text: 'Game'
                             },
                             ticks: {
-                                autoSkip: false, 
+                                autoSkip: false,
                                 maxRotation: 45,
                                 minRotation: 0,
                                 font: {
-                                    size: 12,
+                                    size: 12
                                 }
                             }
                         }
@@ -672,9 +721,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('game-table-body not found');
             return;
         }
-
-        // Log the number of games for debugging
-        console.log('filteredGames:', filteredGames, 'Length:', filteredGames.length);
 
         // Determine items per page based on screen size
         const isMobile = window.innerWidth <= 640;
@@ -723,9 +769,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('user-table-body not found');
             return;
         }
-
-        // Log the number of users for debugging
-        console.log('filteredUsers:', filteredUsers, 'Length:', filteredUsers.length);
 
         // Determine items per page based on screen size
         const isMobile = window.innerWidth <= 640;
@@ -784,9 +827,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Log the number of overrides for debugging
-        console.log('filteredOverrides:', filteredOverrides, 'Length:', filteredOverrides.length);
-
         // Determine items per page based on screen size
         const isMobile = window.innerWidth <= 640;
         const itemsPerPage = isMobile ? 5 : 8;
@@ -832,9 +872,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Log the number of history records for debugging
-        console.log('history:', history, 'Length:', history.length);
-
         // Determine items per page based on screen size
         const isMobile = window.innerWidth <= 640;
         const itemsPerPage = isMobile ? 5 : 8;
@@ -874,7 +911,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (totalPages <= 1) return;
 
         // Log pagination state for debugging
-        console.log('Rendering pagination:', { totalPages, currentPage });
 
         const pagination = document.createElement('div');
         pagination.className = 'flex items-center justify-center mt-4 space-x-2';
@@ -1535,7 +1571,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const totalDeposits = walletTransactions.filter(t => t.action === 'Deposit').reduce((sum, t) => sum + t.amount, 0);
         const totalWithdrawals = walletTransactions.filter(t => t.action === 'Withdraw').reduce((sum, t) => sum + t.amount, 0);
-        const totalProfit = users.reduce((sum, u) => sum + u.gameHistory.reduce((s, h) => s + (h.bet - h.payout), 0), 0);
+        const totalProfit = users.reduce((sum, u) => sum + u.gameHistory.reduce((s, h) => s + (h.payout - h.bet), 0), 0);
 
         if (totalDepositsEl) totalDepositsEl.textContent = `$${totalDeposits.toFixed(2)}`;
         if (totalProfitEl) totalProfitEl.textContent = `$${totalProfit.toFixed(2)}`;
