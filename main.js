@@ -1,4 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Hard-coded admin account
+    const adminAccount = {
+        username: "admin",
+        password: "admin"
+    };
+
     // Check if user is already logged in
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     const dashboard = document.querySelector('.flex.h-screen');
@@ -13,128 +19,52 @@ document.addEventListener('DOMContentLoaded', () => {
         authContainer.style.display = isLoggedIn ? 'none' : 'flex';
         authContainer.innerHTML = `
             <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-                <div class="flex justify-between mb-6">
-                    <button id="login-tab" class="px-4 py-2 font-semibold text-blue-600 border-b-2 border-blue-600">Login</button>
-                    <button id="register-tab" class="px-4 py-2 font-semibold text-gray-600">Register</button>
-                </div>
+                <h2 class="text-2xl font-semibold mb-6 text-center">Admin Login</h2>
                 <div id="login-form" class="form">
-                    <h2 class="text-2xl font-semibold mb-6 text-center">Admin Login</h2>
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                        <input type="email" id="login-email" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your email">
-                    </div>
-                    <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                        <input type="password" id="login-password" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your password">
-                    </div>
-                    <button id="login-btn" class="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">Login</button>
-                    <p id="login-error" class="text-red-500 text-sm mt-2 hidden">Invalid email or password</p>
-                </div>
-                <div id="register-form" class="form hidden">
-                    <h2 class="text-2xl font-semibold mb-6 text-center">Register</h2>
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                        <input type="text" id="register-username" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your username">
+                        <input type="text" id="login-username" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your username" value="admin">
                     </div>
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                        <input type="email" id="register-email" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your email">
-                    </div>
-                    <div class="mb-6">
+                    <div class="mb-6 relative">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                        <input type="password" id="register-password" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your password">
+                        <input type="password" id="login-password" class="w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your password" value="admin">
+                        <button type="button" id="toggle-password" class="absolute right-3 top-9 text-gray-500 hover:text-gray-700 focus:outline-none">
+                            <i class="fas fa-eye"></i>
+                        </button>
                     </div>
-                    <button id="register-btn" class="w-full bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">Register</button>
-                    <p id="register-error" class="text-red-500 text-sm mt-2 hidden">All fields are required</p>
-                    <p id="register-success" class="text-green-500 text-sm mt-2 hidden">Registration successful! Please login.</p>
+                    <button id="login-btn" class="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">Login</button>
+                    <p id="login-error" class="text-red-500 text-sm mt-2 hidden">Invalid username or password</p>
                 </div>
             </div>
         `;
         document.body.appendChild(authContainer);
     }
 
-    // Tab switching
-    const loginTab = document.getElementById('login-tab');
-    const registerTab = document.getElementById('register-tab');
-    const loginForm = document.getElementById('login-form');
-    const registerForm = document.getElementById('register-form');
+    // Set default input values and handle show/hide password
+    const usernameInput = document.getElementById('login-username');
+    const passwordInput = document.getElementById('login-password');
+    const togglePasswordBtn = document.getElementById('toggle-password');
 
-    loginTab.addEventListener('click', () => {
-        loginTab.classList.add('text-blue-600', 'border-b-2', 'border-blue-600');
-        registerTab.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600');
-        registerTab.classList.add('text-gray-600');
-        loginForm.classList.remove('hidden');
-        registerForm.classList.add('hidden');
-    });
+    // Set default values
+    usernameInput.value = adminAccount.username;
+    passwordInput.value = adminAccount.password;
 
-    registerTab.addEventListener('click', () => {
-        registerTab.classList.add('text-blue-600', 'border-b-2', 'border-blue-600');
-        loginTab.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600');
-        loginTab.classList.add('text-gray-600');
-        registerForm.classList.remove('hidden');
-        loginForm.classList.add('hidden');
-    });
-
-    // Registration
-    document.getElementById('register-btn').addEventListener('click', () => {
-        const username = document.getElementById('register-username').value.trim();
-        const email = document.getElementById('register-email').value.trim();
-        const password = document.getElementById('register-password').value.trim();
-        const error = document.getElementById('register-error');
-        const success = document.getElementById('register-success');
-
-        if (!username || !email || !password) {
-            error.textContent = 'All fields are required';
-            error.classList.remove('hidden');
-            success.classList.add('hidden');
-            return;
-        }
-
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            error.textContent = 'Invalid email format';
-            error.classList.remove('hidden');
-            success.classList.add('hidden');
-            return;
-        }
-
-        let users = JSON.parse(localStorage.getItem('users') || '[]');
-        if (users.some(user => user.email === email)) {
-            error.textContent = 'Email already registered';
-            error.classList.remove('hidden');
-            success.classList.add('hidden');
-            return;
-        }
-
-        users.push({ username, email, password });
-        localStorage.setItem('users', JSON.stringify(users));
-        notifications.push({
-            id: notifications.length + 1,
-            title: "New Admin Registered",
-            message: `Admin "${username}" has registered.`,
-            time: new Date().toLocaleString()
-        });
-        localStorage.setItem('notifications', JSON.stringify(notifications));
-        error.classList.add('hidden');
-        success.classList.remove('hidden');
-        updateNotificationBadge();
-
-        document.getElementById('register-username').value = '';
-        document.getElementById('register-email').value = '';
-        document.getElementById('register-password').value = '';
+    // Toggle password visibility
+    togglePasswordBtn.addEventListener('click', () => {
+        const isPassword = passwordInput.type === 'password';
+        passwordInput.type = isPassword ? 'text' : 'password';
+        togglePasswordBtn.innerHTML = `<i class="fas fa-${isPassword ? 'eye-slash' : 'eye'}"></i>`;
     });
 
     // Login
     document.getElementById('login-btn').addEventListener('click', () => {
-        const email = document.getElementById('login-email').value.trim();
-        const password = document.getElementById('login-password').value.trim();
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value.trim();
         const error = document.getElementById('login-error');
 
-        const users = JSON.parse(localStorage.getItem('users') || '[]');
-        const user = users.find(u => u.email === email && u.password === password);
-
-        if (user) {
+        if (username === adminAccount.username && password === adminAccount.password) {
             localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('currentUser', JSON.stringify(user));
+            localStorage.setItem('currentUser', JSON.stringify({ username: adminAccount.username }));
             authContainer.style.display = 'none';
             dashboard.style.display = 'flex';
             error.classList.add('hidden');
@@ -156,9 +86,11 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem('currentUser');
         dashboard.style.display = 'none';
         authContainer.style.display = 'flex';
-        document.getElementById('login-email').value = '';
-        document.getElementById('login-password').value = '';
-        loginTab.click();
+        // Reset input values to default
+        usernameInput.value = adminAccount.username;
+        passwordInput.value = adminAccount.password;
+        passwordInput.type = 'password';
+        togglePasswordBtn.innerHTML = '<i class="fas fa-eye"></i>';
         updateAdminName();
     });
 
@@ -170,6 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     updateAdminName();
 
+    // Rest of the existing code remains unchanged
     // Data
     let games = JSON.parse(localStorage.getItem('games')) || [
         { id: 1, name: "Lucky Card Flip", description: "Flip one of three cards to reveal a hidden reward", status: "On", winRate: 55, preResult: "", plays: 1200 },
@@ -490,7 +423,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const id = parseInt(e.target.closest('.edit-game').dataset.id);
             const game = games.find(g => g.id === id);
-            document.getElementById('add-game-name').value = game.name;
+            document.getElementById('add-game-name approachable').value = game.name;
             document.getElementById('add-game-description').value = game.description;
             document.getElementById('add-game-status').value = game.status;
             document.getElementById('add-game-win-rate').value = game.winRate;

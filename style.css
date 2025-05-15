@@ -96,6 +96,12 @@
     }
 
 @media (max-width: 450px) {
+    header{
+        position: relative !important;
+    }
+    main{
+        padding: 0 2px !important;
+    }
     .sidebar {
         width: 180px;
     }
