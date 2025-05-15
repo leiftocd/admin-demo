@@ -646,8 +646,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const profits = top5Profits.map(item => item.profit);
 
             // Determine dynamic max for y-axis with smaller buffer
-            const maxProfit = Math.max(0, ...profits); // Đảm bảo không âm
-            const yAxisMax = maxProfit + 50; // Buffer nhỏ hơn, dựa trên hình ảnh max là $162
+            const maxProfit = Math.max(0, ...profits);
+            const yAxisMax = maxProfit + 50; 
 
             // Destroy existing chart if any
             if (profitChartCanvas.chart) {
@@ -669,18 +669,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false, // Cho phép tùy chỉnh chiều cao
+                    maintainAspectRatio: false,
                     layout: {
                         padding: {
-                            bottom: 10 // Giảm padding dưới
+                            bottom: 10,
                         }
                     },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            max: yAxisMax, // Ví dụ: 162 + 50 = 212
+                            max: yAxisMax,
                             ticks: {
-                                stepSize: Math.max(20, Math.ceil(yAxisMax / 5)), // Bước chia động
+                                stepSize: Math.max(20, Math.ceil(yAxisMax / 5)), 
                                 callback: value => `$${value.toFixed(2)}`
                             }
                         },
