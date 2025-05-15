@@ -78,7 +78,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const header = document.querySelector('header .flex.items-center:last-child');
     const logoutBtn = document.createElement('button');
     logoutBtn.className = 'ml-4 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm logout-btn';
-    logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt mr-1"></i> Logout';
+
+    // Check screen size to set logout button content
+    const isMobile = window.innerWidth < 641;
+    logoutBtn.innerHTML = isMobile 
+        ? '<i class="fas fa-sign-out-alt"></i>' 
+        : '<i class="fas fa-sign-out-alt mr-1"></i> Logout';
+
+    // Update logout button on window resize
+    window.addEventListener('resize', () => {
+        const isMobileNow = window.innerWidth < 641;
+        logoutBtn.innerHTML = isMobileNow 
+            ? '<i class="fas fa-sign-out-alt"></i>' 
+            : '<i class="fas fa-sign-out-alt mr-1"></i> Logout';
+    });
+
     header.appendChild(logoutBtn);
 
     logoutBtn.addEventListener('click', () => {
@@ -115,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 8, name: "Crash", description: "Bet and cash out before the rising multiplier crashes", status: "On", winRate: 65, preResult: "", plays: 1800 },
         { id: 9, name: "Jackpot Ladder", description: "Climb the reward ladder — the longer you play, the bigger the jackpot", status: "On", winRate: 42, preResult: "", plays: 400 },
         { id: 10, name: "Aviator", description: "Bet on a plane's ascent and cash out before it crashes", status: "On", winRate: 58, preResult: "Lose", plays: 1100 },
-        { id: 11, name: "-kernel32.dll", description: "Predict whether the next number will be higher or lower", status: "On", winRate: 50, preResult: "", plays: 700 },
+        { id: 11, name: "Higher or Lower", description: "Predict whether the next number will be higher or lower", status: "On", winRate: 50, preResult: "", plays: 700 },
         { id: 12, name: "Number Guess", description: "Guess a number from 1–10; correct guesses win big", status: "Off", winRate: 38, preResult: "", plays: 200 },
         { id: 13, name: "Coin Flip", description: "Simple heads-or-tails coin toss betting game", status: "On", winRate: 55, preResult: "Win", plays: 1300 },
         { id: 14, name: "Color Guess", description: "Guess which color will appear next", status: "On", winRate: 47, preResult: "", plays: 500 },
@@ -124,29 +138,195 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 17, name: "Space Max", description: "Navigate a spaceship to pass checkpoints and collect rewards", status: "On", winRate: 49, preResult: "Lose", plays: 650 },
         { id: 18, name: "Racing", description: "Bet on animated cars and win if your pick finishes first", status: "On", winRate: 46, preResult: "", plays: 1400 },
         { id: 19, name: "Video Poker", description: "Play a quick 5-card poker game against probability", status: "On", winRate: 51, preResult: "", plays: 750 },
-        { id: 20, name: "Classic Wheel", description: "Spin a wheel with fixed win segments", status: "On", winRate: 54, preResult: "", plays: 1600 }
+        { id: 20, name: "Classic Wheel", description: "Spin a wheel with fixed win segments", status: "On", winRate: 54, preResult: "", plays: 1600 },
+    
     ];
 
     let users = JSON.parse(localStorage.getItem('platformUsers')) || [
-        { id: "U5481", name: "[USER1_NAME]", email: "[USER1_EMAIL]", wallet: 100.00, status: "Active", gameHistory: [
-            { game: "Lucky Card Flip", date: "2025-05-12", result: "Win", bet: 10.00, payout: 20.00 },
-            { game: "Slot Machine", date: "2025-05-11", result: "Lose", bet: 5.00, payout: 0.00 }
-        ] },
-        { id: "U5480", name: "[USER2_NAME]", email: "[USER2_EMAIL]", wallet: 200.00, status: "Active", gameHistory: [
-            { game: "Dice Roll", date: "2025-05-12", result: "Win", bet: 15.00, payout: 30.00 }
-        ] },
-        { id: "U5479", name: "[USER3_NAME]", email: "[USER3_EMAIL]", wallet: 50.00, status: "Banned", gameHistory: [] }
+        {
+            id: "U5481",
+            name: "Alice Nguyen",
+            email: "alice.nguyen@example.com",
+            wallet: 100.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Lucky Card Flip", date: "2025-05-12", result: "Win", bet: 10.00, payout: 20.00 },
+                { game: "Slot Machine", date: "2025-05-11", result: "Lose", bet: 5.00, payout: 0.00 }
+            ]
+        },
+        {
+            id: "U5480",
+            name: "Brian Tran",
+            email: "brian.tran@example.com",
+            wallet: 200.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Dice Roll", date: "2025-05-12", result: "Win", bet: 15.00, payout: 30.00 }
+            ]
+        },
+        {
+            id: "U5479",
+            name: "Cindy Le",
+            email: "cindy.le@example.com",
+            wallet: 50.00,
+            status: "Banned",
+            gameHistory: []
+        },
+                {
+            id: "U5481",
+            name: "Alice Nguyen",
+            email: "alice.nguyen@example.com",
+            wallet: 100.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Lucky Card Flip", date: "2025-05-12", result: "Win", bet: 10.00, payout: 20.00 },
+                { game: "Slot Machine", date: "2025-05-11", result: "Lose", bet: 5.00, payout: 0.00 }
+            ]
+        },
+        {
+            id: "U5480",
+            name: "Brian Tran",
+            email: "brian.tran@example.com",
+            wallet: 200.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Dice Roll", date: "2025-05-12", result: "Win", bet: 15.00, payout: 30.00 }
+            ]
+        },
+        {
+            id: "U5479",
+            name: "Cindy Le",
+            email: "cindy.le@example.com",
+            wallet: 50.00,
+            status: "Banned",
+            gameHistory: []
+        },
+                {
+            id: "U5481",
+            name: "Alice Nguyen",
+            email: "alice.nguyen@example.com",
+            wallet: 100.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Lucky Card Flip", date: "2025-05-12", result: "Win", bet: 10.00, payout: 20.00 },
+                { game: "Slot Machine", date: "2025-05-11", result: "Lose", bet: 5.00, payout: 0.00 }
+            ]
+        },
+        {
+            id: "U5480",
+            name: "Brian Tran",
+            email: "brian.tran@example.com",
+            wallet: 200.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Dice Roll", date: "2025-05-12", result: "Win", bet: 15.00, payout: 30.00 }
+            ]
+        },
+        {
+            id: "U5479",
+            name: "Cindy Le",
+            email: "cindy.le@example.com",
+            wallet: 50.00,
+            status: "Banned",
+            gameHistory: []
+        },
+                {
+            id: "U5481",
+            name: "Alice Nguyen",
+            email: "alice.nguyen@example.com",
+            wallet: 100.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Lucky Card Flip", date: "2025-05-12", result: "Win", bet: 10.00, payout: 20.00 },
+                { game: "Slot Machine", date: "2025-05-11", result: "Lose", bet: 5.00, payout: 0.00 }
+            ]
+        },
+        {
+            id: "U5480",
+            name: "Brian Tran",
+            email: "brian.tran@example.com",
+            wallet: 200.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Dice Roll", date: "2025-05-12", result: "Win", bet: 15.00, payout: 30.00 }
+            ]
+        },
+        {
+            id: "U5479",
+            name: "Cindy Le",
+            email: "cindy.le@example.com",
+            wallet: 50.00,
+            status: "Banned",
+            gameHistory: []
+        },
+                {
+            id: "U5481",
+            name: "Alice Nguyen",
+            email: "alice.nguyen@example.com",
+            wallet: 100.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Lucky Card Flip", date: "2025-05-12", result: "Win", bet: 10.00, payout: 20.00 },
+                { game: "Slot Machine", date: "2025-05-11", result: "Lose", bet: 5.00, payout: 0.00 }
+            ]
+        },
+        {
+            id: "U5480",
+            name: "Brian Tran",
+            email: "brian.tran@example.com",
+            wallet: 200.00,
+            status: "Active",
+            gameHistory: [
+                { game: "Dice Roll", date: "2025-05-12", result: "Win", bet: 15.00, payout: 30.00 }
+            ]
+        },
+        {
+            id: "U5479",
+            name: "Cindy Le",
+            email: "cindy.le@example.com",
+            wallet: 50.00,
+            status: "Banned",
+            gameHistory: []
+        },
+        
     ];
 
     let walletTransactions = JSON.parse(localStorage.getItem('walletTransactions')) || [
-        { id: "WT8765", user: "[USER1_NAME]", email: "[USER1_EMAIL]", action: "Deposit", amount: 50.00, date: "2025-05-12" },
-        { id: "WT8764", user: "[USER2_NAME]", email: "[USER2_EMAIL]", action: "Withdraw", amount: 20.00, date: "2025-05-12" }
+        {
+            id: "WT8765",
+            user: "Alice Nguyen",
+            email: "alice.nguyen@example.com",
+            action: "Deposit",
+            amount: 50.00,
+            date: "2025-05-12"
+        },
+        {
+            id: "WT8764",
+            user: "Brian Tran",
+            email: "brian.tran@example.com",
+            action: "Withdraw",
+            amount: 20.00,
+            date: "2025-05-12"
+        }
     ];
 
     let overrides = JSON.parse(localStorage.getItem('overrides')) || [
-        { id: 1, game: "Lucky Card Flip", user: "[USER1_EMAIL]", result: "Win", expiration: "2025-05-20" },
-        { id: 2, game: "Dice Roll", user: "[USER2_EMAIL]", result: "Lose", expiration: "2025-05-18" }
+        {
+            id: 1,
+            game: "Lucky Card Flip",
+            user: "alice.nguyen@example.com",
+            result: "Win",
+            expiration: "2025-05-20"
+        },
+        {
+            id: 2,
+            game: "Dice Roll",
+            user: "brian.tran@example.com",
+            result: "Lose",
+            expiration: "2025-05-18"
+        }
     ];
+
 
     let notifications = JSON.parse(localStorage.getItem('notifications')) || [
         { id: 1, title: "New User Registered", message: "A new user has registered.", time: "2025-05-13 10:30 AM" },
@@ -203,7 +383,7 @@ document.addEventListener('DOMContentLoaded', () => {
             pages.forEach(page => page.classList.add('hidden'));
             document.getElementById(`${targetPage}-page`).classList.remove('hidden');
             pageTitle.textContent = targetPage.charAt(0).toUpperCase() + targetPage.slice(1).replace('-', ' ');
-            if (window.innerWidth < 640) {
+            if (window.innerWidth < 641) {
                 hamburgerMenuContent.classList.add('hidden');
                 sidebar.classList.add('collapsed');
             }
@@ -247,11 +427,30 @@ document.addEventListener('DOMContentLoaded', () => {
     // Populate Tables
     function populateGameTable(filteredGames) {
         const tbody = document.getElementById('game-table-body');
-        if (!tbody) return;
-        tbody.innerHTML = '';
-        filteredGames.forEach(game => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
+        const paginationContainer = document.getElementById('game-pagination');
+        if (!tbody) {
+            console.error('game-table-body not found');
+            return;
+        }
+
+        // Log the number of games for debugging
+        console.log('filteredGames:', filteredGames, 'Length:', filteredGames.length);
+
+        // Determine items per page based on screen size
+        const isMobile = window.innerWidth <= 640;
+        const itemsPerPage = isMobile ? 5 : 8;
+        const totalPages = Math.ceil(filteredGames.length / itemsPerPage);
+        let currentPage = parseInt(localStorage.getItem('gamePage')) || 1;
+        if (currentPage < 1 || currentPage > totalPages) currentPage = totalPages > 0 ? 1 : 1;
+
+        // Get data for the current page
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const paginatedGames = filteredGames.slice(start, end);
+
+        // Render table rows
+        tbody.innerHTML = paginatedGames.length > 0 ? paginatedGames.map(game => `
+            <tr>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${game.name}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${game.description}</td>
                 <td class="px-6 py-4 whitespace-nowrap">
@@ -263,21 +462,49 @@ document.addEventListener('DOMContentLoaded', () => {
                     <a href="#" class="text-blue-600 hover:text-blue-900 mr-3 edit-game" data-id="${game.id}"><i class="fas fa-edit"></i></a>
                     <a href="#" class="text-red-600 hover:text-red-900 delete-game" data-id="${game.id}"><i class="fas fa-trash"></i></a>
                 </td>
-            `;
-            tbody.appendChild(row);
+            </tr>
+        `).join('') : '<tr><td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">No games found</td></tr>';
+
+        // Render pagination controls
+        if (!paginationContainer) {
+            console.warn('game-pagination container not found, skipping pagination');
+            return;
+        }
+        renderPagination(paginationContainer, totalPages, currentPage, page => {
+            localStorage.setItem('gamePage', page);
+            populateGameTable(filteredGames);
         });
     }
 
     function populateUserTable(filteredUsers) {
         const tbody = document.getElementById('user-table-body');
-        if (!tbody) return;
-        tbody.innerHTML = '';
-        filteredUsers.forEach(user => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
+        const paginationContainer = document.getElementById('user-pagination');
+        if (!tbody) {
+            console.error('user-table-body not found');
+            return;
+        }
+
+        // Log the number of users for debugging
+        console.log('filteredUsers:', filteredUsers, 'Length:', filteredUsers.length);
+
+        // Determine items per page based on screen size
+        const isMobile = window.innerWidth <= 640;
+        const itemsPerPage = isMobile ? 5 : 8;
+        const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+        let currentPage = parseInt(localStorage.getItem('userPage')) || 1;
+        if (currentPage < 1 || currentPage > totalPages) currentPage = totalPages > 0 ? 1 : 1;
+
+        // Get data for the current page
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const paginatedUsers = filteredUsers.slice(start, end);
+
+        // Render table rows
+        tbody.innerHTML = paginatedUsers.length > 0 ? paginatedUsers.map(user => `
+            <tr>
                 <td class="px-6 py-4 whitespace-nowrap">
                     <div class="flex items-center">
-                        <img src="https://static.vecteezy.com/system/resources/previews/019/465/366/original/3d-user-icon-on-transparent-background-free-png.png" alt="User" class="w-10 h-10 rounded-full">
+                        <img src="https://static.vecteezy.com/system/resources/previews/019/465/366/original/3d-user-icon-on-transparent-background-free-png.png" alt="User" class="w-10 h-10 rounded-full ad-res">
                         <div class="ml-4">
                             <div class="text-sm font-medium text-gray-900">${user.name}</div>
                             <div class="text-xs text-gray-500">User ID: ${user.id}</div>
@@ -295,18 +522,46 @@ document.addEventListener('DOMContentLoaded', () => {
                     <a href="#" class="text-green-600 hover:text-green-900 mr-3 update-wallet" data-id="${user.id}"><i class="fas fa-wallet"></i></a>
                     <a href="#" class="text-red-600 hover:text-red-900 toggle-ban" data-id="${user.id}"><i class="fas fa-ban"></i></a>
                 </td>
-            `;
-            tbody.appendChild(row);
+            </tr>
+        `).join('') : '<tr><td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">No users found</td></tr>';
+
+        // Render pagination controls
+        if (!paginationContainer) {
+            console.warn('user-pagination container not found, skipping pagination');
+            return;
+        }
+        renderPagination(paginationContainer, totalPages, currentPage, page => {
+            localStorage.setItem('userPage', page);
+            populateUserTable(filteredUsers);
         });
     }
 
     function populateOverrideTable(filteredOverrides) {
         const tbody = document.getElementById('override-table-body');
-        if (!tbody) return;
-        tbody.innerHTML = '';
-        filteredOverrides.forEach(override => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
+        const paginationContainer = document.getElementById('override-pagination');
+        if (!tbody) {
+            console.error('override-table-body not found');
+            return;
+        }
+
+        // Log the number of overrides for debugging
+        console.log('filteredOverrides:', filteredOverrides, 'Length:', filteredOverrides.length);
+
+        // Determine items per page based on screen size
+        const isMobile = window.innerWidth <= 640;
+        const itemsPerPage = isMobile ? 5 : 8;
+        const totalPages = Math.ceil(filteredOverrides.length / itemsPerPage);
+        let currentPage = parseInt(localStorage.getItem('overridePage')) || 1;
+        if (currentPage < 1 || currentPage > totalPages) currentPage = totalPages > 0 ? 1 : 1;
+
+        // Get data for the current page
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const paginatedOverrides = filteredOverrides.slice(start, end);
+
+        // Render table rows
+        tbody.innerHTML = paginatedOverrides.length > 0 ? paginatedOverrides.map(override => `
+            <tr>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${override.game}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${override.user}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${override.result}</td>
@@ -315,30 +570,129 @@ document.addEventListener('DOMContentLoaded', () => {
                     <a href="#" class="text-blue-600 hover:text-blue-900 mr-3 edit-override" data-id="${override.id}"><i class="fas fa-edit"></i></a>
                     <a href="#" class="text-red-600 hover:text-red-900 delete-override" data-id="${override.id}"><i class="fas fa-trash"></i></a>
                 </td>
-            `;
-            tbody.appendChild(row);
+            </tr>
+        `).join('') : '<tr><td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">No overrides found</td></tr>';
+
+        // Render pagination controls
+        if (!paginationContainer) {
+            console.warn('override-pagination container not found, skipping pagination');
+            return;
+        }
+        renderPagination(paginationContainer, totalPages, currentPage, page => {
+            localStorage.setItem('overridePage', page);
+            populateOverrideTable(filteredOverrides);
         });
     }
 
     function populateGameHistoryTable(history) {
         const tbody = document.getElementById('game-history-table-body');
-        if (!tbody) return;
-        tbody.innerHTML = '';
-        history.forEach(record => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
+        const paginationContainer = document.getElementById('game-history-pagination');
+        if (!tbody) {
+            console.error('game-history-table-body not found');
+            return;
+        }
+
+        // Log the number of history records for debugging
+        console.log('history:', history, 'Length:', history.length);
+
+        // Determine items per page based on screen size
+        const isMobile = window.innerWidth <= 640;
+        const itemsPerPage = isMobile ? 5 : 8;
+        const totalPages = Math.ceil(history.length / itemsPerPage);
+        let currentPage = parseInt(localStorage.getItem('gameHistoryPage')) || 1;
+        if (currentPage < 1 || currentPage > totalPages) currentPage = totalPages > 0 ? 1 : 1;
+
+        // Get data for the current page
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const paginatedHistory = history.slice(start, end);
+
+        // Render table rows
+        tbody.innerHTML = paginatedHistory.length > 0 ? paginatedHistory.map(record => `
+            <tr>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${record.game}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${record.date}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${record.result}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$${record.bet.toFixed(2)}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$${record.payout.toFixed(2)}</td>
-            `;
-            tbody.appendChild(row);
+            </tr>
+        `).join('') : '<tr><td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">No game history</td></tr>';
+
+        // Render pagination controls
+        if (!paginationContainer) {
+            console.warn('game-history-pagination container not found, skipping pagination');
+            return;
+        }
+        renderPagination(paginationContainer, totalPages, currentPage, page => {
+            localStorage.setItem('gameHistoryPage', page);
+            populateGameHistoryTable(history);
         });
-        if (history.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">No game history</td></tr>';
+    }
+
+   function renderPagination(container, totalPages, currentPage, onPageChange) {
+    container.innerHTML = '';
+    if (totalPages <= 1) return;
+
+    // Log pagination state for debugging
+    console.log('Rendering pagination:', { totalPages, currentPage });
+
+    const pagination = document.createElement('div');
+    pagination.className = 'flex items-center justify-center mt-4 space-x-2';
+
+    // Previous button
+    const prevButton = document.createElement('button');
+    prevButton.className = `px-3 py-1 rounded-lg ${currentPage === 1 ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`;
+    prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
+    prevButton.disabled = currentPage === 1;
+    prevButton.addEventListener('click', () => {
+        if (currentPage > 1) onPageChange(currentPage - 1);
+    });
+
+    // Page tabs (show only previous, current, next)
+    const pageTabs = document.createElement('div');
+    pageTabs.className = 'flex space-x-1';
+
+    // Calculate the tabs to display
+    const tabsToShow = [];
+    if (totalPages <= 3) {
+        // If 3 or fewer pages, show all
+        for (let i = 1; i <= totalPages; i++) {
+            tabsToShow.push(i);
+        }
+    } else {
+        // Show previous, current, next
+        if (currentPage === 1) {
+            tabsToShow.push(1, 2, 3); // [1][2][3]
+        } else if (currentPage === totalPages) {
+            tabsToShow.push(totalPages - 2, totalPages - 1, totalPages); // [N-2][N-1][N]
+        } else {
+            tabsToShow.push(currentPage - 1, currentPage, currentPage + 1); // [prev][current][next]
         }
     }
+
+    // Render the tabs
+    tabsToShow.forEach(page => {
+        const pageButton = document.createElement('button');
+        pageButton.className = `px-3 py-1 rounded-lg ${page === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`;
+        pageButton.textContent = page;
+        pageButton.addEventListener('click', () => onPageChange(page));
+        pageTabs.appendChild(pageButton);
+    });
+
+    // Next button
+    const nextButton = document.createElement('button');
+    nextButton.className = `px-3 py-1 rounded-lg ${currentPage === totalPages ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`;
+    nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
+    nextButton.disabled = currentPage === totalPages;
+    nextButton.addEventListener('click', () => {
+        if (currentPage < totalPages) onPageChange(currentPage + 1);
+    });
+
+    pagination.appendChild(prevButton);
+    pagination.appendChild(pageTabs);
+    pagination.appendChild(nextButton);
+    container.appendChild(pagination);
+}
 
     // Game Modal
     const addGameModal = document.getElementById('add-game-modal');
@@ -423,7 +777,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const id = parseInt(e.target.closest('.edit-game').dataset.id);
             const game = games.find(g => g.id === id);
-            document.getElementById('add-game-name approachable').value = game.name;
+            document.getElementById('add-game-name').value = game.name;
             document.getElementById('add-game-description').value = game.description;
             document.getElementById('add-game-status').value = game.status;
             document.getElementById('add-game-win-rate').value = game.winRate;

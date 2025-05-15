@@ -21,54 +21,7 @@
 .menu-icon {
     display: none;
 }
-
-/* PC (above 640px) */
-@media (min-width: 640px) {
-    .sidebar {
-        transform: translateX(0); /* Always visible on PC */
-        display: block !important;
-    }
-
-    .content {
-        margin-left: 250px; /* Space for sidebar */
-        transition: margin-left 0.3s;
-    }
-
-    #hamburger-menu {
-        display: none; /* Hide hamburger button on PC */
-    }
-
-    #hamburger-menu-content {
-        display: none; /* Hide hamburger menu content on PC */
-    }
-}
-
-/* Mobile (below 640px) */
-@media (max-width: 640px) {
-    .sidebar {
-        display: none !important;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-        transform: translateX(-100%); /* Hidden by default on mobile */
-    }
-
-    .content {
-        margin-left: 0; /* No margin on mobile */
-        padding: 0.5rem;
-    }
-
-    .sidebar:not(.collapsed) {
-        transform: translateX(0); /* Show when hamburger menu is toggled */
-    }
-
-    .header-top {
-        justify-content: space-between; /* Ensure hamburger and other elements are spaced */
-    }
-
-    .menu-icon {
-        display: flex; /* Show hamburger menu button on mobile */
-    }
-}   
-    /* Hamburger Menu Content */
+ /* Hamburger Menu Content */
     #hamburger-menu-content {
         transition: transform 0.3s;
         transform: translateX(-100%); /* Hidden by default */
@@ -95,9 +48,135 @@
         padding: 1rem;
     }
 
-@media (max-width: 450px) {
+@media (max-width: 768px){
+    main{
+        padding: 0 6px !important;
+    }
+    .content{
+        margin-left: 200px !important;
+    }
+    h1{
+        font-size: 16px !important;
+    }
+    .sidebar{
+        max-width: 200px;
+    }
+    span.nav-text{
+        font-size: 14px !important;
+    }
+}
+
+/* PC (above 640px) */
+@media (min-width: 640px) {
+
+    .sidebar {
+        transform: translateX(0); /* Always visible on PC */
+        display: block !important;
+    }
+
+    .content {
+        margin-left: 250px; /* Space for sidebar */
+        transition: margin-left 0.3s;
+    }
+
+    #hamburger-menu {
+        display: none; /* Hide hamburger button on PC */
+    }
+
+    #hamburger-menu-content {
+        display: none; /* Hide hamburger menu content on PC */
+    }
+}
+
+/* Mobile (below 640px) */
+@media (max-width: 640px) {
+    .sidebar {
+        display: none !important;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+        transform: translateX(-100%); /* Hidden by default on mobile */
+    }
+    .content {
+        margin-left: 0 !important; /* No margin on mobile */
+        padding: 0.5rem;
+    }
+
+    .sidebar:not(.collapsed) {
+        transform: translateX(0); /* Show when hamburger menu is toggled */
+    }
+
+    .header-top {
+        justify-content: space-between; /* Ensure hamburger and other elements are spaced */
+    }
+
+    .menu-icon {
+        display: flex; /* Show hamburger menu button on mobile */
+    }
     header{
         position: relative !important;
+    }
+    main{
+        padding: 0 2px !important;
+    }
+    #manual-override-page .my-res,
+    #games-page .my-res,
+    #users-page .my-res{
+        margin: 15px 0 !important;
+    }
+    .p-rp-1{
+        padding: 8px 12px !important;
+    }
+    
+    #hamburger-menu {
+        display: unset; /* Hide hamburger button on PC */
+    }
+
+    #hamburger-menu-content {
+        display: unset; /* Hide hamburger menu content on PC */
+    }
+    .ad-res{
+        width: 35px !important;
+        height: 35px !important;
+    }
+    #add-game-btn ,
+    #add-user-btn ,
+    #add-override-btn {
+        font-size: 14px !important;
+    }
+    
+}   
+
+@media (max-width: 450px) {
+    #add-game-btn ,
+    #add-user-btn ,
+    #add-override-btn {
+        font-size: 13px !important;
+    }
+    #game-pagination,
+    #user-pagination,
+    #override-pagination{
+        font-size: 13px;
+    }
+    .p-rp-1{
+        padding: 8px 10px !important;
+    }
+    .p-rp-2{
+        padding: 6px 10px !important;
+    }
+    #notification-subnav{
+        width: 192px !important;
+    }
+    .ad-res{
+        width: 30px !important;
+        height: 30px !important;
+    }
+    #page-title{
+        margin-left: 8px;
+    }
+    header{
+        padding: 10px 8px !important;
+    }
+    .p-x-5{
+        padding: 10px;
     }
     main{
         padding: 0 2px !important;
@@ -115,7 +194,7 @@
         gap: 0.5rem;
     }
     #hamburger-menu {
-        margin-bottom: 0.5rem;
+        margin-bottom: 0;
     }
     #page-title {
         font-size: 1rem;
@@ -126,10 +205,9 @@
         gap: 0.5rem;
     }
     .logout-btn {
-        width: 100%;
         text-align: center;
-        padding: 0.5rem;
         font-size: 0.875rem;
+        margin-left: 8px;
     }
     .chart-container {
         height: 200px;

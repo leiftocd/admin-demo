@@ -71,7 +71,7 @@
                         </div>
                     </div>
                     <div class="flex items-center">
-                        <img src="https://static.vecteezy.com/system/resources/previews/015/078/710/non_2x/professor-illustration-on-a-background-premium-quality-symbols-icons-for-concept-and-graphic-design-vector.jpg" alt="Admin" class="w-10 h-10 rounded-full">
+                        <img src="https://static.vecteezy.com/system/resources/previews/015/078/710/non_2x/professor-illustration-on-a-background-premium-quality-symbols-icons-for-concept-and-graphic-design-vector.jpg" alt="Admin" class="w-10 h-10 rounded-full ad-res">
                         <span class="ml-2 text-sm font-medium ad-name">Admin</span>
                     </div>
                 </div>
@@ -112,31 +112,31 @@
                 <!-- Dashboard Page -->
                 <div id="dashboard-page" class="page">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-                        <div class="bg-white p-6 rounded-lg shadow">
+                        <div class="bg-white p-6 rounded-lg shadow p-x-5">
                             <h3 class="text-lg font-semibold mb-2">Total Games</h3>
                             <p class="text-3xl font-bold text-blue-600">20</p>
                         </div>
-                        <div class="bg-white p-6 rounded-lg shadow">
+                        <div class="bg-white p-6 rounded-lg shadow p-x-5">
                             <h3 class="text-lg font-semibold mb-2">Total Users</h3>
                             <p class="text-3xl font-bold text-green-600">3</p>
                         </div>
-                        <div class="bg-white p-6 rounded-lg shadow">
+                        <div class="bg-white p-6 rounded-lg shadow p-x-5">
                             <h3 class="text-lg font-semibold mb-2">Total Deposits</h3>
                             <p class="text-3xl font-bold text-yellow-600">$100.00</p>
                         </div>
-                        <div class="bg-white p-6 rounded-lg shadow">
+                        <div class="bg-white p-6 rounded-lg shadow p-x-5">
                             <h3 class="text-lg font-semibold mb-2">Total Profit</h3>
                             <p class="text-3xl font-bold text-purple-600">$50.00</p>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                        <div class="bg-white p-6 rounded-lg shadow">
+                        <div class="bg-white p-6 rounded-lg shadow p-x-5">
                             <h3 class="text-lg font-semibold mb-4">Game Plays Over Time</h3>
                             <div class="chart-container">
                                 <canvas id="playChart"></canvas>
                             </div>
                         </div>
-                        <div class="bg-white p-6 rounded-lg shadow">
+                        <div class="bg-white p-6 rounded-lg shadow p-x-5">
                             <h3 class="text-lg font-semibold mb-4">Profit by Game</h3>
                             <div class="chart-container">
                                 <canvas id="profitChart"></canvas>
@@ -147,13 +147,13 @@
 
                 <!-- Games Page -->
                 <div id="games-page" class="page hidden">
-                    <div class="flex justify-between items-center mb-6">
+                    <div class="flex justify-between items-center mb-6 my-res">
                         <h3 class="text-lg font-semibold">Manage Games</h3>
                         <button id="add-game-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
                             <i class="fas fa-plus mr-2"></i>Add Game
                         </button>
                     </div>
-                    <div class="bg-white p-6 rounded-lg shadow mb-6">
+                    <div class="bg-white p-6 rounded-lg shadow mb-6 p-rp-1">
                         <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                             <input type="text" id="game-search" class="border rounded-lg px-3 py-2 mb-2 md:mb-0 md:mr-2 w-full md:w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Search games...">
                             <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
@@ -179,18 +179,19 @@
                                 <tbody id="game-table-body" class="bg-white divide-y divide-gray-200"></tbody>
                             </table>
                         </div>
+                        <div id="game-pagination" class="mt-4" style="display: block;"></div>
                     </div>
                 </div>
 
                 <!-- Users Page -->
                 <div id="users-page" class="page hidden">
-                    <div class="flex justify-between items-center mb-6">
+                    <div class="flex justify-between items-center mb-6 my-res">
                         <h3 class="text-lg font-semibold">Manage Users</h3>
                         <button id="add-user-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
                             <i class="fas fa-plus mr-2"></i>Add User
                         </button>
                     </div>
-                    <div class="bg-white p-6 rounded-lg shadow mb-6">
+                    <div class="bg-white p-6 rounded-lg shadow mb-6 p-rp-1">
                         <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                             <input type="text" id="user-search" class="border rounded-lg px-3 py-2 mb-2 md:mb-0 md:mr-2 w-full md:w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Search users...">
                             <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
@@ -215,18 +216,19 @@
                                 <tbody id="user-table-body" class="bg-white divide-y divide-gray-200"></tbody>
                             </table>
                         </div>
+                        <div id="user-pagination" class="mt-4"></div>
                     </div>
                 </div>
 
                 <!-- Manual Override Page -->
                 <div id="manual-override-page" class="page hidden">
-                    <div class="flex justify-between items-center mb-6">
+                    <div class="flex justify-between items-center mb-6 my-res">
                         <h3 class="text-lg font-semibold">Manage Manual Overrides</h3>
                         <button id="add-override-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
                             <i class="fas fa-plus mr-2"></i>Add Override
                         </button>
                     </div>
-                    <div class="bg-white p-6 rounded-lg shadow mb-6">
+                    <div class="bg-white p-6 rounded-lg shadow mb-6 p-rp-1">
                         <div class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
@@ -241,6 +243,7 @@
                                 <tbody id="override-table-body" class="bg-white divide-y divide-gray-200"></tbody>
                             </table>
                         </div>
+                        <div id="override-pagination" class="mt-4"></div>
                     </div>
                 </div>
             </main>
@@ -249,7 +252,7 @@
 
     <!-- Add Game Modal -->
     <div id="add-game-modal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
-        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md p-x-5">
             <h3 class="text-lg font-semibold mb-4">Add/Edit Game</h3>
             <div class="space-y-4">
                 <div>
@@ -290,7 +293,7 @@
 
     <!-- Add User Modal -->
     <div id="add-user-modal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
-        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md p-x-5">
             <h3 class="text-lg font-semibold mb-4">Add/Edit User</h3>
             <div class="space-y-4">
                 <div>
@@ -323,7 +326,7 @@
 
     <!-- Wallet Update Modal -->
     <div id="wallet-update-modal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
-        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md p-x-5">
             <h3 class="text-lg font-semibold mb-4">Update Wallet</h3>
             <div class="space-y-4">
                 <div>
@@ -348,7 +351,7 @@
 
     <!-- Game History Modal -->
     <div id="game-history-modal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
-        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl p-x-5">
             <h3 class="text-lg font-semibold mb-4">Game History</h3>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
@@ -372,7 +375,7 @@
 
     <!-- Add Manual Override Modal -->
     <div id="add-override-modal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
-        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md p-x-5">
             <h3 class="text-lg font-semibold mb-4">Add/Edit Manual Override</h3>
             <div class="space-y-4">
                 <div>
