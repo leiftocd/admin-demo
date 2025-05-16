@@ -5,6 +5,13 @@ document.addEventListener('DOMContentLoaded', () => {
         password: "admin"
     };
 
+    // Confirmation 
+    function confirmAction(message, onConfirm) {
+        if (confirm(message)) {
+            onConfirm();
+        }
+    }
+    
     // Check if user is already logged in
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     const dashboard = document.querySelector('.flex.h-screen');
@@ -117,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
         const adminNameSpan = document.querySelector('.ad-name');
         if (adminNameSpan) {
-            adminNameSpan.textContent = user.username || 'Admin';
+            adminNameSpan.textContent = `Hi, ${user.username || 'Admin'}`;
         }
     };
     updateAdminName();
@@ -319,9 +326,31 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     let walletTransactions = JSON.parse(localStorage.getItem('walletTransactions')) || [
-        { id: "WT8765", user: "Alice Nguyen", email: "alice.nguyen@example.com", action: "Deposit", amount: 5000, date: "2025-05-12" },
-        { id: "WT8764", user: "Brian Tran", email: "brian.tran@example.com", action: "Withdraw", amount: 2000, date: "2025-05-12" }
-    ];
+    { id: "WT1001", user: "Alice Nguyen", email: "alice.nguyen@example.com", action: "Deposit", amount: 5000, date: "2025-05-12" },
+    { id: "WT1002", user: "Brian Tran", email: "brian.tran@example.com", action: "Withdraw", amount: 20000, date: "2025-05-12" },
+    { id: "WT1003", user: "Charlie Le", email: "charlie.le@example.com", action: "Deposit", amount: 7000, date: "2025-05-12" },
+    { id: "WT1004", user: "Diana Pham", email: "diana.pham@example.com", action: "Withdraw", amount: 15000, date: "2025-05-12" },
+    { id: "WT1005", user: "Ethan Vo", email: "ethan.vo@example.com", action: "Deposit", amount: 12000, date: "2025-05-12" },
+    { id: "WT1006", user: "Fiona Do", email: "fiona.do@example.com", action: "Withdraw", amount: 5000, date: "2025-05-12" },
+    { id: "WT1007", user: "George Bui", email: "george.bui@example.com", action: "Deposit", amount: 3000, date: "2025-05-12" },
+    { id: "WT1008", user: "Hannah Ly", email: "hannah.ly@example.com", action: "Withdraw", amount: 22000, date: "2025-05-12" },
+    { id: "WT1009", user: "Ivan Truong", email: "ivan.truong@example.com", action: "Deposit", amount: 4500, date: "2025-05-12" },
+    { id: "WT1010", user: "Julia Ho", email: "julia.ho@example.com", action: "Withdraw", amount: 10000, date: "2025-05-12" },
+    { id: "WT1011", user: "Kevin Lam", email: "kevin.lam@example.com", action: "Deposit", amount: 8000, date: "2025-05-12" },
+    { id: "WT1012", user: "Linda Chau", email: "linda.chau@example.com", action: "Withdraw", amount: 3000, date: "2025-05-12" },
+    { id: "WT1013", user: "Mike Dang", email: "mike.dang@example.com", action: "Deposit", amount: 16000, date: "2025-05-12" },
+    { id: "WT1014", user: "Nina Mai", email: "nina.mai@example.com", action: "Withdraw", amount: 25000, date: "2025-05-12" },
+    { id: "WT1015", user: "Oscar Nguyen", email: "oscar.nguyen@example.com", action: "Deposit", amount: 7000, date: "2025-05-12" },
+    { id: "WT1016", user: "Paula Vo", email: "paula.vo@example.com", action: "Withdraw", amount: 6000, date: "2025-05-12" },
+    { id: "WT1017", user: "Quinn Dinh", email: "quinn.dinh@example.com", action: "Deposit", amount: 9000, date: "2025-05-12" },
+    { id: "WT1018", user: "Ryan Chau", email: "ryan.chau@example.com", action: "Withdraw", amount: 4500, date: "2025-05-12" },
+    { id: "WT1019", user: "Sophie Tran", email: "sophie.tran@example.com", action: "Deposit", amount: 11000, date: "2025-05-12" },
+    { id: "WT1020", user: "Tony Le", email: "tony.le@example.com", action: "Withdraw", amount: 17000, date: "2025-05-12" },
+    { id: "WT1021", user: "Uyen Do", email: "uyen.do@example.com", action: "Deposit", amount: 13000, date: "2025-05-12" },
+    { id: "WT1022", user: "Victor Pham", email: "victor.pham@example.com", action: "Withdraw", amount: 4000, date: "2025-05-12" },
+    { id: "WT1023", user: "Wendy Bui", email: "wendy.bui@example.com", action: "Deposit", amount: 50000, date: "2025-05-12" },
+    { id: "WT1024", user: "Xavier Truong", email: "xavier.truong@example.com", action: "Withdraw", amount: 2000, date: "2025-05-12" },
+];
 
     let overrides = JSON.parse(localStorage.getItem('overrides')) || [
         { id: 1, game: "Lucky Card Flip", user: "alice.nguyen@example.com", fields: { result: "Win", details: "Set card 1" }, expiration: "2025-05-20" },
@@ -666,7 +695,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     <a href="#" class="text-blue-600 hover:text-blue-900 mr-3 edit-user" data-id="${user.id}"><i class="fas fa-edit"></i></a>
                     <a href="#" class="text-gray-600 hover:text-gray-900 mr-3 view-history" data-id="${user.id}"><i class="fas fa-eye"></i></a>
                     <a href="#" class="text-green-600 hover:text-green-900 mr-3 update-wallet" data-id="${user.id}"><i class="fas fa-wallet"></i></a>
-                    <a href="#" class="text-red-600 hover:text-red-900 toggle-ban" data-id="${user.id}"><i class="fas fa-ban"></i></a>
                 </td>
             </tr>
         `).join('') : '<tr><td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">No users found</td></tr>';
@@ -782,56 +810,67 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Render Pagination
+    // Generic Pagination Renderer
     function renderPagination(container, totalPages, currentPage, onPageChange) {
-        if (!container) return;
-        container.innerHTML = '';
-        if (totalPages <= 1) return;
+    if (!container) return;
+    container.innerHTML = '';
+    if (totalPages <= 1) return;
 
-        const pagination = document.createElement('div');
-        pagination.className = 'flex items-center justify-center mt-4 space-x-2';
+    const pagination = document.createElement('div');
+    pagination.className = 'flex items-center justify-center mt-4 space-x-2';
 
-        const prevButton = document.createElement('button');
-        prevButton.className = `px-3 py-1 rounded-lg ${currentPage === 1 ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`;
-        prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
-        prevButton.disabled = currentPage === 1;
-        prevButton.addEventListener('click', () => {
-            if (currentPage > 1) onPageChange(currentPage - 1);
-        });
+    const prevButton = document.createElement('button');
+    prevButton.className = `px-3 py-1 rounded-lg ${currentPage === 1 ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`;
+    prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
+    prevButton.disabled = currentPage === 1;
+    prevButton.addEventListener('click', () => {
+        if (currentPage > 1) onPageChange(currentPage - 1);
+    });
 
-        const pageTabs = document.createElement('div');
-        pageTabs.className = 'flex space-x-1';
-
-        const tabsToShow = [];
-        if (totalPages <= 3) {
-            for (let i = 1; i <= totalPages; i++) tabsToShow.push(i);
-        } else {
-            if (currentPage === 1) tabsToShow.push(1, 2, 3);
-            else if (currentPage === totalPages) tabsToShow.push(totalPages - 2, totalPages - 1, totalPages);
-            else tabsToShow.push(currentPage - 1, currentPage, currentPage + 1);
-        }
-
-        tabsToShow.forEach(page => {
-            const pageButton = document.createElement('button');
-            pageButton.className = `px-3 py-1 rounded-lg ${page === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`;
-            pageButton.textContent = page;
-            pageButton.addEventListener('click', () => onPageChange(page));
-            pageTabs.appendChild(pageButton);
-        });
-
-        const nextButton = document.createElement('button');
-        nextButton.className = `px-3 py-1 rounded-lg ${currentPage === totalPages ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`;
-        nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
-        nextButton.disabled = currentPage === totalPages;
-        nextButton.addEventListener('click', () => {
-            if (currentPage < totalPages) onPageChange(currentPage + 1);
-        });
-
-        pagination.appendChild(prevButton);
-        pagination.appendChild(pageTabs);
-        pagination.appendChild(nextButton);
-        container.appendChild(pagination);
+    const pageTabs = document.createElement('div');
+    pageTabs.className = 'flex space-x-1';
+    const tabsToShow = [];
+    if (totalPages <= 3) {
+        for (let i = 1; i <= totalPages; i++) tabsToShow.push(i);
+    } else {
+        if (currentPage === 1) tabsToShow.push(1, 2, 3);
+        else if (currentPage === totalPages) tabsToShow.push(totalPages - 2, totalPages - 1, totalPages);
+        else tabsToShow.push(currentPage - 1, currentPage, currentPage + 1);
     }
+    tabsToShow.forEach(page => {
+        const pageButton = document.createElement('button');
+        pageButton.className = `px-3 py-1 rounded-lg ${page === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`;
+        pageButton.textContent = page;
+        pageButton.addEventListener('click', () => onPageChange(page));
+        pageTabs.appendChild(pageButton);
+    });
+
+    const nextButton = document.createElement('button');
+    nextButton.className = `px-3 py-1 rounded-lg ${currentPage === totalPages ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'}`;
+    nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
+    nextButton.disabled = currentPage === totalPages;
+    nextButton.addEventListener('click', () => {
+        if (currentPage < totalPages) onPageChange(currentPage + 1);
+    });
+
+    pagination.appendChild(prevButton);
+    pagination.appendChild(pageTabs);
+    pagination.appendChild(nextButton);
+    container.appendChild(pagination);
+    }
+
+    // Helpers to paginate other tables
+    function paginateList(dataList, pageKey, itemsPerPageMobile = 5, itemsPerPageDesktop = 7) {
+    const isMobile = window.innerWidth <= 640;
+    const itemsPerPage = isMobile ? itemsPerPageMobile : itemsPerPageDesktop;
+    const totalPages = Math.ceil(dataList.length / itemsPerPage);
+    let currentPage = parseInt(localStorage.getItem(pageKey)) || 1;
+    if (currentPage < 1 || currentPage > totalPages) currentPage = totalPages > 0 ? 1 : 1;
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    return { paginated: dataList.slice(start, end), totalPages, currentPage };
+    }
+
 
     // Game Modal (Handles gameOverrides)
     const addGameModal = document.getElementById('add-game-modal');
@@ -977,16 +1016,18 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target.closest('.delete-game')) {
                 e.preventDefault();
                 const id = parseInt(e.target.closest('.delete-game').dataset.id);
-                const override = gameOverrides.find(o => o.id === id);
-                gameOverrides = gameOverrides.filter(o => o.id !== id);
-                if (override) {
-                    notifications.push({
-                        id: notifications.length + 1,
-                        title: "Game Override Deleted",
-                        message: `Override for "${override.game}" has been deleted.`,
-                        time: new Date().toLocaleString()
-                    });
-                }
+                confirmAction('Are you sure you want to delete this game ?', () => {
+                    const override = gameOverrides.find(o => o.id === id);
+                    gameOverrides = gameOverrides.filter(o => o.id !== id);
+                    if (override) {
+                        notifications.push({
+                            id: notifications.length + 1,
+                            title: "Game Override Deleted",
+                            message: `Override for "${override.game}" has been deleted.`,
+                            time: new Date().toLocaleString()
+                        });
+                    }
+                });
                 localStorage.setItem('gameOverrides', JSON.stringify(gameOverrides));
                 localStorage.setItem('notifications', JSON.stringify(notifications));
                 populateGameTable();
@@ -1243,24 +1284,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (walletError) walletError.classList.add('hidden');
                 if (walletUpdateModal) walletUpdateModal.classList.remove('hidden');
             }
-
-            if (e.target.closest('.toggle-ban')) {
-                e.preventDefault();
-                const id = e.target.closest('.toggle-ban').dataset.id;
-                const user = users.find(u => u.id === id);
-                user.status = user.status === 'Active' ? 'Banned' : 'Active';
-                notifications.push({
-                    id: notifications.length + 1,
-                    title: `User ${user.status === 'Active' ? 'Unbanned' : 'Banned'}`,
-                    message: `User "${user.name}" has been ${user.status === 'Active' ? 'unbanned' : 'banned'}.`,
-                    time: new Date().toLocaleString()
-                });
-                localStorage.setItem('platformUsers', JSON.stringify(users));
-                localStorage.setItem('notifications', JSON.stringify(notifications));
-                populateUserTable();
-                updateDashboardStats();
-                updateNotificationBadge();
-            }
         });
     }
 
@@ -1355,146 +1378,406 @@ document.addEventListener('DOMContentLoaded', () => {
     // Override Table Actions
     const overrideTableBody = document.getElementById('override-table-body');
     if (overrideTableBody) {
-        overrideTableBody.addEventListener('click', (e) => {
-            if (e.target.closest('.edit-override')) {
-                e.preventDefault();
-                const id = parseInt(e.target.closest('.edit-override').dataset.id);
-                const game = games.find(g => g.id === id);
-                if (game) {
-                    document.getElementById('add-override-game').value = game.name;
-                    document.getElementById('add-override-description').value = game.description;
-                    document.getElementById('add-override-status').value = game.status;
-                    document.getElementById('add-override-winrate').value = game.winRate;
-                    if (addOverrideModal) {
-                        addOverrideModal.classList.remove('hidden');
-                        addOverrideModal.dataset.mode = 'edit';
-                        addOverrideModal.dataset.id = id;
-                    }
-                }
-            }
+    overrideTableBody.addEventListener('click', (e) => {
+        if (e.target.closest('.edit-override')) {
+        e.preventDefault();
+        const id = parseInt(e.target.closest('.edit-override').dataset.id);
+        const game = games.find(g => g.id === id);
+        if (game) {
+            document.getElementById('add-override-name').value = game.name;
+            document.getElementById('add-override-description').value = game.description;
+            document.getElementById('add-override-status').value = game.status;
+            document.getElementById('add-override-win-rate').value = game.winRate;
 
-            if (e.target.closest('.delete-override')) {
-                e.preventDefault();
-                const id = parseInt(e.target.closest('.delete-override').dataset.id);
+            const modal = document.getElementById('add-override-modal');
+            if (modal) {
+            modal.classList.remove('hidden');
+            modal.dataset.mode = 'edit';
+            modal.dataset.id = id;
+            }
+        }
+        }
+
+        if (e.target.closest('.delete-override')) {
+            e.preventDefault();
+            const id = parseInt(e.target.closest('.delete-override').dataset.id);
+            confirmAction('Are you sure you want to delete this game override?', () => {
                 const game = games.find(g => g.id === id);
                 games = games.filter(g => g.id !== id);
                 if (game) {
                     notifications.push({
-                        id: notifications.length + 1,
-                        title: "Game Override Deleted",
-                        message: `Override for "${game.name}" has been deleted.`,
-                        time: new Date().toLocaleString()
+                    id: notifications.length + 1,
+                    title: "Game Override Deleted",
+                    message: `Override for "${game.name}" has been deleted.`,
+                    time: new Date().toLocaleString()
                     });
                 }
-                localStorage.setItem('games', JSON.stringify(games));
-                localStorage.setItem('notifications', JSON.stringify(notifications));
-                populateOverrideTable();
-                updateDashboardStats();
-                updateNotificationBadge();
+            });
+        
+            localStorage.setItem('games', JSON.stringify(games));
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            populateOverrideTable();
+            updateDashboardStats();
+            updateNotificationBadge();
+        }
+    });
+    }
+
+
+    // Notifications
+    function updateNotificationBadge() {
+        const notificationCount = document.getElementById('notification-count');
+        notificationCount.textContent = notifications.length;
+        notificationCount.classList.toggle('hidden', notifications.length === 0);
+    }
+
+    const notificationBell = document.getElementById('notification-bell');
+    const notificationSubnav = document.getElementById('notification-subnav');
+    const notificationContent = document.getElementById('notification-content');
+
+    if (notificationBell) {
+        notificationBell.addEventListener('click', () => {
+            // Toggle visibility of notification subnav
+            notificationSubnav.classList.toggle('hidden');
+
+            // Display notifications without clearing them
+            notificationContent.innerHTML = notifications.length > 0 ? `
+                <div class="p-3 border-b">
+                    <button id="clear-notifications" class="w-full bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm">Clear All</button>
+                </div>
+                ${notifications.map(n => `
+                    <div class="p-3 border-b last:border-b-0">
+                        <div class="text-sm font-medium text-gray-900">${n.title}</div>
+                        <div class="text-xs text-gray-500">${n.message}</div>
+                        <div class="text-xs text-gray-400">${n.time}</div>
+                    </div>
+                `).join('')}
+            ` : '<div class="p-3 text-sm text-gray-500">No notifications</div>';
+
+            // Reset badge count to 0 without clearing notifications
+            const notificationCount = document.getElementById('notification-count');
+            notificationCount.textContent = '0';
+            notificationCount.classList.add('hidden');
+
+            // Add event listener for Clear All button
+            const clearNotificationsBtn = document.getElementById('clear-notifications');
+            if (clearNotificationsBtn) {
+                clearNotificationsBtn.addEventListener('click', () => {
+                    notifications = [];
+                    localStorage.setItem('notifications', JSON.stringify(notifications));
+                    notificationContent.innerHTML = '<div class="p-3 text-sm text-gray-500">No notifications</div>';
+                    updateNotificationBadge();
+                    notificationSubnav.classList.add('hidden');
+                });
             }
         });
     }
+        // User Filters
+        const userSearch = document.getElementById('user-search');
+        const userStatusFilter = document.getElementById('user-status-filter');
 
-    // Notifications
-function updateNotificationBadge() {
-    const notificationCount = document.getElementById('notification-count');
-    notificationCount.textContent = notifications.length;
-    notificationCount.classList.toggle('hidden', notifications.length === 0);
-}
+        function filterUsers() {
+            let filteredUsers = [...users];
+            const search = userSearch?.value.toLowerCase() || '';
+            const status = userStatusFilter?.value || '';
 
-const notificationBell = document.getElementById('notification-bell');
-const notificationSubnav = document.getElementById('notification-subnav');
-const notificationContent = document.getElementById('notification-content');
+            if (search) {
+                filteredUsers = filteredUsers.filter(user =>
+                    user.name.toLowerCase().includes(search) ||
+                    user.email.toLowerCase().includes(search)
+                );
+            }
 
-if (notificationBell) {
-    notificationBell.addEventListener('click', () => {
-        // Toggle visibility of notification subnav
-        notificationSubnav.classList.toggle('hidden');
+            if (status) {
+                filteredUsers = filteredUsers.filter(user => user.status === status);
+            }
 
-        // Display notifications without clearing them
-        notificationContent.innerHTML = notifications.length > 0 ? `
-            <div class="p-3 border-b">
-                <button id="clear-notifications" class="w-full bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm">Clear All</button>
-            </div>
-            ${notifications.map(n => `
-                <div class="p-3 border-b last:border-b-0">
-                    <div class="text-sm font-medium text-gray-900">${n.title}</div>
-                    <div class="text-xs text-gray-500">${n.message}</div>
-                    <div class="text-xs text-gray-400">${n.time}</div>
-                </div>
-            `).join('')}
-        ` : '<div class="p-3 text-sm text-gray-500">No notifications</div>';
+            populateUserTable(filteredUsers);
+        }
 
-        // Reset badge count to 0 without clearing notifications
-        const notificationCount = document.getElementById('notification-count');
-        notificationCount.textContent = '0';
-        notificationCount.classList.add('hidden');
+        if (userSearch) userSearch.addEventListener('input', filterUsers);
+        if (userStatusFilter) userStatusFilter.addEventListener('change', filterUsers);
 
-        // Add event listener for Clear All button
-        const clearNotificationsBtn = document.getElementById('clear-notifications');
-        if (clearNotificationsBtn) {
-            clearNotificationsBtn.addEventListener('click', () => {
-                notifications = [];
-                localStorage.setItem('notifications', JSON.stringify(notifications));
-                notificationContent.innerHTML = '<div class="p-3 text-sm text-gray-500">No notifications</div>';
-                updateNotificationBadge();
-                notificationSubnav.classList.add('hidden');
+        // Override Filters
+        const overrideSearch = document.getElementById('override-search');
+        const overrideStatusFilter = document.getElementById('override-status-filter');
+
+        function filterOverrides() {
+            let filteredGames = [...games];
+            const search = overrideSearch?.value.toLowerCase() || '';
+            const status = overrideStatusFilter?.value || '';
+
+            if (search) {
+                filteredGames = filteredGames.filter(game => game.name.toLowerCase().includes(search));
+            }
+
+            if (status) {
+                filteredGames = filteredGames.filter(game => game.status === status);
+            }
+
+            populateOverrideTable(filteredGames);
+        }
+
+        if (overrideSearch) overrideSearch.addEventListener('input', filterOverrides);
+        if (overrideStatusFilter) overrideStatusFilter.addEventListener('change', filterOverrides);
+
+        // Initialize
+        populateGameTable(gameOverrides);
+        populateUserTable(users);
+        populateOverrideTable(games);
+        updateNotificationBadge();
+
+        // Wallet Transactions
+    function renderWalletTransactions() {
+        const tbody = document.getElementById('transaction-table-body');
+        const search = document.getElementById('transaction-search').value.toLowerCase();
+        const type = document.getElementById('transaction-type-filter').value;
+        const startDate = document.getElementById('transaction-start-date').value;
+        const endDate = document.getElementById('transaction-end-date').value;
+
+        const filtered = walletTransactions.filter(tx => {
+            const matchSearch = tx.user.toLowerCase().includes(search) || tx.email.toLowerCase().includes(search);
+            const matchType = type ? tx.action === type : true;
+            const matchStart = startDate ? new Date(tx.date) >= new Date(startDate) : true;
+            const matchEnd = endDate ? new Date(tx.date) <= new Date(endDate) : true;
+            return matchSearch && matchType && matchStart && matchEnd;
+        });
+
+        const { paginated, totalPages, currentPage } = paginateList(filtered, 'walletPage');
+        tbody.innerHTML = paginated.map(tx => `
+            <tr>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">${tx.user}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">${tx.email}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-${tx.action === 'Deposit' ? 'green' : 'red'}-100 text-${tx.action === 'Deposit' ? 'green' : 'red'}-800">
+                ${tx.action}
+                </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">$${tx.amount.toLocaleString()}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">${tx.date}</td>
+            </tr>`).join('');
+
+        renderPagination(document.getElementById('transaction-pagination'), totalPages, currentPage, (page) => {
+            localStorage.setItem('walletPage', page);
+            renderWalletTransactions();
+        });
+    }
+
+    document.getElementById('transaction-search').addEventListener('input', renderWalletTransactions);
+    document.getElementById('transaction-type-filter').addEventListener('change', renderWalletTransactions);
+    document.getElementById('transaction-start-date').addEventListener('change', renderWalletTransactions);
+    document.getElementById('transaction-end-date').addEventListener('change', renderWalletTransactions);
+
+    document.getElementById('export-transactions-csv').addEventListener('click', () => {
+    const rows = [
+        ['User', 'Email', 'Action', 'Amount', 'Date'],
+        ...walletTransactions.map(tx => [tx.user, tx.email, tx.action, `$${tx.amount}`, tx.date])
+    ];
+    const csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "wallet_transactions.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    });
+
+    function renderSuspiciousPlayers(list) {
+        const tbody = document.getElementById('suspicious-players-table-body');
+        const { paginated, totalPages, currentPage } = paginateList(list, 'suspiciousPage');
+        tbody.innerHTML = paginated.map(user => {
+            const winRate = (user.gameHistory.filter(g => g.result === 'Win').length / user.gameHistory.length * 100).toFixed(1);
+            const playsPerHour = (user.gameHistory.length / 1.5).toFixed(1);
+            return `
+            <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm">${user.name}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm">${user.email}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm">${winRate}%</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm">${playsPerHour}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-${user.status === 'Active' ? 'green' : 'red'}-100 text-${user.status === 'Active' ? 'green' : 'red'}-800">
+                    ${user.status}
+                </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <button class="suspend-btn text-red-500 hover:text-red-700" data-id="${user.id}" title="Suspend">
+                    <i class="fas fa-ban"></i>
+                </button>
+                </td>
+            </tr>`;
+        }).join('');
+
+        renderPagination(document.getElementById('suspicious-players-pagination'), totalPages, currentPage, (page) => {
+            localStorage.setItem('suspiciousPage', page);
+            renderAntiCheatPage();
+        });
+
+        document.querySelectorAll('.suspend-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                const user = users.find(u => u.id === id);
+                if (user) {
+                    confirmAction(`Are you sure you want to ${user.status === 'Active' ? 'Banned' : 'activate'} this user?`, () => {
+                        user.status = user.status === 'Active' ? 'Banned' : 'Active';
+                        renderAntiCheatPage();
+                    });
+                }
+            });
+        });
+    }
+
+    function renderAntiCheatPage() {
+        const suspiciousUsers = users.filter(user => {
+            const wins = user.gameHistory.filter(g => g.result === 'Win').length;
+            const plays = user.gameHistory.length;
+            const winRate = plays > 0 ? (wins / plays) * 100 : 0;
+            const playsPerHour = plays > 0 ? plays / 1.5 : 0;
+            return winRate > 80 || playsPerHour > 10;
+        });
+
+        renderSuspiciousPlayers(suspiciousUsers);
+
+        const highRiskBody = document.getElementById('high-risk-transactions-table-body');
+        const highRiskTxs = walletTransactions.filter(tx => tx.amount > 10000);
+        const { paginated, totalPages, currentPage } = paginateList(highRiskTxs, 'highriskPage');
+
+        highRiskBody.innerHTML = paginated.map(tx => {
+            const isFlagged = !!tx.flagged;
+            return `
+            <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm">${tx.user}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm">${tx.email}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm">${tx.action}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm">$${tx.amount.toLocaleString()}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm">${tx.date}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <button class="flag-btn p-2 rounded hover:bg-gray-100" data-id="${tx.id}" title="Toggle Flag">
+                    <i class="fas fa-flag ${isFlagged ? 'text-red-500' : 'text-gray-300'} cursor-pointer"></i>
+                </button>
+                </td>
+            </tr>`;
+        }).join('');
+
+        renderPagination(document.getElementById('high-risk-transactions-pagination'), totalPages, currentPage, (page) => {
+            localStorage.setItem('highriskPage', page);
+            renderAntiCheatPage();
+        });
+
+        document.querySelectorAll('.flag-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                confirmAction('Are you sure you want to toggle this flag?', () => {
+                    const index = walletTransactions.findIndex(tx => tx.id === id);
+                    if (index !== -1) {
+                        walletTransactions[index].flagged = !walletTransactions[index].flagged;
+                        renderAntiCheatPage();
+                    }
+                });
+            });
+        });
+    }
+
+
+    function renderNotificationPage() {
+        const historyBody = document.getElementById('notification-history-table-body');
+        const { paginated, totalPages, currentPage } = paginateList(notifications, 'notiPage');
+        historyBody.innerHTML = paginated.map(n => `
+            <tr>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">${n.title.split(':')[0]}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">${n.title}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">${n.message}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">${n.time}</td>
+            </tr>`).join('');
+        renderPagination(document.getElementById('notification-history-pagination'), totalPages, currentPage, (page) => {
+            localStorage.setItem('notiPage', page);
+            renderNotificationPage();
+        });
+
+        document.getElementById('send-notification').addEventListener('click', () => {
+            const type = document.getElementById('notification-type').value;
+            const title = document.getElementById('notification-title').value;
+            const message = document.getElementById('notification-message').value;
+            const schedule = document.getElementById('notification-schedule').value;
+
+            if (!title || !message) return alert('Please fill in all fields');
+
+            notifications.unshift({
+            id: Date.now(),
+            title: `${type}: ${title}`,
+            message,
+            time: schedule
+            });
+
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            renderNotificationPage();
+            updateNotificationBadge();
+        });
+    }
+
+    function renderPermissionPage() {
+        const roleSelect = document.getElementById('role-select');
+        const permissionsBody = document.getElementById('permissions-table-body');
+        permissionsBody.innerHTML = '';
+
+        const modules = ["Dashboard", "Games", "Users", "Wallet & Transactions", "Anti-Cheat", "Content & Notification"];
+        modules.forEach(mod => {
+            const modKey = mod.toLowerCase().replace(/ & | /g, '-');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${mod}</td>
+            <td class="px-6 py-4 whitespace-nowrap"><input type="checkbox" class="permission-checkbox" data-module="${modKey}" data-permission="view"></td>
+            <td class="px-6 py-4 whitespace-nowrap"><input type="checkbox" class="permission-checkbox" data-module="${modKey}" data-permission="edit"></td>
+            <td class="px-6 py-4 whitespace-nowrap"><input type="checkbox" class="permission-checkbox" data-module="${modKey}" data-permission="approve"></td>`;
+            permissionsBody.appendChild(row);
+        });
+
+        const checkboxes = document.querySelectorAll('.permission-checkbox');
+        const permissionsByRole = {
+            'Super Admin': {
+            'dashboard': ['view', 'edit', 'approve'],
+            'games': ['view', 'edit', 'approve'],
+            'users': ['view', 'edit', 'approve'],
+            'wallet-transactions': ['view', 'edit', 'approve'],
+            'anti-cheat': ['view', 'edit', 'approve'],
+            'content-notification': ['view', 'edit', 'approve']
+            },
+            'Support': {
+            'users': ['view'],
+            'wallet-transactions': ['view']
+            },
+            'Finance': {
+            'wallet-transactions': ['view', 'approve']
+            },
+            'QA': {
+            'dashboard': ['view'],
+            'games': ['view']
+            },
+            'Game Config': {
+            'games': ['view', 'edit']
+            }
+        };
+
+        function updateCheckboxes() {
+            const role = roleSelect.value;
+            checkboxes.forEach(cb => {
+            const mod = cb.dataset.module;
+            const perm = cb.dataset.permission;
+            cb.checked = permissionsByRole[role]?.[mod]?.includes(perm) || false;
             });
         }
-    });
-}
-    // User Filters
-    const userSearch = document.getElementById('user-search');
-    const userStatusFilter = document.getElementById('user-status-filter');
 
-    function filterUsers() {
-        let filteredUsers = [...users];
-        const search = userSearch?.value.toLowerCase() || '';
-        const status = userStatusFilter?.value || '';
+        roleSelect.addEventListener('change', updateCheckboxes);
+        updateCheckboxes();
 
-        if (search) {
-            filteredUsers = filteredUsers.filter(user =>
-                user.name.toLowerCase().includes(search) ||
-                user.email.toLowerCase().includes(search)
-            );
-        }
-
-        if (status) {
-            filteredUsers = filteredUsers.filter(user => user.status === status);
-        }
-
-        populateUserTable(filteredUsers);
+        document.getElementById('save-permissions').addEventListener('click', () => {
+            alert('Permissions saved (mock only)');
+        });
     }
 
-    if (userSearch) userSearch.addEventListener('input', filterUsers);
-    if (userStatusFilter) userStatusFilter.addEventListener('change', filterUsers);
+    renderWalletTransactions();
+    renderAntiCheatPage();
+    renderNotificationPage();
+    renderPermissionPage();
 
-    // Override Filters
-    const overrideSearch = document.getElementById('override-search');
-    const overrideStatusFilter = document.getElementById('override-status-filter');
-
-    function filterOverrides() {
-        let filteredGames = [...games];
-        const search = overrideSearch?.value.toLowerCase() || '';
-        const status = overrideStatusFilter?.value || '';
-
-        if (search) {
-            filteredGames = filteredGames.filter(game => game.name.toLowerCase().includes(search));
-        }
-
-        if (status) {
-            filteredGames = filteredGames.filter(game => game.status === status);
-        }
-
-        populateOverrideTable(filteredGames);
-    }
-
-    if (overrideSearch) overrideSearch.addEventListener('input', filterOverrides);
-    if (overrideStatusFilter) overrideStatusFilter.addEventListener('change', filterOverrides);
-
-    // Initialize
-    populateGameTable(gameOverrides);
-    populateUserTable(users);
-    populateOverrideTable(games);
-    updateNotificationBadge();
 });

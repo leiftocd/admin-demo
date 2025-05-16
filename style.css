@@ -123,6 +123,9 @@ canvas {
 
 /* Mobile (below 640px) */
 @media (max-width: 640px) {
+    select{
+        font-size: 14px !important;
+    }
     canvas {
         width: 100% !important;
         height: 100% !important;
