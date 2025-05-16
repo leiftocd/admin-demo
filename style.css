@@ -154,7 +154,7 @@ canvas {
     main{
         padding: 0 2px !important;
     }
-    #manual-override-page .my-res,
+    #manage-page .my-res,
     #games-page .my-res,
     #users-page .my-res{
         margin: 15px 0 !important;

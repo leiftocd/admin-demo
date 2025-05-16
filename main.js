@@ -8,7 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Check if user is already logged in
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     const dashboard = document.querySelector('.flex.h-screen');
-    dashboard.style.display = isLoggedIn ? 'flex' : 'none';
+    if (dashboard) {
+        dashboard.style.display = isLoggedIn ? 'flex' : 'none';
+    }
 
     // Create auth container
     let authContainer = document.getElementById('auth-container');
@@ -45,72 +47,82 @@ document.addEventListener('DOMContentLoaded', () => {
     const passwordInput = document.getElementById('login-password');
     const togglePasswordBtn = document.getElementById('toggle-password');
 
-    usernameInput.value = adminAccount.username;
-    passwordInput.value = adminAccount.password;
+    if (usernameInput && passwordInput && togglePasswordBtn) {
+        usernameInput.value = adminAccount.username;
+        passwordInput.value = adminAccount.password;
 
-    togglePasswordBtn.addEventListener('click', () => {
-        const isPassword = passwordInput.type === 'password';
-        passwordInput.type = isPassword ? 'text' : 'password';
-        togglePasswordBtn.innerHTML = `<i class="fas fa-${isPassword ? 'eye-slash' : 'eye'}"></i>`;
-    });
+        togglePasswordBtn.addEventListener('click', () => {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            togglePasswordBtn.innerHTML = `<i class="fas fa-${isPassword ? 'eye-slash' : 'eye'}"></i>`;
+        });
+    }
 
     // Login
-    document.getElementById('login-btn').addEventListener('click', () => {
-        const username = usernameInput.value.trim();
-        const password = passwordInput.value.trim();
-        const error = document.getElementById('login-error');
+    const loginBtn = document.getElementById('login-btn');
+    if (loginBtn) {
+        loginBtn.addEventListener('click', () => {
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+            const error = document.getElementById('login-error');
 
-        if (username === adminAccount.username && password === adminAccount.password) {
-            localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('currentUser', JSON.stringify({ username: adminAccount.username }));
-            authContainer.style.display = 'none';
-            dashboard.style.display = 'flex';
-            error.classList.add('hidden');
-            updateAdminName();
-        } else {
-            error.classList.remove('hidden');
-        }
-    });
+            if (username === adminAccount.username && password === adminAccount.password) {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('currentUser', JSON.stringify({ username: adminAccount.username }));
+                authContainer.style.display = 'none';
+                dashboard.style.display = 'flex';
+                error.classList.add('hidden');
+                updateAdminName();
+            } else {
+                error.classList.remove('hidden');
+            }
+        });
+    }
 
     // Logout
     const header = document.querySelector('header .flex.items-center:last-child');
-    const logoutBtn = document.createElement('button');
-    logoutBtn.className = 'ml-4 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm logout-btn';
+    if (header) {
+        const logoutBtn = document.createElement('button');
+        logoutBtn.className = 'ml-4 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm logout-btn';
 
-    const isMobile = window.innerWidth < 641;
-    logoutBtn.innerHTML = isMobile 
-        ? '<i class="fas fa-sign-out-alt"></i>' 
-        : '<i class="fas fa-sign-out-alt mr-1"></i> Logout';
-
-    window.addEventListener('resize', () => {
-        const isMobileNow = window.innerWidth < 641;
-        logoutBtn.innerHTML = isMobileNow 
+        const isMobile = window.innerWidth < 641;
+        logoutBtn.innerHTML = isMobile 
             ? '<i class="fas fa-sign-out-alt"></i>' 
             : '<i class="fas fa-sign-out-alt mr-1"></i> Logout';
-    });
 
-    header.appendChild(logoutBtn);
+        window.addEventListener('resize', () => {
+            const isMobileNow = window.innerWidth < 641;
+            logoutBtn.innerHTML = isMobileNow 
+                ? '<i class="fas fa-sign-out-alt"></i>' 
+                : '<i class="fas fa-sign-out-alt mr-1"></i> Logout';
+        });
 
-    logoutBtn.addEventListener('click', () => {
-        localStorage.removeItem('isLoggedIn');
-        localStorage.removeItem('currentUser');
-        dashboard.style.display = 'none';
-        authContainer.style.display = 'flex';
-        usernameInput.value = adminAccount.username;
-        passwordInput.value = adminAccount.password;
-        passwordInput.type = 'password';
-        togglePasswordBtn.innerHTML = '<i class="fas fa-eye"></i>';
-        updateAdminName();
-    });
+        header.appendChild(logoutBtn);
+
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('currentUser');
+            dashboard.style.display = 'none';
+            authContainer.style.display = 'flex';
+            usernameInput.value = adminAccount.username;
+            passwordInput.value = adminAccount.password;
+            passwordInput.type = 'password';
+            togglePasswordBtn.innerHTML = '<i class="fas fa-eye"></i>';
+            updateAdminName();
+        });
+    }
 
     // Update admin name
     const updateAdminName = () => {
         const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
         const adminNameSpan = document.querySelector('.ad-name');
-        adminNameSpan.textContent = user.username || 'Admin';
+        if (adminNameSpan) {
+            adminNameSpan.textContent = user.username || 'Admin';
+        }
     };
     updateAdminName();
 
+    // Override configurations for game-specific fields
     const overrideConfigs = {
         "Lucky Card Flip": {
             fields: [
@@ -238,10 +250,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 { name: "result", type: "select", label: "Result", options: ["Win", "Lose"], default: "Win" },
                 { name: "segment", type: "select", label: "Segment", options: ["Segment 1", "Segment 2", "Segment 3"], default: "Segment 1", placeholder: "Select segment" }
             ]
-        }
+        },
     };
 
-    // Data
+    // Data Initialization
     let games = JSON.parse(localStorage.getItem('games')) || [
         { id: 1, name: "Lucky Card Flip", description: "Flip one of three cards to reveal a hidden reward", status: "On", winRate: 55, plays: 1200 },
         { id: 2, name: "Dice Roll", description: "Guess the result of a dice roll from 1 to 6", status: "On", winRate: 60, plays: 800 },
@@ -263,6 +275,29 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 18, name: "Racing", description: "Bet on animated cars and win if your pick finishes first", status: "On", winRate: 46, plays: 1400 },
         { id: 19, name: "Video Poker", description: "Play a quick 5-card poker game against probability", status: "On", winRate: 51, plays: 750 },
         { id: 20, name: "Classic Wheel", description: "Spin a wheel with fixed win segments", status: "On", winRate: 54, plays: 1600 }
+    ];
+
+    let gameOverrides = JSON.parse(localStorage.getItem('gameOverrides')) || [
+        { id: 1, game: "Lucky Card Flip", description: "Flip one of three cards to reveal a hidden reward", fields: { result: "Win", details: "Card 1" }, expiration: "2025-05-20" },
+        { id: 2, game: "Dice Roll", description: "Guess the result of a dice roll from 1 to 6", fields: { result: "Lose", details: "4" }, expiration: "2025-05-18" },
+        { id: 3, game: "Lucky Wheel", description: "Spin the wheel and win based on the landed segment", fields: { result: "Win", details: "Segment 1" }, expiration: "2025-05-22" },
+        { id: 4, game: "Slot Machine", description: "Classic 3-row slot with randomized symbols and combinations", fields: { result: "Win", details: "Cherries" }, expiration: "2025-05-19" },
+        { id: 5, game: "Mystery Box", description: "Open a random box for a chance to win valuable prize", fields: { result: "Lose", details: "Box 2" }, expiration: "2025-05-21" },
+        { id: 6, game: "Plinko", description: "Drop a ball through a peg board to land in a random reward slot", fields: { result: "Win", details: "Center" }, expiration: "2025-05-20" },
+        { id: 7, game: "Mine", description: "Choose safe tiles on a grid without hitting mines", fields: { result: "Win", details: "Safe" }, expiration: "2025-05-18" },
+        { id: 8, game: "Crash", description: "Bet and cash out before the rising multiplier crashes", fields: { result: "Win", multiplier: "100x", crashTime: "3.25s" }, expiration: "2025-05-19" },
+        { id: 9, game: "Jackpot Ladder", description: "Climb the reward ladder — the longer you play, the bigger the jackpot", fields: { result: "Lose", level: "2", jumpHeight: "2.5m" }, expiration: "2025-05-20" },
+        { id: 10, game: "Aviator", description: "Bet on a plane's ascent and cash out before it crashes", fields: { result: "Win", multiplier: "50x", takeoffTime: "2.7s" }, expiration: "2025-05-18" },
+        { id: 11, game: "Higher or Lower", description: "Predict whether the next number will be higher or lower", fields: { result: "Win", number: "8" }, expiration: "2025-05-21" },
+        { id: 12, game: "Number Guess", description: "Guess a number from 1–10; correct guesses win big", fields: { result: "Lose", guess: "6" }, expiration: "2025-05-19" },
+        { id: 13, game: "Coin Flip", description: "Simple heads-or-tails coin toss betting game", fields: { result: "Win", side: "Heads" }, expiration: "2025-05-20" },
+        { id: 14, game: "Color Guess", description: "Guess which color will appear next", fields: { result: "Win", color: "Red" }, expiration: "2025-05-18" },
+        { id: 15, game: "Limbo", description: "Bet on a multiplier and cash out before the number drops", fields: { result: "Win", targetMultiplier: "100x", delay: "1.2s" }, expiration: "2025-05-19" },
+        { id: 16, game: "Goal", description: "Shoot the ball and avoid the goalkeeper to score", fields: { result: "Win", position: "Left", keeperAction: "Dive Right" }, expiration: "2025-05-20" },
+        { id: 17, game: "Space Max", description: "Navigate a spaceship to pass checkpoints and collect rewards", fields: { result: "Win", checkpoint: "1", boostPower: "3x" }, expiration: "2025-05-21" },
+        { id: 18, game: "Racing", description: "Bet on animated cars and win if your pick finishes first", fields: { result: "Win", winner: "Car 1", speed: "120km/h" }, expiration: "2025-05-19" },
+        { id: 19, game: "Video Poker", description: "Play a quick 5-card poker game against probability", fields: { result: "Win", hand: "Four of a Kind" }, expiration: "2025-05-20" },
+        { id: 20, game: "Classic Wheel", description: "Spin a wheel with fixed win segments", fields: { result: "Win", segment: "Segment 1" }, expiration: "2025-05-22" }
     ];
 
     let users = JSON.parse(localStorage.getItem('platformUsers')) || [
@@ -308,7 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const content = document.querySelector('.content');
     const sidebar = document.querySelector('.sidebar');
 
-    if (toggleSidebarBtn) {
+    if (toggleSidebarBtn && sidebar && content) {
         toggleSidebarBtn.addEventListener('click', () => {
             sidebar.classList.toggle('collapsed');
             content.classList.toggle('sidebar-collapsed');
@@ -351,9 +386,14 @@ document.addEventListener('DOMContentLoaded', () => {
             navLinks.forEach(l => l.classList.remove('active-nav', 'bg-gray-700', 'text-gray-100'));
             link.classList.add('active-nav', 'bg-gray-700', 'text-gray-100');
             pages.forEach(page => page.classList.add('hidden'));
-            document.getElementById(`${targetPage}-page`).classList.remove('hidden');
-            pageTitle.textContent = targetPage.charAt(0).toUpperCase() + targetPage.slice(1).replace('-', ' ');
-            if (window.innerWidth < 641) {
+            const targetPageElement = document.getElementById(`${targetPage}-page`);
+            if (targetPageElement) {
+                targetPageElement.classList.remove('hidden');
+            }
+            if (pageTitle) {
+                pageTitle.textContent = targetPage.charAt(0).toUpperCase() + targetPage.slice(1).replace('-', ' ');
+            }
+            if (window.innerWidth < 641 && hamburgerMenuContent) {
                 hamburgerMenuContent.classList.add('hidden');
                 sidebar.classList.add('collapsed');
             }
@@ -361,49 +401,50 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Charts
-    const playChart = new Chart(document.getElementById('playChart'), {
-        type: 'line',
-        data: {
-            labels: ['May 6', 'May 7', 'May 8', 'May 9', 'May 10', 'May 11', 'May 12'],
-            datasets: [{
-                label: 'Game Plays',
-                data: [50, 250, 300, 280, 320, 350, 400],
-                borderColor: 'rgb(59, 130, 246)',
-                tension: 0.1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            layout: {
-                padding: {
-                    bottom: 20
-                }
+    const playChartCanvas = document.getElementById('playChart');
+    if (playChartCanvas) {
+        const playChart = new Chart(playChartCanvas, {
+            type: 'line',
+            data: {
+                labels: ['May 6', 'May 7', 'May 8', 'May 9', 'May 10', 'May 11', 'May 12'],
+                datasets: [{
+                    label: 'Game Plays',
+                    data: [50, 250, 300, 280, 320, 350, 400],
+                    borderColor: 'rgb(59, 130, 246)',
+                    tension: 0.1
+                }]
             },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 400 + 100,
-                    ticks: {
-                        stepSize: Math.max(50, Math.ceil((400 + 100) / 5)),
-                        callback: value => value
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                layout: {
+                    padding: {
+                        bottom: 20
                     }
                 },
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Date'
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 400 + 100,
+                        ticks: {
+                            stepSize: Math.max(50, Math.ceil((400 + 100) / 5)),
+                            callback: value => value
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
                     }
                 }
             }
-        }
-    });
+        });
+    }
 
-    // Initialize profit chart with top 5 most profitable games
+    // Profit Chart
     const profitChartCanvas = document.getElementById('profitChart');
-    if (!profitChartCanvas) {
-        console.error('profitChart canvas not found');
-    } else {
+    if (profitChartCanvas) {
         const profitByGame = {};
         users.forEach(user => {
             user.gameHistory.forEach(record => {
@@ -489,6 +530,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Update Dashboard Stats
     function updateDashboardStats() {
         const totalGames = document.querySelector('#dashboard-page .p-x-5:nth-child(1) p');
         const totalUsers = document.querySelector('#dashboard-page .p-x-5:nth-child(2) p');
@@ -496,23 +538,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalProfit = document.querySelector('#dashboard-page .p-x-5:nth-child(4) p');
         const usersOnline = document.querySelector('#dashboard-page .p-x-5:nth-child(5) p');
 
-        totalGames.textContent = games.length;
-        
-        totalUsers.textContent = users.length;
-        
-        totalUsers.textContent = Math.floor(Math.random() * (10000 - 5000 + 1)) + 5000; // Fake 5000-10000 users
-
-        totalDeposits.textContent = `$${walletTransactions
-        .filter(t => t.action === 'Deposit')
-        .reduce((sum, t) => sum + t.amount, 0)}`;
-        totalProfit.textContent = `$${users
-        .flatMap(u => u.gameHistory)
-        .reduce((sum, g) => sum + (g.payout - g.bet), 0)}`;
-        
-        usersOnline.textContent = Math.floor(Math.random() * (1200 - 800 + 1)) + 800; // Fake 800-1200 
+        if (totalGames) totalGames.textContent = games.length;
+        if (totalUsers) totalUsers.textContent = Math.floor(Math.random() * (10000 - 5000 + 1)) + 5000;
+        if (totalDeposits) {
+            totalDeposits.textContent = `$${walletTransactions
+                .filter(t => t.action === 'Deposit')
+                .reduce((sum, t) => sum + t.amount, 0)}`;
+        }
+        if (totalProfit) {
+            totalProfit.textContent = `$${users
+                .flatMap(u => u.gameHistory)
+                .reduce((sum, g) => sum + (g.payout - g.bet), 0)}`;
+        }
+        if (usersOnline) usersOnline.textContent = Math.floor(Math.random() * (1200 - 800 + 1)) + 800;
     }
     updateDashboardStats();
-    // Display game play history in the modal
+
+    // Populate Game Logs Table
     function populateGameLogsTable(gameName) {
         const tbody = document.getElementById('game-logs-table-body');
         if (!tbody) {
@@ -520,7 +562,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Collect play history from all users, filtering by game name
         const gameLogs = users
             .flatMap(user => user.gameHistory
                 .filter(record => record.game === gameName)
@@ -533,7 +574,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }))
             );
 
-        // Render the table content
         tbody.innerHTML = gameLogs.length > 0 ? gameLogs.map(log => `
             <tr>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${log.email}</td>
@@ -544,8 +584,9 @@ document.addEventListener('DOMContentLoaded', () => {
             </tr>
         `).join('') : '<tr><td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">No play logs found for this game</td></tr>';
     }
-    // Update populateGameTable to include the View button
-    function populateGameTable(filteredGames) {
+
+    // Populate Game Table (Fixed to handle gameOverrides)
+    function populateGameTable(filteredGameOverrides = gameOverrides) {
         const tbody = document.getElementById('game-table-body');
         const paginationContainer = document.getElementById('game-pagination');
         if (!tbody) {
@@ -555,42 +596,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const isMobile = window.innerWidth <= 640;
         const itemsPerPage = isMobile ? 5 : 7;
-        const totalPages = Math.ceil(filteredGames.length / itemsPerPage);
+        const totalPages = Math.ceil(filteredGameOverrides.length / itemsPerPage);
         let currentPage = parseInt(localStorage.getItem('gamePage')) || 1;
         if (currentPage < 1 || currentPage > totalPages) currentPage = totalPages > 0 ? 1 : 1;
 
         const start = (currentPage - 1) * itemsPerPage;
         const end = start + itemsPerPage;
-        const paginatedGames = filteredGames.slice(start, end);
+        const paginatedGameOverrides = filteredGameOverrides.slice(start, end);
 
-        // Render the games table with a View button in the Actions column
-        tbody.innerHTML = paginatedGames.length > 0 ? paginatedGames.map(game => `
+        tbody.innerHTML = paginatedGameOverrides.length > 0 ? paginatedGameOverrides.map(override => `
             <tr>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${game.name}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${game.description}</td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-${game.status === 'On' ? 'green' : 'red'}-100 text-${game.status === 'On' ? 'green' : 'red'}-800">${game.status}</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${game.winRate}%</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${override.game}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${override.description}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${override.fields?.result || 'N/A'}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${override.fields ? Object.entries(override.fields).filter(([key, val]) => key !== 'result').map(([_, val]) => val).join(', ') : 'N/A'}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${override.expiration || 'N/A'}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <a href="#" class="text-blue-600 hover:text-blue-900 mr-3 edit-game" data-id="${game.id}"><i class="fas fa-edit"></i></a>
-                    <a href="#" class="text-gray-600 hover:text-gray-900 mr-3 view-game-logs" data-id="${game.id}"><i class="fas fa-eye"></i></a>
-                    <a href="#" class="text-red-600 hover:text-red-900 delete-game" data-id="${game.id}"><i class="fas fa-trash"></i></a>
+                    <a href="#" class="text-blue-600 hover:text-blue-900 mr-3 edit-game" data-id="${override.id}"><i class="fas fa-edit"></i></a>
+                    <a href="#" class="text-gray-600 hover:text-gray-900 mr-3 view-game-logs" data-game="${override.game}"><i class="fas fa-eye"></i></a>
+                    <a href="#" class="text-red-600 hover:text-red-900 delete-game" data-id="${override.id}"><i class="fas fa-trash"></i></a>
                 </td>
             </tr>
-        `).join('') : '<tr><td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">No games found</td></tr>';
+        `).join('') : '<tr><td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">No games found</td></tr>';
 
-        if (!paginationContainer) {
-            console.warn('Element with ID game-pagination not found, skipping pagination');
-            return;
+        if (paginationContainer) {
+            renderPagination(paginationContainer, totalPages, currentPage, page => {
+                localStorage.setItem('gamePage', page);
+                populateGameTable(filteredGameOverrides);
+            });
         }
-        renderPagination(paginationContainer, totalPages, currentPage, page => {
-            localStorage.setItem('gamePage', page);
-            populateGameTable(filteredGames);
-        });
     }
 
-    function populateUserTable(filteredUsers) {
+    // Populate User Table
+    function populateUserTable(filteredUsers = users) {
         const tbody = document.getElementById('user-table-body');
         const paginationContainer = document.getElementById('user-pagination');
         if (!tbody) {
@@ -633,141 +671,120 @@ document.addEventListener('DOMContentLoaded', () => {
             </tr>
         `).join('') : '<tr><td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">No users found</td></tr>';
 
-        if (!paginationContainer) {
-            console.warn('user-pagination container not found, skipping pagination');
-            return;
+        if (paginationContainer) {
+            renderPagination(paginationContainer, totalPages, currentPage, page => {
+                localStorage.setItem('userPage', page);
+                populateUserTable(filteredUsers);
+            });
         }
-        renderPagination(paginationContainer, totalPages, currentPage, page => {
-            localStorage.setItem('userPage', page);
-            populateUserTable(filteredUsers);
-        });
     }
 
-    // Populate Override Table
-    function populateOverrideTable(filteredOverrides) {
+    // Populate Override Table (Handles games data for Manual Override)
+    function populateOverrideTable(filteredGames = games) {
         const tbody = document.getElementById('override-table-body');
         const paginationContainer = document.getElementById('override-pagination');
         if (!tbody) {
-            console.error('override-table-body not found');
+            console.error('Element with ID override-table-body not found');
             return;
         }
 
         const isMobile = window.innerWidth <= 640;
-        const itemsPerPage = isMobile ? 5 : 8;
-        const totalPages = Math.ceil(filteredOverrides.length / itemsPerPage);
+        const itemsPerPage = isMobile ? 5 : 7;
+        const totalPages = Math.ceil(filteredGames.length / itemsPerPage);
         let currentPage = parseInt(localStorage.getItem('overridePage')) || 1;
         if (currentPage < 1 || currentPage > totalPages) currentPage = totalPages > 0 ? 1 : 1;
 
         const start = (currentPage - 1) * itemsPerPage;
         const end = start + itemsPerPage;
-        const paginatedOverrides = filteredOverrides.slice(start, end);
+        const paginatedGames = filteredGames.slice(start, end);
 
-        tbody.innerHTML = paginatedOverrides.length > 0 ? paginatedOverrides.map(override => `
+        tbody.innerHTML = paginatedGames.length > 0 ? paginatedGames.map(game => `
             <tr>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${override.game}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${override.user}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${override.fields?.result || ''}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${override.fields?.details || ''}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${override.expiration}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${game.name}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${game.description}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${game.status}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${game.winRate}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <a href="#" class="text-blue-600 hover:text-blue-900 mr-3 edit-override" data-id="${override.id}"><i class="fas fa-edit"></i></a>
-                    <a href="#" class="text-red-600 hover:text-red-900 delete-override" data-id="${override.id}"><i class="fas fa-trash"></i></a>
+                    <a href="#" class="text-blue-600 hover:text-blue-900 mr-3 edit-override" data-id="${game.id}"><i class="fas fa-edit"></i></a>
+                    <a href="#" class="text-red-600 hover:text-red-900 delete-override" data-id="${game.id}"><i class="fas fa-trash"></i></a>
                 </td>
             </tr>
-        `).join('') : '<tr><td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">No overrides found</td></tr>';
+        `).join('') : '<tr><td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">No overrides found</td></tr>';
 
-        if (!paginationContainer) {
-            console.warn('override-pagination container not found, skipping pagination');
+        if (paginationContainer) {
+            renderPagination(paginationContainer, totalPages, currentPage, page => {
+                localStorage.setItem('overridePage', page);
+                populateOverrideTable(filteredGames);
+            });
+        }
+    }
+
+    // Render Dynamic Fields for Game Modal
+    function renderDynamicFields(gameName, containerId, fieldsData = {}) {
+        const container = document.getElementById(containerId);
+        if (!container) {
+            console.error(`Element with ID ${containerId} not found`);
             return;
         }
-        renderPagination(paginationContainer, totalPages, currentPage, page => {
-            localStorage.setItem('overridePage', page);
-            populateOverrideTable(filteredOverrides);
+
+        container.innerHTML = '';
+        const config = overrideConfigs[gameName] || { fields: [] };
+        config.fields.forEach(field => {
+            const div = document.createElement('div');
+            div.className = 'mb-4';
+            div.innerHTML = `
+                <label class="block text-sm font-medium text-gray-700 mb-1">${field.label}</label>
+                ${field.type === 'select' ? `
+                    <select id="${containerId}-${field.name}" class="border rounded-lg px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">${field.placeholder || 'Select'}</option>
+                        ${field.options.map(opt => `<option value="${opt}" ${fieldsData[field.name] === opt ? 'selected' : ''}>${opt}</option>`).join('')}
+                    </select>
+                ` : `
+                    <input type="text" id="${containerId}-${field.name}" class="border rounded-lg px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="${field.placeholder || ''}" value="${fieldsData[field.name] || ''}">
+                `}
+            `;
+            container.appendChild(div);
         });
     }
 
-    // Render dynamic fields in modal
-    function renderDynamicFields(gameName, container, existingValues = {}) {
-    if (!container) {
-        console.error('Dynamic fields container not found');
-        return;
-    }
-    container.innerHTML = '';
-    if (!gameName || !overrideConfigs[gameName]) {
-        console.warn(`No override config found for game: ${gameName}`);
-        return;
-    }
-
-    overrideConfigs[gameName].fields.forEach(field => {
-        const div = document.createElement('div');
-        div.className = 'mb-4';
-        const label = document.createElement('label');
-        label.className = 'block text-sm font-medium text-gray-700 mb-1';
-        label.setAttribute('for', `add-override-${field.name}`);
-        label.textContent = field.label;
-        div.appendChild(label);
-
-        let input;
-        if (field.type === 'select') {
-            input = document.createElement('select');
-            input.className = 'border rounded-lg px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500';
-            input.id = `add-override-${field.name}`;
-            input.name = field.name;
-            input.innerHTML = `<option value="">Select ${field.label}</option>` +
-                field.options.map(opt => `<option value="${opt}">${opt}</option>`).join('');
-            input.value = existingValues[field.name] || field.default || '';
-        } else if (field.type === 'text') {
-            input = document.createElement('input');
-            input.type = 'text';
-            input.className = 'border rounded-lg px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500';
-            input.id = `add-override-${field.name}`;
-            input.name = field.name;
-            input.placeholder = field.placeholder || '';
-            input.value = existingValues[field.name] || field.default || '';
-        }
-        div.appendChild(input);
-        container.appendChild(div);
-    });
-}
-
-    // Populate modal fields for add/edit
+    // Populate Modal Fields for Add/Edit Override
     function populateModalFields(override = null) {
-    const gameSelect = document.getElementById('add-override-game');
-    const userSelect = document.getElementById('add-override-user-email');
-    const dynamicFieldsContainer = document.getElementById('add-override-dynamic-fields');
-    const expirationInput = document.getElementById('add-override-expiration');
+        const gameSelect = document.getElementById('add-override-game');
+        const userSelect = document.getElementById('add-override-user-email');
+        const dynamicFieldsContainer = document.getElementById('add-override-dynamic-fields');
+        const expirationInput = document.getElementById('add-override-expiration');
 
-    if (!gameSelect || !userSelect || !dynamicFieldsContainer || !expirationInput) {
-        console.error('One or more modal elements not found');
-        return;
-    }
-
-    if (override) {
-        gameSelect.value = override.game;
-        userSelect.value = override.user;
-        renderDynamicFields(override.game, dynamicFieldsContainer, override.fields || {});
-        expirationInput.value = override.expiration;
-    } else {
-        // Chọn game đầu tiên làm mặc định
-        const firstGame = Object.keys(overrideConfigs)[0]; // Lấy game đầu tiên từ overrideConfigs
-        gameSelect.value = firstGame || '';
-        userSelect.value = '';
-        expirationInput.value = '';
-        if (firstGame) {
-            renderDynamicFields(firstGame, dynamicFieldsContainer);
-        } else {
-            dynamicFieldsContainer.innerHTML = '<p class="text-sm text-gray-500">No games available to configure.</p>';
+        if (!gameSelect || !userSelect || !dynamicFieldsContainer || !expirationInput) {
+            console.error('One or more modal elements not found');
+            return;
         }
+
+        if (override) {
+            gameSelect.value = override.game;
+            userSelect.value = override.user || '';
+            renderDynamicFields(override.game, dynamicFieldsContainer, override.fields || {});
+            expirationInput.value = override.expiration;
+        } else {
+            const firstGame = Object.keys(overrideConfigs)[0];
+            gameSelect.value = firstGame || '';
+            userSelect.value = '';
+            expirationInput.value = '';
+            if (firstGame) {
+                renderDynamicFields(firstGame, dynamicFieldsContainer);
+            } else {
+                dynamicFieldsContainer.innerHTML = '<p class="text-sm text-gray-500">No games available to configure.</p>';
+            }
+        }
+
+        gameSelect.removeEventListener('change', renderDynamicFields);
+        gameSelect.addEventListener('change', () => {
+            renderDynamicFields(gameSelect.value, dynamicFieldsContainer);
+        });
     }
 
-    // Update dynamic fields when game changes
-    gameSelect.removeEventListener('change', renderDynamicFields);
-    gameSelect.addEventListener('change', () => {
-        renderDynamicFields(gameSelect.value, dynamicFieldsContainer);
-    });
-}
-
+    // Render Pagination
     function renderPagination(container, totalPages, currentPage, onPageChange) {
+        if (!container) return;
         container.innerHTML = '';
         if (totalPages <= 1) return;
 
@@ -816,167 +833,216 @@ document.addEventListener('DOMContentLoaded', () => {
         container.appendChild(pagination);
     }
 
-    // Game Modal
-    const addGameModal = document.getElementById('add-game-modal');
-    const addGameBtn = document.getElementById('add-game-btn');
-    const addGameSave = document.getElementById('add-game-save');
-    const addGameCancel = document.getElementById('add-game-cancel');
-    const addGameError = document.getElementById('add-game-error');
+// Game Modal (Updated to include user selection from users data)
+const addGameModal = document.getElementById('add-game-modal');
+const addGameBtn = document.getElementById('add-game-btn');
+const addGameSave = document.getElementById('add-game-save');
+const addGameCancel = document.getElementById('add-game-cancel');
+const addGameError = document.getElementById('add-game-error');
+const addGameName = document.getElementById('add-game-name');
+const addGameDescription = document.getElementById('add-game-description');
+const addGameExpiration = document.getElementById('add-game-expiration');
+const addGameUser = document.getElementById('add-game-user-email');
 
-    let isEditingGame = false;
-    let editingGameId = null;
-
+if (addGameBtn) {
     addGameBtn.addEventListener('click', () => {
-        addGameModal.classList.remove('hidden');
-        document.getElementById('add-game-name').value = '';
-        document.getElementById('add-game-description').value = '';
-        document.getElementById('add-game-status').value = 'On';
-        document.getElementById('add-game-win-rate').value = '';
-        addGameError.classList.add('hidden');
-        isEditingGame = false;
-        editingGameId = null;
-    });
-
-    addGameCancel.addEventListener('click', () => {
-        addGameModal.classList.add('hidden');
-    });
-
-    addGameSave.addEventListener('click', () => {
-        const name = document.getElementById('add-game-name').value.trim();
-        const description = document.getElementById('add-game-description').value.trim();
-        const status = document.getElementById('add-game-status').value;
-        const winRate = parseInt(document.getElementById('add-game-win-rate').value);
-
-        if (!name || !description || !status || isNaN(winRate) || winRate < 0 || winRate > 100) {
-            addGameError.classList.remove('hidden');
-            return;
+        if (addGameName) {
+            addGameName.innerHTML = '<option value="">Select Game</option>' + games.map(g => `<option value="${g.name}">${g.name}</option>`).join('');
+            addGameName.value = '';
         }
-
-        if (isEditingGame) {
-            const game = games.find(g => g.id === editingGameId);
-            game.name = name;
-            game.description = description;
-            game.status = status;
-            game.winRate = winRate;
-            notifications.push({
-                id: notifications.length + 1,
-                title: "Game Updated",
-                message: `Game "${name}" has been updated.`,
-                time: new Date().toLocaleString()
-            });
+        if (addGameDescription) addGameDescription.value = '';
+        if (addGameExpiration) addGameExpiration.value = '';
+        if (addGameUser) {
+            addGameUser.innerHTML = '<option value="">Select User</option>' + users.map(u => `<option value="${u.email}">${u.email} (${u.name})</option>`).join('');
+            addGameUser.value = ''; // Default to "Select User"
         } else {
-            const newGame = {
-                id: games.length ? Math.max(...games.map(g => g.id)) + 1 : 1,
-                name,
-                description,
-                status,
-                winRate,
-                plays: 0
-            };
-            games.push(newGame);
-            notifications.push({
-                id: notifications.length + 1,
-                title: "New Game Added",
-                message: `Game "${name}" has been added.`,
-                time: new Date().toLocaleString()
-            });
+            console.error('Element with ID add-game-user-email not found');
         }
-
-        localStorage.setItem('games', JSON.stringify(games));
-        localStorage.setItem('notifications', JSON.stringify(notifications));
-        populateGameTable(games);
-        updateDashboardStats();
-        updateNotificationBadge();
-        addGameModal.classList.add('hidden');
+        renderDynamicFields('', 'add-game-dynamic-fields');
+        if (addGameModal) addGameModal.classList.remove('hidden');
+        if (addGameError) addGameError.classList.add('hidden');
+        addGameModal.dataset.mode = 'add';
     });
+}
 
-    document.getElementById('game-table-body').addEventListener('click', (e) => {
-        console.log('Click detected in game-table-body', e.target); // Debug click events
+    if (addGameName) {
+        addGameName.addEventListener('change', () => {
+            const selectedGame = games.find(g => g.name === addGameName.value);
+            if (addGameDescription) {
+                addGameDescription.value = selectedGame ? selectedGame.description : '';
+            }
+            renderDynamicFields(addGameName.value, 'add-game-dynamic-fields');
+        });
+    }
 
-        if (e.target.closest('.edit-game')) {
-            e.preventDefault();
-            const id = parseInt(e.target.closest('.edit-game').dataset.id);
-            console.log('Editing game with ID:', id); // Debug edit action
-            const game = games.find(g => g.id === id);
-            document.getElementById('add-game-name').value = game.name;
-            document.getElementById('add-game-description').value = game.description;
-            document.getElementById('add-game-status').value = game.status;
-            document.getElementById('add-game-win-rate').value = game.winRate;
-            addGameModal.classList.remove('hidden');
-            isEditingGame = true;
-            editingGameId = id;
-        }
+    if (addGameSave) {
+        addGameSave.addEventListener('click', () => {
+            const gameName = addGameName.value;
+            const description = addGameDescription.value.trim();
+            const expiration = addGameExpiration.value;
+            const userEmail = addGameUser.value;
+            const config = overrideConfigs[gameName] || { fields: [] };
+            const fields = {};
+            let isValid = gameName && expiration && description && userEmail;
 
-        if (e.target.closest('.delete-game')) {
-            e.preventDefault();
-            const id = parseInt(e.target.closest('.delete-game').dataset.id);
-            console.log('Deleting game with ID:', id); // Debug delete action
-            const game = games.find(g => g.id === id);
-            games = games.filter(g => g.id !== id);
-            notifications.push({
-                id: notifications.length + 1,
-                title: "Game Deleted",
-                message: `Game "${game.name}" has been deleted.`,
-                time: new Date().toLocaleString()
+            config.fields.forEach(field => {
+                const input = document.getElementById(`add-game-dynamic-fields-${field.name}`);
+                if (input) {
+                    fields[field.name] = input.value;
+                    if (!input.value) isValid = false;
+                }
             });
-            localStorage.setItem('games', JSON.stringify(games));
+
+            if (!isValid) {
+                if (addGameError) addGameError.classList.remove('hidden');
+                return;
+            }
+
+            const mode = addGameModal.dataset.mode;
+            if (mode === 'add') {
+                const newOverride = {
+                    id: gameOverrides.length ? Math.max(...gameOverrides.map(o => o.id)) + 1 : 1,
+                    game: gameName,
+                    description,
+                    fields,
+                    expiration,
+                    user: userEmail
+                };
+                gameOverrides.push(newOverride);
+                notifications.push({
+                    id: notifications.length + 1,
+                    title: "New Game Override Added",
+                    message: `Override for "${gameName}" for user "${userEmail}" has been added.`,
+                    time: new Date().toLocaleString()
+                });
+            } else {
+                const id = parseInt(addGameModal.dataset.id);
+                const override = gameOverrides.find(o => o.id === id);
+                if (override) {
+                    override.game = gameName;
+                    override.description = description;
+                    override.fields = fields;
+                    override.expiration = expiration;
+                    override.user = userEmail;
+                    notifications.push({
+                        id: notifications.length + 1,
+                        title: "Game Override Updated",
+                        message: `Override for "${gameName}" for user "${userEmail}" has been updated.`,
+                        time: new Date().toLocaleString()
+                    });
+                }
+            }
+
+            localStorage.setItem('gameOverrides', JSON.stringify(gameOverrides));
             localStorage.setItem('notifications', JSON.stringify(notifications));
-            populateGameTable(games);
+            if (addGameModal) addGameModal.classList.add('hidden');
+            if (addGameError) addGameError.classList.add('hidden');
+            populateGameTable();
             updateDashboardStats();
             updateNotificationBadge();
-        }
+        });
+    }
 
-        if (e.target.closest('.view-game-logs')) {
-            e.preventDefault();
-            const id = parseInt(e.target.closest('.view-game-logs').dataset.id);
-            console.log('Viewing logs for game with ID:', id); // Debug view action
-            const game = games.find(g => g.id === id);
-            if (game) {
-                console.log('Game found:', game); // Debug game object
-                populateGameLogsTable(game.name);
-                const gameLogsModal = document.getElementById('game-logs-modal');
-                if (gameLogsModal) {
-                    gameLogsModal.classList.remove('hidden');
-                    console.log('Game logs modal should now be visible'); // Debug modal visibility
-                } else {
-                    console.error('Element with ID game-logs-modal not found');
-                }
-            } else {
-                console.error('Game not found with ID:', id);
-            }
-        }
-    });
-    // Handle closing the game-logs-modal
+    if (addGameCancel) {
+        addGameCancel.addEventListener('click', () => {
+            if (addGameModal) addGameModal.classList.add('hidden');
+            if (addGameError) addGameError.classList.add('hidden');
+        });
+    }
+
+    // Game Logs Modal
     const gameLogsModal = document.getElementById('game-logs-modal');
     const gameLogsClose = document.getElementById('game-logs-close');
 
     if (gameLogsClose) {
         gameLogsClose.addEventListener('click', () => {
-            console.log('Closing game logs modal'); // Debug close action
-            gameLogsModal.classList.add('hidden');
+            if (gameLogsModal) gameLogsModal.classList.add('hidden');
         });
-    } else {
-        console.error('Element with ID game-logs-close not found');
     }
+
+    // Game Table Actions
+    const gameTableBody = document.getElementById('game-table-body');
+    if (gameTableBody) {
+        gameTableBody.addEventListener('click', (e) => {
+            if (e.target.closest('.edit-game')) {
+                e.preventDefault();
+                const id = parseInt(e.target.closest('.edit-game').dataset.id);
+                const override = gameOverrides.find(o => o.id === id);
+                if (override) {
+                    if (addGameName) {
+                        addGameName.innerHTML = '<option value="">Select Game</option>' + games.map(g => `<option value="${g.name}">${g.name}</option>`).join('');
+                        addGameName.value = override.game;
+                    }
+                    if (addGameDescription) addGameDescription.value = override.description;
+                    if (addGameExpiration) addGameExpiration.value = override.expiration;
+                    if (addGameUser) {
+                        addGameUser.innerHTML = '<option value="">Select User</option>' + users.map(u => `<option value="${u.email}">${u.email} (${u.name})</option>`).join('');
+                        addGameUser.value = ''; // Default to "Select User" instead of override.user
+                    } else {
+                        console.error('Element with ID add-game-user-email not found');
+                    }
+                    renderDynamicFields(override.game, 'add-game-dynamic-fields', override.fields);
+                    if (addGameModal) {
+                        addGameModal.classList.remove('hidden');
+                        addGameModal.dataset.mode = 'edit';
+                        addGameModal.dataset.id = id;
+                    }
+                }
+            }
+
+            if (e.target.closest('.delete-game')) {
+                e.preventDefault();
+                const id = parseInt(e.target.closest('.delete-game').dataset.id);
+                const override = gameOverrides.find(o => o.id === id);
+                gameOverrides = gameOverrides.filter(o => o.id !== id);
+                if (override) {
+                    notifications.push({
+                        id: notifications.length + 1,
+                        title: "Game Override Deleted",
+                        message: `Override for "${override.game}" for user "${override.user}" has been deleted.`,
+                        time: new Date().toLocaleString()
+                    });
+                }
+                localStorage.setItem('gameOverrides', JSON.stringify(gameOverrides));
+                localStorage.setItem('notifications', JSON.stringify(notifications));
+                populateGameTable();
+                updateDashboardStats();
+                updateNotificationBadge();
+            }
+
+            if (e.target.closest('.view-game-logs')) {
+                e.preventDefault();
+                const gameName = e.target.closest('.view-game-logs').dataset.game;
+                const userEmail = e.target.closest('.view-game-logs').dataset.user;
+                populateGameLogsTable(gameName, userEmail);
+                const gameLogsModal = document.getElementById('game-logs-modal');
+                if (gameLogsModal) gameLogsModal.classList.remove('hidden');
+            }
+        });
+    }
+
     // Game Filters
-    document.getElementById('game-search').addEventListener('input', filterGames);
-    document.getElementById('game-status-filter').addEventListener('change', filterGames);
+    const gameSearch = document.getElementById('game-search');
+    const gameStatusFilter = document.getElementById('game-status-filter');
 
     function filterGames() {
-        let filteredGames = [...games];
-        const search = document.getElementById('game-search').value.toLowerCase();
-        const status = document.getElementById('game-status-filter').value;
+        let filteredGameOverrides = [...gameOverrides];
+        const search = gameSearch?.value.toLowerCase() || '';
+        const status = gameStatusFilter?.value || '';
 
         if (search) {
-            filteredGames = filteredGames.filter(game => game.name.toLowerCase().includes(search));
+            filteredGameOverrides = filteredGameOverrides.filter(override => override.game.toLowerCase().includes(search));
         }
 
         if (status) {
-            filteredGames = filteredGames.filter(game => game.status === status);
+            filteredGameOverrides = filteredGameOverrides.filter(override => override.fields?.result === status);
         }
 
-        populateGameTable(filteredGames);
+        populateGameTable(filteredGameOverrides);
     }
+
+    if (gameSearch) gameSearch.addEventListener('input', filterGames);
+    if (gameStatusFilter) gameStatusFilter.addEventListener('change', filterGames);
 
     // User Modal
     const addUserModal = document.getElementById('add-user-modal');
@@ -988,76 +1054,86 @@ document.addEventListener('DOMContentLoaded', () => {
     let isEditingUser = false;
     let editingUserId = null;
 
-    addUserBtn.addEventListener('click', () => {
-        addUserModal.classList.remove('hidden');
-        document.getElementById('add-user-username').value = '';
-        document.getElementById('add-user-email').value = '';
-        document.getElementById('add-user-wallet').value = '';
-        document.getElementById('add-user-status').value = 'Active';
-        addUserError.classList.add('hidden');
-        isEditingUser = false;
-        editingUserId = null;
-    });
+    if (addUserBtn) {
+        addUserBtn.addEventListener('click', () => {
+            if (addUserModal) addUserModal.classList.remove('hidden');
+            document.getElementById('add-user-username').value = '';
+            document.getElementById('add-user-email').value = '';
+            document.getElementById('add-user-wallet').value = '';
+            document.getElementById('add-user-status').value = 'Active';
+            if (addUserError) addUserError.classList.add('hidden');
+            isEditingUser = false;
+            editingUserId = null;
+        });
+    }
 
-    addUserCancel.addEventListener('click', () => {
-        addUserModal.classList.add('hidden');
-    });
+    if (addUserCancel) {
+        addUserCancel.addEventListener('click', () => {
+            if (addUserModal) addUserModal.classList.add('hidden');
+        });
+    }
 
-    addUserSave.addEventListener('click', () => {
-        const username = document.getElementById('add-user-username').value.trim();
-        const email = document.getElementById('add-user-email').value.trim();
-        const wallet = parseFloat(document.getElementById('add-user-wallet').value);
-        const status = document.getElementById('add-user-status').value;
+    if (addUserSave) {
+        addUserSave.addEventListener('click', () => {
+            const username = document.getElementById('add-user-username').value.trim();
+            const email = document.getElementById('add-user-email').value.trim();
+            const wallet = parseFloat(document.getElementById('add-user-wallet').value);
+            const status = document.getElementById('add-user-status').value;
 
-        if (!username || !email || isNaN(wallet) || wallet < 0) {
-            addUserError.textContent = 'All fields are required and wallet must be non-negative.';
-            addUserError.classList.remove('hidden');
-            return;
-        }
+            if (!username || !email || isNaN(wallet) || wallet < 0) {
+                if (addUserError) {
+                    addUserError.textContent = 'All fields are required and wallet must be non-negative.';
+                    addUserError.classList.remove('hidden');
+                }
+                return;
+            }
 
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            addUserError.textContent = 'Invalid email format';
-            addUserError.classList.remove('hidden');
-            return;
-        }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                if (addUserError) {
+                    addUserError.textContent = 'Invalid email format';
+                    addUserError.classList.remove('hidden');
+                }
+                return;
+            }
 
-        if (isEditingUser) {
-            const user = users.find(u => u.id === editingUserId);
-            user.name = username;
-            user.email = email;
-            user.wallet = wallet;
-            user.status = status;
-            notifications.push({
-                id: notifications.length + 1,
-                title: "User Updated",
-                message: `User "${username}" has been updated.`,
-                time: new Date().toLocaleString()
-            });
-        } else {
-            const newUser = {
-                id: `U${Math.floor(Math.random() * 10000)}`,
-                name: username,
-                email,
-                wallet,
-                status,
-                gameHistory: []
-            };
-            users.push(newUser);
-            notifications.push({
-                id: notifications.length + 1,
-                title: "New User Registered",
-                message: `User "${username}" has registered.`,
-                time: new Date().toLocaleString()
-            });
-        }
+            if (isEditingUser) {
+                const user = users.find(u => u.id === editingUserId);
+                user.name = username;
+                user.email = email;
+                user.wallet = wallet;
+                user.status = status;
+                notifications.push({
+                    id: notifications.length + 1,
+                    title: "User Updated",
+                    message: `User "${username}" has been updated.`,
+                    time: new Date().toLocaleString()
+                });
+            } else {
+                const newUser = {
+                    id: `U${Math.floor(Math.random() * 10000)}`,
+                    name: username,
+                    email,
+                    wallet,
+                    status,
+                    gameHistory: []
+                };
+                users.push(newUser);
+                notifications.push({
+                    id: notifications.length + 1,
+                    title: "New User Registered",
+                    message: `User "${username}" has registered.`,
+                    time: new Date().toLocaleString()
+                });
+            }
 
-        localStorage.setItem('platformUsers', JSON.stringify(users));
-        localStorage.setItem('notifications', JSON.stringify(notifications));
-        populateUserTable(users);
-        updateDashboardStats();
-        updateNotificationBadge();
-        addUserModal.classList.add('hidden');
-    });
+            localStorage.setItem('platformUsers', JSON.stringify(users));
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            populateUserTable();
+            updateDashboardStats();
+            updateNotificationBadge();
+            if (addUserModal) addUserModal.classList.add('hidden');
+        });
+    }
 
     // Wallet Update Modal
     const walletUpdateModal = document.getElementById('wallet-update-modal');
@@ -1067,64 +1143,73 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let walletUserId = null;
 
-    walletCancel.addEventListener('click', () => {
-        walletUpdateModal.classList.add('hidden');
-    });
-
-    walletSave.addEventListener('click', () => {
-        const action = document.getElementById('wallet-action').value;
-        const amount = parseFloat(document.getElementById('wallet-amount').value);
-
-        if (isNaN(amount) || amount <= 0) {
-            walletError.classList.remove('hidden');
-            return;
-        }
-
-        const user = users.find(u => u.id === walletUserId);
-        if (action === 'Withdraw' && amount > user.wallet) {
-            walletError.textContent = 'Insufficient balance.';
-            walletError.classList.remove('hidden');
-            return;
-        }
-
-        if (action === 'Deposit') {
-            user.wallet += amount;
-        } else {
-            user.wallet -= amount;
-        }
-
-        const transaction = {
-            id: `WT${Math.floor(Math.random() * 10000)}`,
-            user: user.name,
-            email: user.email,
-            action,
-            amount,
-            date: new Date().toISOString().split('T')[0]
-        };
-        walletTransactions.push(transaction);
-        notifications.push({
-            id: notifications.length + 1,
-            title: `Wallet ${action}`,
-            message: `${action} of $${amount.toFixed(2)} for user "${user.name}".`,
-            time: new Date().toLocaleString()
+    if (walletCancel) {
+        walletCancel.addEventListener('click', () => {
+            if (walletUpdateModal) walletUpdateModal.classList.add('hidden');
         });
+    }
 
-        localStorage.setItem('platformUsers', JSON.stringify(users));
-        localStorage.setItem('walletTransactions', JSON.stringify(walletTransactions));
-        localStorage.setItem('notifications', JSON.stringify(notifications));
-        populateUserTable(users);
-        updateDashboardStats();
-        updateNotificationBadge();
-        walletUpdateModal.classList.add('hidden');
-    });
+    if (walletSave) {
+        walletSave.addEventListener('click', () => {
+            const action = document.getElementById('wallet-action').value;
+            const amount = parseFloat(document.getElementById('wallet-amount').value);
+
+            if (isNaN(amount) || amount <= 0) {
+                if (walletError) walletError.classList.remove('hidden');
+                return;
+            }
+
+            const user = users.find(u => u.id === walletUserId);
+            if (action === 'Withdraw' && amount > user.wallet) {
+                if (walletError) {
+                    walletError.textContent = 'Insufficient balance.';
+                    walletError.classList.remove('hidden');
+                }
+                return;
+            }
+
+            if (action === 'Deposit') {
+                user.wallet += amount;
+            } else {
+                user.wallet -= amount;
+            }
+
+            const transaction = {
+                id: `WT${Math.floor(Math.random() * 10000)}`,
+                user: user.name,
+                email: user.email,
+                action,
+                amount,
+                date: new Date().toISOString().split('T')[0]
+            };
+            walletTransactions.push(transaction);
+            notifications.push({
+                id: notifications.length + 1,
+                title: `Wallet ${action}`,
+                message: `${action} of $${amount.toFixed(2)} for user "${user.name}".`,
+                time: new Date().toLocaleString()
+            });
+
+            localStorage.setItem('platformUsers', JSON.stringify(users));
+            localStorage.setItem('walletTransactions', JSON.stringify(walletTransactions));
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            populateUserTable();
+            updateDashboardStats();
+            updateNotificationBadge();
+            if (walletUpdateModal) walletUpdateModal.classList.add('hidden');
+        });
+    }
 
     // Game History Modal
     const gameHistoryModal = document.getElementById('game-history-modal');
     const gameHistoryClose = document.getElementById('game-history-close');
 
-    gameHistoryClose.addEventListener('click', () => {
-        gameHistoryModal.classList.add('hidden');
-    });
+    if (gameHistoryClose) {
+        gameHistoryClose.addEventListener('click', () => {
+            if (gameHistoryModal) gameHistoryModal.classList.add('hidden');
+        });
+    }
+
     function populateGameHistoryTable(gameHistory) {
         const tbody = document.getElementById('game-history-table-body');
         if (!tbody) {
@@ -1142,218 +1227,194 @@ document.addEventListener('DOMContentLoaded', () => {
             </tr>
         `).join('') : '<tr><td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">No game history found</td></tr>';
     }
-    // User Table Actions
-    document.getElementById('user-table-body').addEventListener('click', (e) => {
-        if (e.target.closest('.edit-user')) {
-            e.preventDefault();
-            const id = e.target.closest('.edit-user').dataset.id;
-            const user = users.find(u => u.id === id);
-            document.getElementById('add-user-username').value = user.name;
-            document.getElementById('add-user-email').value = user.email;
-            document.getElementById('add-user-wallet').value = user.wallet;
-            document.getElementById('add-user-status').value = user.status;
-            addUserModal.classList.remove('hidden');
-            isEditingUser = true;
-            editingUserId = id;
-        }
 
-        if (e.target.closest('.view-history')) {
-            e.preventDefault();
-            const id = e.target.closest('.view-history').dataset.id;
-            const user = users.find(u => u.id === id);
-            populateGameHistoryTable(user.gameHistory);
-            gameHistoryModal.classList.remove('hidden');
-        }
+   // User Table Actions
+    const userTableBody = document.getElementById('user-table-body');
+    if (userTableBody) {
+        userTableBody.addEventListener('click', (e) => {
+            if (e.target.closest('.edit-user')) {
+                e.preventDefault();
+                const id = e.target.closest('.edit-user').dataset.id;
+                const user = users.find(u => u.id === id);
+                document.getElementById('add-user-username').value = user.name;
+                document.getElementById('add-user-email').value = user.email;
+                document.getElementById('add-user-wallet').value = user.wallet;
+                document.getElementById('add-user-status').value = user.status;
+                if (addUserModal) addUserModal.classList.remove('hidden');
+                isEditingUser = true;
+                editingUserId = id;
+            }
 
-        if (e.target.closest('.update-wallet')) {
-            e.preventDefault();
-            walletUserId = e.target.closest('.update-wallet').dataset.id;
-            document.getElementById('wallet-action').value = 'Deposit';
-            document.getElementById('wallet-amount').value = '';
-            walletError.classList.add('hidden');
-            walletUpdateModal.classList.remove('hidden');
-        }
+            if (e.target.closest('.view-history')) {
+                e.preventDefault();
+                const id = e.target.closest('.view-history').dataset.id;
+                const user = users.find(u => u.id === id);
+                populateGameHistoryTable(user.gameHistory);
+                if (gameHistoryModal) gameHistoryModal.classList.remove('hidden');
+            }
 
-        if (e.target.closest('.toggle-ban')) {
-            e.preventDefault();
-            const id = e.target.closest('.toggle-ban').dataset.id;
-            const user = users.find(u => u.id === id);
-            user.status = user.status === 'Active' ? 'Banned' : 'Active';
-            notifications.push({
-                id: notifications.length + 1,
-                title: `User ${user.status === 'Active' ? 'Unbanned' : 'Banned'}`,
-                message: `User "${user.name}" has been ${user.status === 'Active' ? 'unbanned' : 'banned'}.`,
-                time: new Date().toLocaleString()
-            });
-            localStorage.setItem('platformUsers', JSON.stringify(users));
-            localStorage.setItem('notifications', JSON.stringify(notifications));
-            populateUserTable(users);
-            updateNotificationBadge();
-        }
-    });
+            if (e.target.closest('.update-wallet')) {
+                e.preventDefault();
+                walletUserId = e.target.closest('.update-wallet').dataset.id;
+                document.getElementById('wallet-action').value = 'Deposit';
+                document.getElementById('wallet-amount').value = '';
+                if (walletError) walletError.classList.add('hidden');
+                if (walletUpdateModal) walletUpdateModal.classList.remove('hidden');
+            }
 
-    // User Filters
-    document.getElementById('user-search').addEventListener('input', filterUsers);
-    document.getElementById('user-status-fileter').addEventListener('change', filterUsers);
-
-    function filterUsers() {
-        let filteredUsers = [...users];
-        const search = document.getElementById('user-search').value.toLowerCase();
-        const status = document.getElementById('user-status-fileter').value;
-
-        if (search) {
-            filteredUsers = filteredUsers.filter(user => user.name.toLowerCase().includes(search) || user.email.toLowerCase().includes(search));
-        }
-
-        if (status) {
-            filteredUsers = filteredUsers.filter(user => user.status === status);
-        }
-
-        populateUserTable(filteredUsers);
+            if (e.target.closest('.toggle-ban')) {
+                e.preventDefault();
+                const id = e.target.closest('.toggle-ban').dataset.id;
+                const user = users.find(u => u.id === id);
+                user.status = user.status === 'Active' ? 'Banned' : 'Active';
+                notifications.push({
+                    id: notifications.length + 1,
+                    title: `User ${user.status === 'Active' ? 'Unbanned' : 'Banned'}`,
+                    message: `User "${user.name}" has been ${user.status === 'Active' ? 'unbanned' : 'banned'}.`,
+                    time: new Date().toLocaleString()
+                });
+                localStorage.setItem('platformUsers', JSON.stringify(users));
+                localStorage.setItem('notifications', JSON.stringify(notifications));
+                populateUserTable();
+                updateDashboardStats();
+                updateNotificationBadge();
+            }
+        });
     }
 
-    // Manual Override Modal
+
+    // Override Modal
     const addOverrideModal = document.getElementById('add-override-modal');
     const addOverrideBtn = document.getElementById('add-override-btn');
     const addOverrideSave = document.getElementById('add-override-save');
     const addOverrideCancel = document.getElementById('add-override-cancel');
     const addOverrideError = document.getElementById('add-override-error');
 
-    let isEditingOverride = false;
-    let editingOverrideId = null;
-
-    const overrideGameSelect = document.getElementById('add-override-game');
-    const overrideUserSelect = document.getElementById('add-override-user-email');
-
-    overrideGameSelect.innerHTML = '<option value="">Select Game</option>';
-    games.forEach(game => {
-        const option = document.createElement('option');
-        option.value = game.name;
-        option.textContent = game.name;
-        overrideGameSelect.appendChild(option);
-    });
-
-    overrideUserSelect.innerHTML = '<option value="">Select User</option>';
-    users.forEach(user => {
-        const option = document.createElement('option');
-        option.value = user.email;
-        option.textContent = user.email;
-        overrideUserSelect.appendChild(option);
-    });
-
-    addOverrideBtn.addEventListener('click', () => {
-        addOverrideModal.classList.remove('hidden');
-        populateModalFields();
-        addOverrideError.classList.add('hidden');
-        isEditingOverride = false;
-        editingOverrideId = null;
-    });
-
-    addOverrideCancel.addEventListener('click', () => {
-        addOverrideModal.classList.add('hidden');
-    });
-
-    addOverrideSave.addEventListener('click', () => {
-        const game = overrideGameSelect.value;
-        const user = overrideUserSelect.value;
-        const expiration = document.getElementById('add-override-expiration').value;
-        const dynamicFieldsContainer = document.getElementById('add-override-dynamic-fields');
-
-        if (!game || !user || !expiration) {
-            addOverrideError.classList.remove('hidden');
-            return;
-        }
-
-        const fields = {};
-        const inputs = dynamicFieldsContainer.querySelectorAll('input, select');
-        inputs.forEach(input => {
-            if (input.type === 'checkbox') {
-                if (!fields[input.name]) fields[input.name] = [];
-                if (input.checked) fields[input.name].push(input.value);
-            } else if (input.multiple) {
-                fields[input.name] = Array.from(input.selectedOptions).map(opt => opt.value);
-            } else {
-                fields[input.name] = input.value;
-            }
+    if (addOverrideBtn) {
+        addOverrideBtn.addEventListener('click', () => {
+            populateModalFields();
+            if (addOverrideModal) addOverrideModal.classList.remove('hidden');
+            addOverrideModal.dataset.mode = 'add';
+            if (addOverrideError) addOverrideError.classList.add('hidden');
         });
+    }
 
-        const requiredFields = overrideConfigs[game]?.fields.map(f => f.name) || [];
-        if (requiredFields.some(field => !fields[field] || (Array.isArray(fields[field]) && fields[field].length === 0))) {
-            addOverrideError.classList.remove('hidden');
-            return;
-        }
+    if (addOverrideCancel) {
+        addOverrideCancel.addEventListener('click', () => {
+            if (addOverrideModal) addOverrideModal.classList.add('hidden');
+            if (addOverrideError) addOverrideError.classList.add('hidden');
+        });
+    }
 
-        if (isEditingOverride) {
-            const override = overrides.find(o => o.id === editingOverrideId);
-            override.game = game;
-            override.user = user;
-            override.fields = fields;
-            override.expiration = expiration;
-            notifications.push({
-                id: notifications.length + 1,
-                title: "Override Updated",
-                message: `Override for "${game}" and "${user}" has been updated.`,
-                time: new Date().toLocaleString()
+    if (addOverrideSave) {
+        addOverrideSave.addEventListener('click', () => {
+            const game = document.getElementById('add-override-game').value;
+            const userEmail = document.getElementById('add-override-user-email').value;
+            const expiration = document.getElementById('add-override-expiration').value;
+            const config = overrideConfigs[game] || { fields: [] };
+            const fields = {};
+            let isValid = game && expiration;
+
+            config.fields.forEach(field => {
+                const input = document.getElementById(`add-override-dynamic-fields-${field.name}`);
+                if (input) {
+                    fields[field.name] = input.value;
+                    if (!input.value) isValid = false;
+                }
             });
-        } else {
-            const newOverride = {
-                id: overrides.length ? Math.max(...overrides.map(o => o.id)) + 1 : 1,
-                game,
-                user,
-                fields,
-                expiration
-            };
-            overrides.push(newOverride);
-            notifications.push({
-                id: notifications.length + 1,
-                title: "New Override Added",
-                message: `Override for "${game}" and "${user}" has been added.`,
-                time: new Date().toLocaleString()
-            });
-        }
 
-        localStorage.setItem('overrides', JSON.stringify(overrides));
-        localStorage.setItem('notifications', JSON.stringify(notifications));
-        populateOverrideTable(overrides);
-        updateNotificationBadge();
-        addOverrideModal.classList.add('hidden');
-    });
-
-    document.getElementById('override-table-body').addEventListener('click', (e) => {
-        e.preventDefault();
-        const editButton = e.target.closest('.edit-override');
-        const deleteButton = e.target.closest('.delete-override');
-
-        if (editButton) {
-            const id = parseInt(editButton.dataset.id);
-            const override = overrides.find(o => o.id === id);
-            if (override) {
-                addOverrideModal.classList.remove('hidden');
-                populateModalFields(override);
-                isEditingOverride = true;
-                editingOverrideId = id;
-                addOverrideError.classList.add('hidden');
+            if (!isValid) {
+                if (addOverrideError) addOverrideError.classList.remove('hidden');
+                return;
             }
-        }
 
-        if (deleteButton) {
-            const id = parseInt(deleteButton.dataset.id);
-            const override = overrides.find(o => o.id === id);
-            overrides = overrides.filter(o => o.id !== id);
-            notifications.push({
-                id: notifications.length + 1,
-                title: "Override Deleted",
-                message: `Override for "${override.game}" and "${override.user}" has been deleted.`,
-                time: new Date().toLocaleString()
-            });
+            const mode = addOverrideModal.dataset.mode;
+            if (mode === 'add') {
+                const newOverride = {
+                    id: overrides.length ? Math.max(...overrides.map(o => o.id)) + 1 : 1,
+                    game,
+                    user: userEmail,
+                    fields,
+                    expiration
+                };
+                overrides.push(newOverride);
+                notifications.push({
+                    id: notifications.length + 1,
+                    title: "New Override Added",
+                    message: `Override for "${game}" has been added.`,
+                    time: new Date().toLocaleString()
+                });
+            } else {
+                const id = parseInt(addOverrideModal.dataset.id);
+                const override = overrides.find(o => o.id === id);
+                if (override) {
+                    override.game = game;
+                    override.user = userEmail;
+                    override.fields = fields;
+                    override.expiration = expiration;
+                    notifications.push({
+                        id: notifications.length + 1,
+                        title: "Override Updated",
+                        message: `Override for "${game}" has been updated.`,
+                        time: new Date().toLocaleString()
+                    });
+                }
+            }
+
             localStorage.setItem('overrides', JSON.stringify(overrides));
             localStorage.setItem('notifications', JSON.stringify(notifications));
-            populateOverrideTable(overrides);
+            if (addOverrideModal) addOverrideModal.classList.add('hidden');
+            if (addOverrideError) addOverrideError.classList.add('hidden');
+            populateOverrideTable();
+            updateDashboardStats();
             updateNotificationBadge();
-        }
-    });
+        });
+    }
 
-    // Notifications
+    // Override Table Actions
+    const overrideTableBody = document.getElementById('override-table-body');
+    if (overrideTableBody) {
+        overrideTableBody.addEventListener('click', (e) => {
+            if (e.target.closest('.edit-override')) {
+                e.preventDefault();
+                const id = parseInt(e.target.closest('.edit-override').dataset.id);
+                const game = games.find(g => g.id === id);
+                if (game) {
+                    document.getElementById('add-override-game').value = game.name;
+                    document.getElementById('add-override-description').value = game.description;
+                    document.getElementById('add-override-status').value = game.status;
+                    document.getElementById('add-override-winrate').value = game.winRate;
+                    if (addOverrideModal) {
+                        addOverrideModal.classList.remove('hidden');
+                        addOverrideModal.dataset.mode = 'edit';
+                        addOverrideModal.dataset.id = id;
+                    }
+                }
+            }
+
+            if (e.target.closest('.delete-override')) {
+                e.preventDefault();
+                const id = parseInt(e.target.closest('.delete-override').dataset.id);
+                const game = games.find(g => g.id === id);
+                games = games.filter(g => g.id !== id);
+                if (game) {
+                    notifications.push({
+                        id: notifications.length + 1,
+                        title: "Game Override Deleted",
+                        message: `Override for "${game.name}" has been deleted.`,
+                        time: new Date().toLocaleString()
+                    });
+                }
+                localStorage.setItem('games', JSON.stringify(games));
+                localStorage.setItem('notifications', JSON.stringify(notifications));
+                populateOverrideTable();
+                updateDashboardStats();
+                updateNotificationBadge();
+            }
+        });
+    }
+
+     // Notifications
     function updateNotificationBadge() {
         const notificationCount = document.getElementById('notification-count');
         notificationCount.textContent = notifications.length;
@@ -1366,7 +1427,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     notificationBell.addEventListener('click', () => {
         notificationSubnav.classList.toggle('hidden');
-        // Hiển thị danh sách thông báo
         notificationContent.innerHTML = notifications.length > 0 ? `
             <div class="p-3 border-b">
                 <button id="clear-notifications" class="w-full bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm">Clear All</button>
@@ -1380,12 +1440,10 @@ document.addEventListener('DOMContentLoaded', () => {
             `).join('')}
         ` : '<div class="p-3 text-sm text-gray-500">No notifications</div>';
 
-        // Đặt số thông báo về 0 (đánh dấu đã xem)
         notifications.length = 0;
         localStorage.setItem('notifications', JSON.stringify(notifications));
         updateNotificationBadge();
 
-        // Thêm sự kiện cho nút Clear All
         const clearNotificationsBtn = document.getElementById('clear-notifications');
         if (clearNotificationsBtn) {
             clearNotificationsBtn.addEventListener('click', () => {
@@ -1398,83 +1456,58 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Search Functionality
-    const headerSearch = document.getElementById('header-search');
-    const searchResults = document.getElementById('search-results');
-    const searchResultsContent = document.getElementById('search-results-content');
-    const noResults = document.getElementById('no-results');
+    // User Filters
+    const userSearch = document.getElementById('user-search');
+    const userStatusFilter = document.getElementById('user-status-filter');
 
-    headerSearch.addEventListener('input', () => {
-        const query = headerSearch.value.toLowerCase();
-        if (!query) {
-            searchResults.classList.add('hidden');
-            return;
+    function filterUsers() {
+        let filteredUsers = [...users];
+        const search = userSearch?.value.toLowerCase() || '';
+        const status = userStatusFilter?.value || '';
+
+        if (search) {
+            filteredUsers = filteredUsers.filter(user =>
+                user.name.toLowerCase().includes(search) ||
+                user.email.toLowerCase().includes(search)
+            );
         }
 
-        const results = [
-            ...games.filter(g => g.name.toLowerCase().includes(query)).map(g => ({ type: 'Game', name: g.name, id: g.id })),
-            ...users.filter(u => u.name.toLowerCase().includes(query) || u.email.toLowerCase().includes(query)).map(u => ({ type: 'User', name: u.name, id: u.id }))
-        ];
-
-        searchResultsContent.innerHTML = results.length > 0 ? results.map(r => `
-            <div class="p-2 hover:bg-gray-100 cursor-pointer search-result" data-type="${r.type.toLowerCase()}" data-id="${r.id}">
-                <div class="text-sm font-medium text-gray-900">${r.name}</div>
-                <div class="text-xs text-gray-500">${r.type}</div>
-            </div>
-        `).join('') : '';
-        noResults.classList.toggle('hidden', results.length > 0);
-        searchResults.classList.remove('hidden');
-    });
-
-    searchResults.addEventListener('click', (e) => {
-        const result = e.target.closest('.search-result');
-        if (!result) return;
-
-        const type = result.dataset.type;
-        const id = result.dataset.id;
-
-        if (type === 'game') {
-            const game = games.find(g => g.id === parseInt(id));
-            document.getElementById('add-game-name').value = game.name;
-            document.getElementById('add-game-description').value = game.description;
-            document.getElementById('add-game-status').value = game.status;
-            document.getElementById('add-game-win-rate').value = game.winRate;
-            addGameModal.classList.remove('hidden');
-            isEditingGame = true;
-            editingGameId = id;
-            navLinks.forEach(l => l.classList.remove('active-nav', 'bg-gray-700', 'text-gray-100'));
-            document.querySelector('a[href="#games"]').classList.add('active-nav', 'bg-gray-700', 'text-gray-100');
-            pages.forEach(page => page.classList.add('hidden'));
-            document.getElementById('games-page').classList.remove('hidden');
-            pageTitle.textContent = 'Games';
-        } else if (type === 'user') {
-            const user = users.find(u => u.id === id);
-            document.getElementById('add-user-username').value = user.name;
-            document.getElementById('add-user-email').value = user.email;
-            document.getElementById('add-user-wallet').value = user.wallet;
-            document.getElementById('add-user-status').value = user.status;
-            addUserModal.classList.remove('hidden');
-            isEditingUser = true;
-            editingUserId = id;
-            navLinks.forEach(l => l.classList.remove('active-nav', 'bg-gray-700', 'text-gray-100'));
-            document.querySelector('a[href="#users"]').classList.add('active-nav', 'bg-gray-700', 'text-gray-100');
-            pages.forEach(page => page.classList.add('hidden'));
-            document.getElementById('users-page').classList.remove('hidden');
-            pageTitle.textContent = 'Users';
+        if (status) {
+            filteredUsers = filteredUsers.filter(user => user.status === status);
         }
-        searchResults.classList.add('hidden');
-        headerSearch.value = '';
-    });
 
-    document.addEventListener('click', (e) => {
-        if (!searchResults.contains(e.target) && e.target !== headerSearch) {
-            searchResults.classList.add('hidden');
+        populateUserTable(filteredUsers);
+    }
+
+    if (userSearch) userSearch.addEventListener('input', filterUsers);
+    if (userStatusFilter) userStatusFilter.addEventListener('change', filterUsers);
+
+    // Override Filters
+    const overrideSearch = document.getElementById('override-search');
+    const overrideStatusFilter = document.getElementById('override-status-filter');
+
+    function filterOverrides() {
+        let filteredGames = [...games];
+        const search = overrideSearch?.value.toLowerCase() || '';
+        const status = overrideStatusFilter?.value || '';
+
+        if (search) {
+            filteredGames = filteredGames.filter(game => game.name.toLowerCase().includes(search));
         }
-    });
 
-    // Initialize tables
-    populateGameTable(games);
+        if (status) {
+            filteredGames = filteredGames.filter(game => game.status === status);
+        }
+
+        populateOverrideTable(filteredGames);
+    }
+
+    if (overrideSearch) overrideSearch.addEventListener('input', filterOverrides);
+    if (overrideStatusFilter) overrideStatusFilter.addEventListener('change', filterOverrides);
+
+    // Initialize
+    populateGameTable(gameOverrides);
     populateUserTable(users);
-    populateOverrideTable(overrides);
+    populateOverrideTable(games);
     updateNotificationBadge();
 });
