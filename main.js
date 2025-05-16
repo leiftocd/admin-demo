@@ -1282,7 +1282,6 @@ if (addGameBtn) {
         });
     }
 
-
     // Override Modal
     const addOverrideModal = document.getElementById('add-override-modal');
     const addOverrideBtn = document.getElementById('add-override-btn');
