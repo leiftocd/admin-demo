@@ -1395,58 +1395,54 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Notification Modal
-    const notificationModal = document.getElementById('notification-modal');
-    const notificationBtn = document.getElementById('notification-btn');
-    const notificationClose = document.getElementById('notification-close');
-    const clearNotificationsBtn = document.getElementById('clear-notifications');
+    // Notifications
+function updateNotificationBadge() {
+    const notificationCount = document.getElementById('notification-count');
+    notificationCount.textContent = notifications.length;
+    notificationCount.classList.toggle('hidden', notifications.length === 0);
+}
 
-    if (notificationBtn) {
-        notificationBtn.addEventListener('click', () => {
-            if (notificationModal) notificationModal.classList.remove('hidden');
-            populateNotifications();
-        });
-    }
+const notificationBell = document.getElementById('notification-bell');
+const notificationSubnav = document.getElementById('notification-subnav');
+const notificationContent = document.getElementById('notification-content');
 
-    if (notificationClose) {
-        notificationClose.addEventListener('click', () => {
-            if (notificationModal) notificationModal.classList.add('hidden');
-        });
-    }
+if (notificationBell) {
+    notificationBell.addEventListener('click', () => {
+        // Toggle visibility of notification subnav
+        notificationSubnav.classList.toggle('hidden');
 
-    if (clearNotificationsBtn) {
-        clearNotificationsBtn.addEventListener('click', () => {
-            notifications = [];
-            localStorage.setItem('notifications', JSON.stringify(notifications));
-            populateNotifications();
-            updateNotificationBadge();
-        });
-    }
-
-    function populateNotifications() {
-        const notificationList = document.getElementById('notification-list');
-        if (!notificationList) {
-            console.error('notification-list not found');
-            return;
-        }
-
-        notificationList.innerHTML = notifications.length > 0 ? notifications.map(n => `
-            <div class="p-4 border-b border-gray-200">
-                <h4 class="text-sm font-medium text-gray-900">${n.title}</h4>
-                <p class="text-sm text-gray-500">${n.message}</p>
-                <p class="text-xs text-gray-400">${n.time}</p>
+        // Display notifications without clearing them
+        notificationContent.innerHTML = notifications.length > 0 ? `
+            <div class="p-3 border-b">
+                <button id="clear-notifications" class="w-full bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm">Clear All</button>
             </div>
-        `).join('') : '<p class="p-4 text-sm text-gray-500">No notifications</p>';
-    }
+            ${notifications.map(n => `
+                <div class="p-3 border-b last:border-b-0">
+                    <div class="text-sm font-medium text-gray-900">${n.title}</div>
+                    <div class="text-xs text-gray-500">${n.message}</div>
+                    <div class="text-xs text-gray-400">${n.time}</div>
+                </div>
+            `).join('')}
+        ` : '<div class="p-3 text-sm text-gray-500">No notifications</div>';
 
-    function updateNotificationBadge() {
-        const badge = document.getElementById('notification-badge');
-        if (badge) {
-            badge.textContent = notifications.length;
-            badge.classList.toggle('hidden', notifications.length === 0);
+        // Reset badge count to 0 without clearing notifications
+        const notificationCount = document.getElementById('notification-count');
+        notificationCount.textContent = '0';
+        notificationCount.classList.add('hidden');
+
+        // Add event listener for Clear All button
+        const clearNotificationsBtn = document.getElementById('clear-notifications');
+        if (clearNotificationsBtn) {
+            clearNotificationsBtn.addEventListener('click', () => {
+                notifications = [];
+                localStorage.setItem('notifications', JSON.stringify(notifications));
+                notificationContent.innerHTML = '<div class="p-3 text-sm text-gray-500">No notifications</div>';
+                updateNotificationBadge();
+                notificationSubnav.classList.add('hidden');
+            });
         }
-    }
-
+    });
+}
     // User Filters
     const userSearch = document.getElementById('user-search');
     const userStatusFilter = document.getElementById('user-status-filter');
