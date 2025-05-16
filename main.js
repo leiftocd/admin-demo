@@ -833,37 +833,30 @@ document.addEventListener('DOMContentLoaded', () => {
         container.appendChild(pagination);
     }
 
-// Game Modal (Updated to include user selection from users data)
-const addGameModal = document.getElementById('add-game-modal');
-const addGameBtn = document.getElementById('add-game-btn');
-const addGameSave = document.getElementById('add-game-save');
-const addGameCancel = document.getElementById('add-game-cancel');
-const addGameError = document.getElementById('add-game-error');
-const addGameName = document.getElementById('add-game-name');
-const addGameDescription = document.getElementById('add-game-description');
-const addGameExpiration = document.getElementById('add-game-expiration');
-const addGameUser = document.getElementById('add-game-user-email');
+    // Game Modal (Handles gameOverrides)
+    const addGameModal = document.getElementById('add-game-modal');
+    const addGameBtn = document.getElementById('add-game-btn');
+    const addGameSave = document.getElementById('add-game-save');
+    const addGameCancel = document.getElementById('add-game-cancel');
+    const addGameError = document.getElementById('add-game-error');
+    const addGameName = document.getElementById('add-game-name');
+    const addGameDescription = document.getElementById('add-game-description');
+    const addGameExpiration = document.getElementById('add-game-expiration');
 
-if (addGameBtn) {
-    addGameBtn.addEventListener('click', () => {
-        if (addGameName) {
-            addGameName.innerHTML = '<option value="">Select Game</option>' + games.map(g => `<option value="${g.name}">${g.name}</option>`).join('');
-            addGameName.value = '';
-        }
-        if (addGameDescription) addGameDescription.value = '';
-        if (addGameExpiration) addGameExpiration.value = '';
-        if (addGameUser) {
-            addGameUser.innerHTML = '<option value="">Select User</option>' + users.map(u => `<option value="${u.email}">${u.email} (${u.name})</option>`).join('');
-            addGameUser.value = ''; // Default to "Select User"
-        } else {
-            console.error('Element with ID add-game-user-email not found');
-        }
-        renderDynamicFields('', 'add-game-dynamic-fields');
-        if (addGameModal) addGameModal.classList.remove('hidden');
-        if (addGameError) addGameError.classList.add('hidden');
-        addGameModal.dataset.mode = 'add';
-    });
-}
+    if (addGameBtn) {
+        addGameBtn.addEventListener('click', () => {
+            if (addGameName) {
+                addGameName.innerHTML = '<option value="">Select Game</option>' + games.map(g => `<option value="${g.name}">${g.name}</option>`).join('');
+                addGameName.value = '';
+            }
+            if (addGameDescription) addGameDescription.value = '';
+            if (addGameExpiration) addGameExpiration.value = '';
+            renderDynamicFields('', 'add-game-dynamic-fields');
+            if (addGameModal) addGameModal.classList.remove('hidden');
+            if (addGameError) addGameError.classList.add('hidden');
+            addGameModal.dataset.mode = 'add';
+        });
+    }
 
     if (addGameName) {
         addGameName.addEventListener('change', () => {
@@ -880,10 +873,9 @@ if (addGameBtn) {
             const gameName = addGameName.value;
             const description = addGameDescription.value.trim();
             const expiration = addGameExpiration.value;
-            const userEmail = addGameUser.value;
             const config = overrideConfigs[gameName] || { fields: [] };
             const fields = {};
-            let isValid = gameName && expiration && description && userEmail;
+            let isValid = gameName && expiration && description;
 
             config.fields.forEach(field => {
                 const input = document.getElementById(`add-game-dynamic-fields-${field.name}`);
@@ -905,14 +897,13 @@ if (addGameBtn) {
                     game: gameName,
                     description,
                     fields,
-                    expiration,
-                    user: userEmail
+                    expiration
                 };
                 gameOverrides.push(newOverride);
                 notifications.push({
                     id: notifications.length + 1,
                     title: "New Game Override Added",
-                    message: `Override for "${gameName}" for user "${userEmail}" has been added.`,
+                    message: `Override for "${gameName}" has been added.`,
                     time: new Date().toLocaleString()
                 });
             } else {
@@ -923,11 +914,10 @@ if (addGameBtn) {
                     override.description = description;
                     override.fields = fields;
                     override.expiration = expiration;
-                    override.user = userEmail;
                     notifications.push({
                         id: notifications.length + 1,
                         title: "Game Override Updated",
-                        message: `Override for "${gameName}" for user "${userEmail}" has been updated.`,
+                        message: `Override for "${gameName}" has been updated.`,
                         time: new Date().toLocaleString()
                     });
                 }
@@ -975,12 +965,6 @@ if (addGameBtn) {
                     }
                     if (addGameDescription) addGameDescription.value = override.description;
                     if (addGameExpiration) addGameExpiration.value = override.expiration;
-                    if (addGameUser) {
-                        addGameUser.innerHTML = '<option value="">Select User</option>' + users.map(u => `<option value="${u.email}">${u.email} (${u.name})</option>`).join('');
-                        addGameUser.value = ''; // Default to "Select User" instead of override.user
-                    } else {
-                        console.error('Element with ID add-game-user-email not found');
-                    }
                     renderDynamicFields(override.game, 'add-game-dynamic-fields', override.fields);
                     if (addGameModal) {
                         addGameModal.classList.remove('hidden');
@@ -999,7 +983,7 @@ if (addGameBtn) {
                     notifications.push({
                         id: notifications.length + 1,
                         title: "Game Override Deleted",
-                        message: `Override for "${override.game}" for user "${override.user}" has been deleted.`,
+                        message: `Override for "${override.game}" has been deleted.`,
                         time: new Date().toLocaleString()
                     });
                 }
@@ -1013,9 +997,7 @@ if (addGameBtn) {
             if (e.target.closest('.view-game-logs')) {
                 e.preventDefault();
                 const gameName = e.target.closest('.view-game-logs').dataset.game;
-                const userEmail = e.target.closest('.view-game-logs').dataset.user;
-                populateGameLogsTable(gameName, userEmail);
-                const gameLogsModal = document.getElementById('game-logs-modal');
+                populateGameLogsTable(gameName);
                 if (gameLogsModal) gameLogsModal.classList.remove('hidden');
             }
         });
@@ -1228,7 +1210,7 @@ if (addGameBtn) {
         `).join('') : '<tr><td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">No game history found</td></tr>';
     }
 
-   // User Table Actions
+    // User Table Actions
     const userTableBody = document.getElementById('user-table-body');
     if (userTableBody) {
         userTableBody.addEventListener('click', (e) => {
@@ -1413,47 +1395,57 @@ if (addGameBtn) {
         });
     }
 
-     // Notifications
-    function updateNotificationBadge() {
-        const notificationCount = document.getElementById('notification-count');
-        notificationCount.textContent = notifications.length;
-        notificationCount.classList.toggle('hidden', notifications.length === 0);
+    // Notification Modal
+    const notificationModal = document.getElementById('notification-modal');
+    const notificationBtn = document.getElementById('notification-btn');
+    const notificationClose = document.getElementById('notification-close');
+    const clearNotificationsBtn = document.getElementById('clear-notifications');
+
+    if (notificationBtn) {
+        notificationBtn.addEventListener('click', () => {
+            if (notificationModal) notificationModal.classList.remove('hidden');
+            populateNotifications();
+        });
     }
 
-    const notificationBell = document.getElementById('notification-bell');
-    const notificationSubnav = document.getElementById('notification-subnav');
-    const notificationContent = document.getElementById('notification-content');
+    if (notificationClose) {
+        notificationClose.addEventListener('click', () => {
+            if (notificationModal) notificationModal.classList.add('hidden');
+        });
+    }
 
-    notificationBell.addEventListener('click', () => {
-        notificationSubnav.classList.toggle('hidden');
-        notificationContent.innerHTML = notifications.length > 0 ? `
-            <div class="p-3 border-b">
-                <button id="clear-notifications" class="w-full bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm">Clear All</button>
-            </div>
-            ${notifications.map(n => `
-                <div class="p-3 border-b last:border-b-0">
-                    <div class="text-sm font-medium text-gray-900">${n.title}</div>
-                    <div class="text-xs text-gray-500">${n.message}</div>
-                    <div class="text-xs text-gray-400">${n.time}</div>
-                </div>
-            `).join('')}
-        ` : '<div class="p-3 text-sm text-gray-500">No notifications</div>';
+    if (clearNotificationsBtn) {
+        clearNotificationsBtn.addEventListener('click', () => {
+            notifications = [];
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            populateNotifications();
+            updateNotificationBadge();
+        });
+    }
 
-        notifications.length = 0;
-        localStorage.setItem('notifications', JSON.stringify(notifications));
-        updateNotificationBadge();
-
-        const clearNotificationsBtn = document.getElementById('clear-notifications');
-        if (clearNotificationsBtn) {
-            clearNotificationsBtn.addEventListener('click', () => {
-                notifications = [];
-                localStorage.setItem('notifications', JSON.stringify(notifications));
-                notificationContent.innerHTML = '<div class="p-3 text-sm text-gray-500">No notifications</div>';
-                updateNotificationBadge();
-                notificationSubnav.classList.add('hidden');
-            });
+    function populateNotifications() {
+        const notificationList = document.getElementById('notification-list');
+        if (!notificationList) {
+            console.error('notification-list not found');
+            return;
         }
-    });
+
+        notificationList.innerHTML = notifications.length > 0 ? notifications.map(n => `
+            <div class="p-4 border-b border-gray-200">
+                <h4 class="text-sm font-medium text-gray-900">${n.title}</h4>
+                <p class="text-sm text-gray-500">${n.message}</p>
+                <p class="text-xs text-gray-400">${n.time}</p>
+            </div>
+        `).join('') : '<p class="p-4 text-sm text-gray-500">No notifications</p>';
+    }
+
+    function updateNotificationBadge() {
+        const badge = document.getElementById('notification-badge');
+        if (badge) {
+            badge.textContent = notifications.length;
+            badge.classList.toggle('hidden', notifications.length === 0);
+        }
+    }
 
     // User Filters
     const userSearch = document.getElementById('user-search');
